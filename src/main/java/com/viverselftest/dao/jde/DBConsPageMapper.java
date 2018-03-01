@@ -1,0 +1,19 @@
+package com.viverselftest.dao.jde;
+
+import com.viverselftest.po.DBConsPagePO;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface DBConsPageMapper {
+
+    @Select("select count(1) from PA_VIVER_TEST")
+    int findCountInfo();
+
+    @Select("select rownum rn,work_code,user_name,display_code,display_name,display_classify,create_time "
+            + "from PA_VIVER_TEST where work_code = #{workCode}")
+    List<DBConsPagePO> findInfo(@Param("workCode") String workCode);
+}

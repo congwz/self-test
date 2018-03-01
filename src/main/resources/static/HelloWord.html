@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>hello word</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+    <script>
+        window.onload = function () {
+            var vm = new Vue({
+                el:'#id_test',
+                data:{
+                    msg:'hello word11'
+                }
+            });
+        }
+    </script>
+
+</head>
+<body>
+  <div id = "id_test">
+    {{msg}}
+  </div>
+</body>
+</html>

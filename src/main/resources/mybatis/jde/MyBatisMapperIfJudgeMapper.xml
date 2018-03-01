@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viverselftest.dao.jde.MyBatisMapperIfJudgeMapper">
+
+    <!-- Method1 -->
+    <select id="findResCountMybatisMapperIfJudge" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from
+        (
+        <choose>
+<!--
+            <when test="status != null and status != '' and status == '\'N\''.toString()">
+-->
+            <when test="status != null and status != '' and status == 'N'.toString()">
+                select distinct orderNo from PA_PLSPAY_AUDIT_CURRENT
+                where a_tag = 'P' and audit_personCode = #{workCode} and status = #{status}
+            </when>
+            <otherwise>
+                select distinct orderNo from PA_PLSPAY_AUDIT_RECORD
+                where a_tag = 'P' and nodeId != '0' and person_code = #{workCode}
+            </otherwise>
+        </choose>
+        )
+    </select>
+
+
+    <!-- Method2 -->
+    <select id="findResCountMybatisMapperIfJudge2" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from
+        (
+        <if test="status.w != null and status.w != '' and status.w == 'N'.toString()">
+            select distinct orderNo from PA_PLSPAY_AUDIT_CURRENT
+            where a_tag = 'P' and audit_personCode = #{workCode} and status = #{status.w}
+        </if>
+        <if test="status.f != null and status.f != '' and status.f == 'Y'.toString()">
+            union All
+            select distinct orderNo from PA_PLSPAY_AUDIT_RECORD
+            where a_tag = 'P' and nodeId != '0' and person_code = #{workCode}
+        </if>
+        )
+    </select>
+
+
+    <!-- Method3  parameterType="java.util.Map"【可加可不加  推荐加上】 -->
+    <select id="findResCountMybatisMapperIfJudge3" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from
+        (
+        <choose>
+            <when test="status != null and status != '' and status == 'N'.toString()">
+                select distinct orderNo from PA_PLSPAY_AUDIT_CURRENT
+                where a_tag = 'P' and audit_personCode = #{workCode} and status = #{status}
+            </when>
+            <when test="status != null and status != '' and status == 'Y'.toString()">
+                select distinct orderNo from PA_PLSPAY_AUDIT_RECORD
+                where a_tag = 'P' and nodeId != '0' and person_code = #{workCode}
+            </when>
+<!--
+            <otherwise>
+                select distinct orderNo from PA_PLSPAY_AUDIT_RECORD
+                where a_tag = 'P' and nodeId != '0' and person_code = #{workCode}
+            </otherwise>
+-->
+        </choose>
+        )
+    </select>
+
+
+
+</mapper>
