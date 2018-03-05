@@ -2,6 +2,7 @@ package com.viverselftest.api;
 
 import com.github.pagehelper.PageInfo;
 import com.viverselftest.common.ServerResponse;
+import com.viverselftest.dto.MapOneToMoreDTO;
 import com.viverselftest.po.DBConsPagePO;
 import com.viverselftest.service.DBConsPageService;
 import com.viverselftest.service.MyBatisMapperIfJudgeService;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(description = "数据库连接与分页接口")
+@Api(description = "数据库连接与分页接口-mybatis一对多映射")
 @RestController
 @RequestMapping("/api/db/page")
 public class DBConsPageApi {
@@ -58,6 +59,20 @@ public class DBConsPageApi {
     public  ServerResponse getResCountMybatisMapperIfJudge(@RequestParam("workCode") String workCode,
                                                            @RequestParam(value = "status", required = false) String status){
         return ServerResponse.successCodeMsgData("<if>标签判断多个参数的查询结果数",myBatisMapperIfJudgeService.findResCountMybatisMapperIfJudge(workCode,status));
+    }
+
+    @ApiOperation(value = "mybatis的高级映射之一对多（工号-管理的分部）")
+    @GetMapping("/mybatis/map/one/to/more")
+    //public List<MapOneToMoreDTO> mybatisOneToMore(){
+    public ServerResponse<List<MapOneToMoreDTO>> mybatisOneToMore(){
+        return ServerResponse.successCodeMsgData("一对多映射成功1",dbConsPageService.mybatisOneToMore());
+    }
+
+    @ApiOperation(value = "mybatis的高级映射之一对多(对账表头-明细)")
+    @GetMapping("/mybatis/map/one/to/more/account")
+    //public List<MapOneToMoreAccountDTO> mybatisOneToMore(){
+    public ServerResponse mybatisOneToMoreAccount(){
+        return ServerResponse.successCodeMsgData("一对多映射成功2",dbConsPageService.mybatisOneToMoreAccount());
     }
 
 

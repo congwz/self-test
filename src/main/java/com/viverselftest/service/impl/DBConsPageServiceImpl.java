@@ -3,6 +3,8 @@ package com.viverselftest.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.viverselftest.dao.jde.DBConsPageMapper;
+import com.viverselftest.dto.MapOneToMoreAccountDTO;
+import com.viverselftest.dto.MapOneToMoreDTO;
 import com.viverselftest.po.DBConsPagePO;
 import com.viverselftest.service.DBConsPageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,5 +38,15 @@ public class DBConsPageServiceImpl implements DBConsPageService {
         pageInfo.setList(resList);
         //pageInfo.setOrderBy("create_time desc"); /*无效的排序*/
         return pageInfo;
+    }
+
+    @Override
+    public List<MapOneToMoreDTO> mybatisOneToMore() {
+        return dbConsPageMapper.mybatisOneToMore();
+    }
+
+    @Override
+    public List<MapOneToMoreAccountDTO> mybatisOneToMoreAccount() {
+        return dbConsPageMapper.mybatisOneToMoreAccount();
     }
 }

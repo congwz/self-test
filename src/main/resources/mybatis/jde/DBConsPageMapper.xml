@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viverselftest.dao.jde.DBConsPageMapper">
+
+    <resultMap id="mapOneToMore" type="com.viverselftest.dto.MapOneToMoreDTO">
+        <id column="work_code" property="work_code"/>
+        <result column="user_name" property="user_name"/>
+        <collection property="manage_info" ofType="com.viverselftest.po.MapOneToMoreManagePO">
+            <id column="display_code" property="display_code"/> <!-- 明细唯一标识 -->
+            <result column="display_name" property="display_name"/>
+            <result column="display_classify" property="display_classify"/>
+            <result column="create_time" property="create_time"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="mapOneToMoreAccount" type="com.viverselftest.dto.MapOneToMoreAccountDTO">
+        <id column="r_number" property="r_number"/>
+        <result column="r_type" property="r_type"/>
+        <result column="company" property="company"/>
+        <result column="ccname" property="gsmc"/>
+        <collection property="detail" ofType="com.viverselftest.po.MapOneToMoreAccountDetailPO">
+            <id column="payc_id" property="payc_id"/> <!-- 明细唯一标识 -->
+            <result column="r_number" property="r_number"/>
+            <result column="r_del" property="r_del"/>
+            <result column="pay_condition" property="pay_condition"/>
+            <result column="des" property="des"/>
+        </collection>
+    </resultMap>
+
+    <select id="mybatisOneToMore" resultMap="mapOneToMore">
+        select work_code,user_name,display_code,display_name,display_classify,create_time
+        from PA_VIVER_TEST
+    </select>
+
+    <select id="mybatisOneToMoreAccount" resultMap="mapOneToMoreAccount">
+        <!--select pr.r_number,r_type,company,
+        prd.r_number,payc_id,prd.r_del
+        from PA_RECONCILIATION pr,PA_RECONCILIATION_DETAIL prd
+        where pr.r_number = prd.r_number-->
+        select pr.r_number,r_type,company,
+        prd.r_number,payc_id,prd.r_del,
+        trim(f0010.ccname) gsmc,ppp.pay_condition,pc.des
+        from PA_RECONCILIATION pr
+        join PA_RECONCILIATION_DETAIL prd on pr.r_number = prd.r_number
+        join PA_PURCHASEORDER_PAYCONDITION ppp on prd.payc_id = ppp.uuid
+        join PA_PAYCONDITION_CONFIG pc on ppp.pay_condition = pc.code
+        left join f0010 on pr.company = f0010.ccco
+    </select>
+
+
+</mapper>
