@@ -310,4 +310,14 @@ listNoDup2：[a, b, c, 1]*/
         /*===================================Method3：remove去重(双重循环---》不推荐)=============================*/
 
     }
+
+    public static void main(String[] args) {
+        String order_company = "00201";
+        String order_company2 = "00010";
+        String order_company3 = "01212";
+
+        System.out.println(Integer.valueOf(order_company).toString());
+        System.out.println(Integer.valueOf(order_company2).toString());
+        System.out.println(Integer.valueOf(order_company3).toString());
+    }
 }

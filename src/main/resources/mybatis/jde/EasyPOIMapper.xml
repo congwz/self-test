@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viverselftest.dao.jde.EasyPOIMapper">
+
+    <resultMap id="excelOneToMoreExport" type="com.viverselftest.po.ExcelExportOneToMorePO">
+        <id column="userno" property="user_id"></id>
+        <result column="username" property="username"/>
+
+        <association property="department" javaType="com.viverselftest.po.ExcelExportOneToMorePartPO">
+            <id column="partno" property="part_id"></id>
+            <result column="partname" property="part_name"/>
+        </association>
+
+        <collection property="display" ofType="com.viverselftest.po.ExcelExportSimplePO">
+
+            <!--<id column="id" property="display_id"></id>-->
+            <result column="work_code" property="work_code"/>
+            <result column="user_name" property="user_name"/>
+            <result column="display_code" property="display_code"/>
+            <result column="display_name" property="display_name"/>
+            <result column="display_classify" property="display_classify"/>
+            <result column="create_time" property="create_time"/>
+
+        </collection>
+        <!--<collection property="display" ofType="com.viverselftest.po.ExcelExportSimplePO" resultMap="displayList">
+        </collection>-->
+    </resultMap>
+
+    <!--<resultMap id="displayList" type="com.viverselftest.po.ExcelExportSimplePO">
+        <result column="work_code" property="work_code"/>
+        <result column="user_name" property="user_name"/>
+        <result column="display_code" property="display_code"/>
+        <result column="display_name" property="display_name"/>
+        <result column="display_classify" property="display_classify"/>
+        <result column="create_time" property="create_time"/>
+
+        <collection property="display"
+                    select="getDisplayInfo" column="{work_code=work_code,display_code=display_code}">
+        </collection>
+    </resultMap>
+
+    <select id="getDisplayInfo" resultType="com.viverselftest.po.ExcelExportSimplePO">
+        select work_code,user_name,display_code,display_name,display_classify,create_time
+        from PA_VIVER_TEST &lt;!&ndash;where work_code = #{work_code} &ndash;&gt;&lt;!&ndash;and display_code = #{display_code}&ndash;&gt;
+    </select>-->
+
+    <select id="findOneToMoreExcelExportData" resultMap="excelOneToMoreExport">
+        select pvu.userno,pvu.username,pvd.partno,pvd.partname,
+        <!--id,-->
+        work_code,user_name,display_code,display_name,display_classify,create_time
+        from PA_VIVER_TEST_USER pvu,
+        PA_VIVER_TEST_DEPARTMENT pvd,
+        <!--PA_VIVER_TEST_2 pvt-->
+        PA_VIVER_TEST pvt
+        where pvu.userno = pvd.userno and pvu.userno = pvt.work_code
+
+    </select>
+
+
+</mapper>
