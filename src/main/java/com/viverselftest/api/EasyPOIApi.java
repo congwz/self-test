@@ -6,16 +6,19 @@ import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
+import cn.afterturn.easypoi.word.WordExportUtil;
 import com.viverselftest.po.ExcelExportBigDataPO;
 import com.viverselftest.po.ExcelExportOneToMorePO;
 import com.viverselftest.po.ExcelExportPersonPO;
 import com.viverselftest.po.ExcelExportSimplePO;
 import com.viverselftest.service.EasyPOIService;
 import com.viverselftest.util.ExcelUtill;
+import com.viverselftest.util.WordUtill;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,6 +42,53 @@ public class EasyPOIApi {
 
     @Autowired
     private ExcelUtill excelUtill;
+
+
+    /*============================================导出word-word模板========================================*/
+
+    @ApiOperation("word模板导出word文件")
+    @GetMapping("/word/template/export")
+    public void testWordTemplateImport(HttpServletRequest request, HttpServletResponse response){
+        Map map = new HashMap();
+        map.put("title","word模板简单测试");
+        map.put("person","个人介绍");
+        map.put("other","职业相关");
+
+        map.put("name","张聪伟");
+        map.put("sex","女");
+        map.put("age",25);
+        map.put("job","IT民工");
+        map.put("hobby","打羽毛球ha");
+
+        try {
+            // 获取模板文件
+            XWPFDocument doc = WordExportUtil.exportWord07("/template/templateWord.docx",map);
+            //ByteArrayOutputStream bous = new ByteArrayOutputStream();
+            //doc.write(bous);
+
+            /*写入文件*/
+            File file = new File("C:/word");
+            if(!file.exists()){
+                file.mkdirs();
+            }
+            FileOutputStream fos = new FileOutputStream("C:/word/templateSimpleWordExport.docx");
+            doc.write(fos);
+            fos.close();
+            System.out.println("模板导出Word 成功!!! -》templateSimpleWordExport.docx");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //File docx = new File("C:/word/templateSimpleWordExport.docx");
+        //File pdf = new File("C:/pdf/wordToPDF.pdf");
+        WordUtill.wordConvertToPdf("C:/word/templateSimpleWordExport.docx","C:/pdf/wordToPDF.pdf");
+
+    }
+
+
+
+
 
 
     /*============================================导出Excel-基础========================================*/

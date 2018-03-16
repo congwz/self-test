@@ -65,7 +65,7 @@ public class testApi {
             Date date2 = sf.parse("2017-10-10");
             Date date3 = sf.parse("2017-12-25");
             Date date4 = sf.parse("2017-02-10");
-            Date date5 = sf.parse("2017-01-20");
+            Date date5 = sf.parse("2018-01-01");
             Calendar cal = Calendar.getInstance();
             Calendar cal2 = Calendar.getInstance();
             Calendar cal3 = Calendar.getInstance();
@@ -76,40 +76,51 @@ public class testApi {
             cal3.setTime(date3);
             cal4.setTime(date4);
             cal5.setTime(date5);
-            cal.add(Calendar.DATE, 30); // 指定日期加上30天  2017-12-31  2018-01-31
-            cal2.add(Calendar.DATE, 30); // 指定日期加上30天 2017-11-09  2017-11-30
-            cal3.add(Calendar.DATE, 30); // 指定日期加上30天 2018-01-24  2018-01-31
-            cal4.add(Calendar.DATE, 15); // 指定日期加上15天 2017-02-25  2017-03-31
-            cal5.add(Calendar.DATE, 38); // 指定日期加上15天 2017-02-27  2017-03-31
+            cal.add(Calendar.DATE, 30); // 指定日期加上30天  2017-12-31  2018-01-25
+            //cal2.add(Calendar.DATE, 30); // 指定日期加上30天 2017-11-09  2017-11-30
+            cal2.add(Calendar.DATE, 10); // 指定日期加上30天 2017-10-20  2017-10-25
+            cal3.add(Calendar.DATE, 30); // 指定日期加上30天 2018-01-24  2018-01-25
+            cal4.add(Calendar.DATE, 15); // 指定日期加上15天 2017-02-25  2017-02-25
+            cal5.add(Calendar.DATE, 25); // 指定日期加上15天 2018-01-26  2018-02-25
 
-            if(Integer.valueOf(sf.format(cal.getTime()).substring(8,10)) < 25) {
-                cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+            if(Integer.valueOf(sf.format(cal.getTime()).substring(8,10)) <= 25) {
+                /*cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));*/
+                cal.set(Calendar.DAY_OF_MONTH, 25);
             }else {
                 cal.add(Calendar.MONTH, 1);  //下一个月
-                cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                /*cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));*/
+                cal.set(Calendar.DAY_OF_MONTH, 25);
                 //cal.roll(Calendar.DAY_OF_MONTH,-1);
             }
 
-            if(Integer.valueOf(sf.format(cal4.getTime()).substring(8,10)) < 25) {
-                cal4.set(Calendar.DAY_OF_MONTH, cal4.getActualMaximum(Calendar.DAY_OF_MONTH));
+            if(Integer.valueOf(sf.format(cal2.getTime()).substring(8,10)) <= 25) {
+                cal2.set(Calendar.DAY_OF_MONTH, 25);
+            }else {
+                cal2.add(Calendar.MONTH, 1);  //下一个月
+                cal2.set(Calendar.DAY_OF_MONTH, 25);
+            }
+
+            if(Integer.valueOf(sf.format(cal4.getTime()).substring(8,10)) <= 25) {
+                cal4.set(Calendar.DAY_OF_MONTH, 25);
             }else {
                 cal4.add(Calendar.MONTH, 1);  //下一个月
-                cal4.set(Calendar.DAY_OF_MONTH, cal4.getActualMaximum(Calendar.DAY_OF_MONTH));
+                cal4.set(Calendar.DAY_OF_MONTH, 25);
             }
-            if(Integer.valueOf(sf.format(cal5.getTime()).substring(8,10)) < 25) {
-                cal5.set(Calendar.DAY_OF_MONTH, cal5.getActualMaximum(Calendar.DAY_OF_MONTH));
+            if(Integer.valueOf(sf.format(cal5.getTime()).substring(8,10)) <= 25) {
+                cal5.set(Calendar.DAY_OF_MONTH, 25);
             }else {
                 /*cal5.add(Calendar.MONTH, 1);
                 cal5.add(Calendar.DAY_OF_MONTH, -1);*/
                 cal5.add(Calendar.MONTH, 1);  //下一个月
-                cal5.set(Calendar.DAY_OF_MONTH, cal5.getActualMaximum(Calendar.DAY_OF_MONTH));
+                cal5.set(Calendar.DAY_OF_MONTH, 25);
 
             }
 
             String s =sf.format(cal.getTime());
+            String s2 =sf.format(cal2.getTime());
             String s4 =sf.format(cal4.getTime());
             String s5 =sf.format(cal5.getTime());
-            System.out.println(s+"\r\n"+s4+"\r\n"+s5);
+            System.out.println(s+"\r\n"+s2+"\r\n"+s4+"\r\n"+s5);
         } catch (ParseException e) {
             e.printStackTrace();
         }
