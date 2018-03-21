@@ -94,7 +94,6 @@ public class EasyPOIApi {
 
     /**
      *
-     * 失败  封装在list里面失败
      * @param request
      * @param response
      */
@@ -137,7 +136,7 @@ public class EasyPOIApi {
 
         /*try {
             // 获取模板文件
-            XWPFDocument doc = WordExportUtil.exportWord07("/template/templateWordTable.docx",map);
+            XWPFDocument doc = WordExportUtil.exportWord07("/template/templateWordTable.docx",map);  //失败的方法
 
             //写入文件
             File file = new File("C:/word");
