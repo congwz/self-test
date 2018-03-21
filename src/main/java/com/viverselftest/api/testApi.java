@@ -2,6 +2,7 @@ package com.viverselftest.api;
 
 //import com.harmontronics.erp.util.StrUtils;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -330,5 +331,30 @@ listNoDup2：[a, b, c, 1]*/
         System.out.println(Integer.valueOf(order_company).toString());
         System.out.println(Integer.valueOf(order_company2).toString());
         System.out.println(Integer.valueOf(order_company3).toString());
+
+        System.out.println("\n\n"+ "===============================");
+
+        List<String> list = new ArrayList<>();
+        List<String> list2 = new ArrayList<>();
+        List<String> list3 = new ArrayList<>();
+        String s1 = "http://www.baidu.com";
+        String s2 = "http://www.qq.cn";
+        String s3 = "https://shanghai.gov.cn";
+        String s4 = "https://test.harmtronics.com";
+        list.add(s1);
+        list.add(s2);
+        list.add(s3);
+        list2.add(s4);
+
+        String listToString = StringUtils.join(list," ,");
+        System.out.println("list转为字符串：" + listToString);
+
+        String list2ToString = StringUtils.join(list2," ,");
+        System.out.println("list2转为字符串：" + list2ToString);
+
+        String list3ToString = StringUtils.join(list3," ,");
+        System.out.println("list3数组：" + list3);
+        System.out.println("list3转为字符串：" + list3ToString);
+
     }
 }

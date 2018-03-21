@@ -11,9 +11,13 @@ import com.viverselftest.po.ExcelExportBigDataPO;
 import com.viverselftest.po.ExcelExportOneToMorePO;
 import com.viverselftest.po.ExcelExportPersonPO;
 import com.viverselftest.po.ExcelExportSimplePO;
+import com.viverselftest.po.word.WordExportTemplateHardPO;
 import com.viverselftest.service.EasyPOIService;
 import com.viverselftest.util.ExcelUtill;
 import com.viverselftest.util.WordUtill;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -48,7 +52,7 @@ public class EasyPOIApi {
 
     @ApiOperation("word模板导出word文件")
     @GetMapping("/word/template/export")
-    public void testWordTemplateImport(HttpServletRequest request, HttpServletResponse response){
+    public void testWordTemplateExport(HttpServletRequest request, HttpServletResponse response){
         Map map = new HashMap();
         map.put("title","word模板简单测试");
         map.put("person","个人介绍");
@@ -82,8 +86,72 @@ public class EasyPOIApi {
 
         //File docx = new File("C:/word/templateSimpleWordExport.docx");
         //File pdf = new File("C:/pdf/wordToPDF.pdf");
+        /*word转pdf*/
         WordUtill.wordConvertToPdf("C:/word/templateSimpleWordExport.docx","C:/pdf/wordToPDF.pdf");
 
+    }
+
+
+    /**
+     *
+     * 失败  封装在list里面失败
+     * @param request
+     * @param response
+     */
+    @ApiOperation("word模板导出word文件-表格")
+    @GetMapping("/word/template/export/complicate")
+    public void testWordTemplateExportHardFail(HttpServletRequest request, HttpServletResponse response) throws IOException, TemplateException {
+        Map<String,Object> map = new HashMap<>();
+
+        List<WordExportTemplateHardPO> list = new ArrayList<>();
+        /*List<Map<String,Object>> mapList = new ArrayList<>();*/
+        for(int i = 0; i < 3; i++){
+            /*Map itemMap = new HashMap();
+            itemMap.put("name","Tony" + i);
+            itemMap.put("age",22 + i);
+            itemMap.put("sex","男i");
+            mapList.add(itemMap);*/
+            WordExportTemplateHardPO item = new WordExportTemplateHardPO();
+            item.setName("Viver" + i);
+            item.setAge(18 + i);
+            item.setSex("女");
+            list.add(item);
+        }
+
+        map.put("title","word模板表格");
+        map.put("tableTitle","table数据如下");
+        map.put("personList",list);
+        /*map.put("personList",mapList);*/
+
+        Configuration configuration = new Configuration();
+        configuration.setDefaultEncoding("utf-8");
+        configuration.setDirectoryForTemplateLoading(new File("C:/"));
+        File outFile = new File("C:/word/test.doc");
+        //获取模板文件
+        Template t =  configuration.getTemplate("templateTable.ftl","utf-8");
+        Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outFile), "utf-8"),10240);
+        //将填充数据填入模板文件并输出到目标文件
+        t.process(map, out);
+        out.close();
+        System.out.println("表格模板导出Word 成功!!! -》test.doc");
+
+        /*try {
+            // 获取模板文件
+            XWPFDocument doc = WordExportUtil.exportWord07("/template/templateWordTable.docx",map);
+
+            //写入文件
+            File file = new File("C:/word");
+            if(!file.exists()){
+                file.mkdirs();
+            }
+            FileOutputStream fos = new FileOutputStream("C:/word/templateWordTableExport.docx");
+            doc.write(fos);
+            fos.close();
+            System.out.println("表格模板导出Word 成功!!! -》templateWordTableExport.docx");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
     }
 
 
