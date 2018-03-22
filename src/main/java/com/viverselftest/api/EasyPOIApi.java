@@ -112,7 +112,7 @@ public class EasyPOIApi {
             mapList.add(itemMap);*/
             WordExportTemplateHardPO item = new WordExportTemplateHardPO();
             item.setName("Viver" + i);
-            item.setAge(18 + i);
+            item.setAge(20 + i);
             item.setSex("女");
             list.add(item);
         }
@@ -124,15 +124,44 @@ public class EasyPOIApi {
 
         Configuration configuration = new Configuration();
         configuration.setDefaultEncoding("utf-8");
-        configuration.setDirectoryForTemplateLoading(new File("C:/"));
+        //方法一：使用本地磁盘上的模板文件
+        //configuration.setDirectoryForTemplateLoading(new File("C:/"));
+
+        //方法二：使用idea中resource下的template文件夹下的模板文件
+/*
+        configuration.setDirectoryForTemplateLoading(new File(getClass().getClassLoader().getResource("template").getFile()));
+*/
+        //  /C:/Users/Congwz/IdeaProjects/VIVERSELFTEST/target/classes/template
+/*
+        System.out.println(getClass().getClassLoader().getResource("template").getFile());
+*/
+
+        //方法三：使用临时文件  拷贝模板文件的副本  最后手动删除临时文件
+        File tempTemplateFile = ExcelUtill.getTempTemplateFile("template/templateTable.ftl");
+        configuration.setDirectoryForTemplateLoading(new File("C:/viverself"));
+
         File outFile = new File("C:/word/test.doc");
         //获取模板文件
-        Template t =  configuration.getTemplate("templateTable.ftl","utf-8");
+        //Template t =  configuration.getTemplate("templateTable.ftl","utf-8");
+        Template t =  configuration.getTemplate(tempTemplateFile.getName(),"utf-8");
         Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outFile), "utf-8"),10240);
         //将填充数据填入模板文件并输出到目标文件
         t.process(map, out);
         out.close();
+
+        //手动删除模板的临时文件（副本）
+        if(tempTemplateFile.exists()){
+            tempTemplateFile.delete();
+            System.out.println("临时模板文件手动删除完成!");
+        }
         System.out.println("表格模板导出Word 成功!!! -》test.doc");
+
+        /*临时模板文件手动删除完成!
+                表格模板导出Word 成功!!! -》test.doc
+        Word转Pdf开始启动..............
+        打开word文档...C:/word/test.doc
+        转换为pdf文档...C:/pdf/test.pdf
+        文档转换完成用时：3235毫秒*/
 
         /*try {
             // 获取模板文件
@@ -151,6 +180,10 @@ public class EasyPOIApi {
         } catch (Exception e) {
             e.printStackTrace();
         }*/
+
+
+        /*word转pdf*/
+        WordUtill.wordConvertToPdf("C:/word/test.doc","C:/pdf/test.pdf");
     }
 
 

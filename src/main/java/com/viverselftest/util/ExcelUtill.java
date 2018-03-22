@@ -47,7 +47,13 @@ public class ExcelUtill {
      * @return
      */
     public static File getTempTemplateFile(String templatePath) throws IOException {
-        File tempFile = File.createTempFile("temp",null);
+        //File tempFile = File.createTempFile("temp",null);
+        File tempFile = File.createTempFile("temp",null,new File("C:\\viverself"));
+
+        //boolean b = tempFile.renameTo(new File(tempFile.getParent()+"/templateTable.ftl"));
+        //System.out.println(b);  //true  改名成功  但是文件是空的
+
+        //ResourcePatternResolver实现PathMatchingResourcePatternResolver，它是基于模式匹配的，默认使用AntPathMatcher进行路径匹配
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         Resource[] resources = resolver.getResources(templatePath);
         if(resources.length == 1){

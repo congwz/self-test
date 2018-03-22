@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -324,7 +325,7 @@ listNoDup2：[a, b, c, 1]*/
     }
 
     public static void main(String[] args) {
-        String order_company = "00201";
+        /*String order_company = "00201";
         String order_company2 = "00010";
         String order_company3 = "01212";
 
@@ -354,7 +355,51 @@ listNoDup2：[a, b, c, 1]*/
 
         String list3ToString = StringUtils.join(list3," ,");
         System.out.println("list3数组：" + list3);
-        System.out.println("list3转为字符串：" + list3ToString);
+        System.out.println("list3转为字符串：" + list3ToString);*/
+
+        /*name：temp4498861985333927274.tmp
+        absolute path：C:\Users\Congwz\AppData\Local\Temp\temp4498861985333927274.tmp
+        path：C:\Users\Congwz\AppData\Local\Temp\temp4498861985333927274.tmp
+        parent：C:\Users\Congwz\AppData\Local\Temp
+        parent file：C:\Users\Congwz\AppData\Local\Temp
+        测试的临时文件删除成功！*/
+
+
+        /*name：test6541670422126954264.txt
+        absolute path：C:\viverself\test6541670422126954264.txt
+        path：C:\viverself\test6541670422126954264.txt
+        parent：C:\viverself
+        parent file：C:\viverself
+        测试的临时文件删除成功！*/
+
+        try {
+            //File tempFile = File.createTempFile("temp",null);
+            //File tempFile = File.createTempFile("test",".txt");
+            File tempFile = File.createTempFile("test",".txt", new File("C:\\viverself\\"));
+            //boolean b = tempFile.renameTo(new File("C:/viverself/123.txt"));
+            //System.out.println(b);  //true  改名成功
+
+            //boolean b = tempFile.renameTo(new File("123.txt"));
+            //System.out.println(b);  //false  改名失败
+
+            //boolean b = tempFile.renameTo(new File(tempFile.getParent()+"/123.txt"));
+            //System.out.println(b);  //true  改名成功
+
+            System.out.println("name：" + tempFile.getName());
+            System.out.println("absolute path：" + tempFile.getAbsolutePath());
+            System.out.println("path：" + tempFile.getPath());
+            System.out.println("parent：" + tempFile.getParent());
+            System.out.println("parent file：" + tempFile.getParentFile());
+            System.out.println("Canonical path：" + tempFile.getCanonicalPath());
+            System.out.println("Canonical file：" + tempFile.getCanonicalFile());
+
+            if(tempFile.exists()){
+                tempFile.delete();
+                System.out.println("测试的临时文件删除成功！");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 }
