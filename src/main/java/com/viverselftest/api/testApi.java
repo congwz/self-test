@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -357,6 +358,13 @@ listNoDup2：[a, b, c, 1]*/
         System.out.println("list3数组：" + list3);
         System.out.println("list3转为字符串：" + list3ToString);*/
 
+
+
+
+
+
+
+
         /*name：temp4498861985333927274.tmp
         absolute path：C:\Users\Congwz\AppData\Local\Temp\temp4498861985333927274.tmp
         path：C:\Users\Congwz\AppData\Local\Temp\temp4498861985333927274.tmp
@@ -372,7 +380,7 @@ listNoDup2：[a, b, c, 1]*/
         parent file：C:\viverself
         测试的临时文件删除成功！*/
 
-        try {
+        /*try {
             //File tempFile = File.createTempFile("temp",null);
             //File tempFile = File.createTempFile("test",".txt");
             File tempFile = File.createTempFile("test",".txt", new File("C:\\viverself\\"));
@@ -399,7 +407,53 @@ listNoDup2：[a, b, c, 1]*/
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }*/
+
+
+
+
+        double d1 = 12.10;
+
+        double d2 = -1.2;
+
+        if(Math.abs(d1-d2) >= 0.1){
+            System.out.println("Error double");
         }
+
+
+        BigDecimal bg1 = new BigDecimal(d1).setScale(2,BigDecimal.ROUND_HALF_UP);
+        BigDecimal bg2 = new BigDecimal(d2).setScale(2,BigDecimal.ROUND_HALF_UP);
+        //String outd1 = bg1.toString();
+        //double outd1 = bg1.doubleValue();
+        //System.out.println(outd1);
+        if(Math.abs(bg1.doubleValue()-bg2.doubleValue()) >= 0.1){
+            System.out.println("BigDecimal Error double");
+        }
+        System.out.println(bg2);
+
+
+        BigDecimal bgsum = new BigDecimal(0);
+        for(int i = 0; i< 10; i++){
+            /*double j = 0.1;
+            bgsum = bgsum.add(new BigDecimal(Double.toString(j)));*/
+
+            BigDecimal j = new BigDecimal(0.1);
+            bgsum = bgsum.add(j);
+
+
+        }
+        bgsum = bgsum.setScale(2,BigDecimal.ROUND_HALF_UP);
+        System.out.println("0.1的求和："+bgsum);
+
+
+        BigDecimal bgHsjeSum = new BigDecimal("0");
+        for(int i = 0; i< 1; i++){
+            if(1 ==1){
+                bgHsjeSum = bgHsjeSum.add(new BigDecimal(Double.toString(-1.17)));
+            }
+        }
+        bgHsjeSum = bgHsjeSum.setScale(2,BigDecimal.ROUND_HALF_UP);
+        System.out.println(bgHsjeSum);
 
     }
 }
