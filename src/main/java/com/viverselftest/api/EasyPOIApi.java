@@ -392,6 +392,32 @@ public class EasyPOIApi {
     }
 
 
+    /**
+     * 数据导出excel-数值存储
+     * @param response
+     * @throws IOException
+     */
+    @ApiOperation("模板导出Excel-数值存储")
+    @GetMapping("/excel/templateNumber/export")
+    public void testTemplateNumberExcelExport(HttpServletResponse response) throws IOException{
+        /*单条数据导出*/
+        TemplateExportParams params = new TemplateExportParams("C:/excel/viverTemplate3.xls");
+        params.setSheetName("person3-single");
+        Map<String,Object> map = new HashMap();
+        map.put("id",1.12);
+        map.put("name","李钟硕");
+        map.put("sex","男");
+        map.put("age",18);
+        map.put("jobDate","2018-04-16");
+        Workbook wb = ExcelExportUtil.exportExcel(params,map);
+
+        FileOutputStream fos2 = new FileOutputStream("C:/excel/templateExport3.xls");
+        wb.write(fos2);
+        fos2.close();
+        System.out.println("模板3导出Excel Success!!! -》templateExport3.xls");
+    }
+
+
     /*============================================大数据导出Excel==========================================*/
     @ApiOperation("大数据导出Excel")
     @GetMapping("/excel/bigData/export")
@@ -402,7 +428,7 @@ public class EasyPOIApi {
         ExportParams exportParams = new ExportParams("大数据导出Excel测试","BigData");
         for(int i = 0; i < 1000000; i++){ // 一百万数据量
             ExcelExportBigDataPO item = new ExcelExportBigDataPO();
-            item.setId(i + "1");
+            item.setId(i);
             item.setWork_code("0"+i);
             item.setUser_name(i+"TestName"+i);
             item.setBirthday(new Date());

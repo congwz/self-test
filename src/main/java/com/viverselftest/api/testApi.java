@@ -1,6 +1,7 @@
 package com.viverselftest.api;
 
 //import com.harmontronics.erp.util.StrUtils;
+import com.viverselftest.po.TestPO;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -412,7 +413,7 @@ listNoDup2：[a, b, c, 1]*/
 
 
 
-        double d1 = 12.10;
+        /*double d1 = 12.10;
 
         double d2 = -1.2;
 
@@ -434,8 +435,8 @@ listNoDup2：[a, b, c, 1]*/
 
         BigDecimal bgsum = new BigDecimal(0);
         for(int i = 0; i< 10; i++){
-            /*double j = 0.1;
-            bgsum = bgsum.add(new BigDecimal(Double.toString(j)));*/
+            *//*double j = 0.1;
+            bgsum = bgsum.add(new BigDecimal(Double.toString(j)));*//*
 
             BigDecimal j = new BigDecimal(0.1);
             bgsum = bgsum.add(j);
@@ -453,7 +454,59 @@ listNoDup2：[a, b, c, 1]*/
             }
         }
         bgHsjeSum = bgHsjeSum.setScale(2,BigDecimal.ROUND_HALF_UP);
-        System.out.println(bgHsjeSum);
+        System.out.println(bgHsjeSum);*/
+
+        /*String str1 = "hello";
+        String str2 = "he" + new String("llo");
+
+        String str3 = new String("hello");
+        System.out.println(str1==str2);  //false
+        System.out.println(str1==str3);  //false*/
+
+
+        List<String> strList = new ArrayList<>();
+
+        strList.add("a");
+        strList.add("b");
+        strList.add("c");
+        strList.add("d");
+
+        strList.remove("a");
+        System.out.println(strList.size() + strList.toString());  //移除成功
+
+        List<TestPO> oList = new ArrayList<>();
+        for(int i = 18; i<= 21; i++){
+            TestPO item = new TestPO();
+            item.setAge(i);
+            item.setName("张聪伟"+ i);
+            item.setSex("女");
+            oList.add(item);
+        }
+
+        oList.remove(1);
+        System.out.println(oList.size() + oList.toString()); //移除成功
+
+        TestPO rmPO = new TestPO();
+        rmPO.setAge(21);
+        rmPO.setName("张聪伟21");
+        rmPO.setSex("女");
+        oList.remove(rmPO);
+        System.out.println(oList.size() + oList.toString());  //移除成功
+
+        //3[b, c, d]
+        //3[TestPO(age=18, name=张聪伟18, sex=女), TestPO(age=20, name=张聪伟20, sex=女), TestPO(age=21, name=张聪伟21, sex=女)]
+        //2[TestPO(age=18, name=张聪伟18, sex=女), TestPO(age=20, name=张聪伟20, sex=女)]
+
+        TestPO rmPO2 = new TestPO();
+        rmPO2.setAge(18);
+        rmPO2.setName("张聪伟18");
+        oList.remove(rmPO2);
+        System.out.println(oList.size() + oList.toString());  //移除不成功哦
+
+
 
     }
+
 }
+
+

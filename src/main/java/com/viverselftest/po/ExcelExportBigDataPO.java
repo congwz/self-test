@@ -8,7 +8,8 @@ import java.util.Date;
 @Data
 public class ExcelExportBigDataPO {
 
-    private String id;
+    @Excel(name = "序号")
+    private int id;
 
     @Excel(name = "工号")
     private String work_code;
