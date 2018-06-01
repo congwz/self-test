@@ -1,12 +1,15 @@
 package com.viverselftest.api;
 
 //import com.harmontronics.erp.util.StrUtils;
+import com.google.common.base.Splitter;
+import com.viverselftest.dto.outputtest.HandlePlanDetailDTO;
 import com.viverselftest.po.TestPO;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -26,6 +29,9 @@ public class testApi {
     public ApiResDTO classCastException(HttpServletRequest req, ClassCastException e, HttpServletResponse res) {
         return ResUtils.successMsg(res.getHeader("str"));
     }*/
+
+    private Logger logger = LoggerFactory.getLogger(testApi.class);
+
 
     /**
      * 测试字符串的返回
@@ -326,8 +332,23 @@ listNoDup2：[a, b, c, 1]*/
 
     }
 
-    public static void main(String[] args) {
-        /*String order_company = "00201";
+
+    /**
+     * 增加/更新/删除计划设置的明细信息
+     * @param detail_dto
+     * @return
+     */
+    @ApiOperation(value = "处理计划设置的明细信息")
+    @PostMapping("/handle-detail")
+    public void handlePlanSetDetail(@RequestBody HandlePlanDetailDTO detail_dto){
+        logger.info("处理计划设置的明细信息：" + "plan_head_id: " + detail_dto.getPlan_head_id() + " plan_status: " + detail_dto.getPlan_status()
+                + " 模块List: "+detail_dto.getModule_list().toString() + " 材料List: " + detail_dto.getMaterial_list().toString());
+    }
+
+
+
+
+    /*String order_company = "00201";
         String order_company2 = "00010";
         String order_company3 = "01212";
 
@@ -464,7 +485,7 @@ listNoDup2：[a, b, c, 1]*/
         System.out.println(str1==str3);  //false*/
 
 
-        List<String> strList = new ArrayList<>();
+        /*List<String> strList = new ArrayList<>();
 
         strList.add("a");
         strList.add("b");
@@ -501,11 +522,31 @@ listNoDup2：[a, b, c, 1]*/
         rmPO2.setAge(18);
         rmPO2.setName("张聪伟18");
         oList.remove(rmPO2);
-        System.out.println(oList.size() + oList.toString());  //移除不成功哦
+        System.out.println(oList.size() + oList.toString());  //移除不成功哦*/
+
+
+        /*String str = "SLDDRW,SLDPRT,PDF,xls,word,";
+        //str = str.replaceAll("(SLDDRW)|(SLDPRT)|(PDF)|(slddrw)|(sldprt)|(pdf)","");
+        *//*if(str.endsWith(",")){
+            str = str.substring(str.lastIndexOf(","),str.length()-1);
+        }*//*
+        List<String> specialTypes = Splitter.on(",").splitToList(str);
+        if(!CollectionUtils.isEmpty(specialTypes)){
+            for(int i = 0; i<specialTypes.size(); i++){
+                String resStr = specialTypes.get(i).replaceAll("(SLDDRW)|(SLDPRT)|(PDF)|(slddrw)|(sldprt)|(pdf)","");
+                if("".equals(resStr)){
+                    specialTypes.remove(i);
+                }
+            }
+        }
+
+        System.out.println(specialTypes.size()+"\t"+specialTypes.toString());*/
 
 
 
-    }
+    /*public static void main(String[] args) {
+
+    }*/
 
 }
 

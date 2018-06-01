@@ -185,6 +185,23 @@
             <version>2.3.23</version>
         </dependency>
 
+
+        <!-- pdf支持中文 -->
+        <!-- https://mvnrepository.com/artifact/com.itextpdf/itext-asian -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itext-asian</artifactId>
+            <version>5.2.0</version>
+        </dependency>
+
+        <!-- spring boot webSocket -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+            <version>1.3.5.RELEASE</version>
+        </dependency>
+
+
     </dependencies>
 
 
