@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+
 @RestController
 @RequestMapping("/api/test/console")
 public class testApi {
@@ -346,6 +347,26 @@ listNoDup2：[a, b, c, 1]*/
         logger.info("处理计划设置的明细信息：" + "plan_head_id: " + detail_dto.getPlan_head_id() + " plan_status: " + detail_dto.getPlan_status()
                 + " 模块List: "+detail_dto.getModule_list().toString() + " 材料List: " + detail_dto.getMaterial_list().toString());
     }
+
+
+    @ApiOperation("AOP测试log输出1")
+    @PostMapping("/test-aop-output1")
+    public void testAOPLogOutPut1(@RequestParam(name = "work_code") String work_code,
+                                 @RequestParam(name = "age") int age,
+                                 @RequestBody HandlePlanDetailDTO detail_dto){
+        System.out.println("测试AOP Log1");
+
+    }
+
+
+    @ApiOperation("AOP测试log输出2")
+    @GetMapping("/test-aop-output2/{work_code}/{age}")
+    public void testAOPLogOutPut2(@PathVariable(name = "work_code") String work_code,
+                                  @PathVariable(name = "age") int age){
+        System.out.println("测试AOP Log2");
+
+    }
+
 
 
 

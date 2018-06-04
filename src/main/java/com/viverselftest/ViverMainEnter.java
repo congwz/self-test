@@ -12,7 +12,6 @@ import java.util.List;
 public class ViverMainEnter {
 
     public static void main(String[] args) throws IOException,SOAPException {
-        System.out.println("test123");
         SpringApplication.run(ViverMainEnter.class,args);
     }
 }
