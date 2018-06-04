@@ -2,6 +2,7 @@ package com.viverselftest.api;
 
 //import com.harmontronics.erp.util.StrUtils;
 import com.google.common.base.Splitter;
+import com.viverselftest.consts.TableTypeConsts;
 import com.viverselftest.dto.outputtest.HandlePlanDetailDTO;
 import com.viverselftest.po.TestPO;
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -348,17 +350,25 @@ listNoDup2：[a, b, c, 1]*/
 
 
 
-    /*String order_company = "00201";
+
+
+    public static void main(String[] args) {
+
+        /*一、String转换成int类型*/
+
+        /*String order_company = "00201";
         String order_company2 = "00010";
         String order_company3 = "01212";
 
-        System.out.println(Integer.valueOf(order_company).toString());
-        System.out.println(Integer.valueOf(order_company2).toString());
-        System.out.println(Integer.valueOf(order_company3).toString());
+        System.out.println(Integer.valueOf(order_company).toString());   //201
+        System.out.println(Integer.valueOf(order_company2).toString());  //10
+        System.out.println(Integer.valueOf(order_company3).toString());  //1212
 
-        System.out.println("\n\n"+ "===============================");
 
-        List<String> list = new ArrayList<>();
+
+        /*二、List转换成String并用,分割连接*/
+
+        /*List<String> list = new ArrayList<>();
         List<String> list2 = new ArrayList<>();
         List<String> list3 = new ArrayList<>();
         String s1 = "http://www.baidu.com";
@@ -371,36 +381,60 @@ listNoDup2：[a, b, c, 1]*/
         list2.add(s4);
 
         String listToString = StringUtils.join(list," ,");
-        System.out.println("list转为字符串：" + listToString);
+        System.out.println("list转为字符串：" + listToString);  //list转为字符串：http://www.baidu.com ,http://www.qq.cn ,https://shanghai.gov.cn
 
         String list2ToString = StringUtils.join(list2," ,");
-        System.out.println("list2转为字符串：" + list2ToString);
+        System.out.println("list2转为字符串：" + list2ToString);  //list2转为字符串：https://test.harmtronics.com
 
         String list3ToString = StringUtils.join(list3," ,");
-        System.out.println("list3数组：" + list3);
-        System.out.println("list3转为字符串：" + list3ToString);*/
+        System.out.println("list3数组：" + list3);  //list3数组：[]
+        System.out.println("list3转为字符串：" + list3ToString); //list3转为字符串：  */
+
+
+
+
+        /*三、测试List元素移除--->通过下标/索引移除 or 通过数组元素（完全一样的数组元素才会移除成功）移除*/
+
+        /*List<String> strList = new ArrayList<>();
+
+        strList.add("a");
+        strList.add("b");
+        strList.add("c");
+        strList.add("d");
+
+        strList.remove("a");
+        System.out.println(strList.size() + strList.toString());  //移除成功 //移除成功  //3[b, c, d]
+
+        List<TestPO> oList = new ArrayList<>();
+        for(int i = 18; i<= 21; i++){
+            TestPO item = new TestPO();
+            item.setAge(i);
+            item.setName("张聪伟"+ i);
+            item.setSex("女");
+            oList.add(item);
+        }
+
+        oList.remove(1);
+        System.out.println(oList.size() + oList.toString()); //3[TestPO(age=18, name=张聪伟18, sex=女), TestPO(age=20, name=张聪伟20, sex=女), TestPO(age=21, name=张聪伟21, sex=女)]
+
+        TestPO rmPO = new TestPO();
+        rmPO.setAge(21);
+        rmPO.setName("张聪伟21");
+        rmPO.setSex("女");
+        oList.remove(rmPO);
+        System.out.println(oList.size() + oList.toString());  //移除成功  //2[TestPO(age=18, name=张聪伟18, sex=女), TestPO(age=20, name=张聪伟20, sex=女)]
+
+        TestPO rmPO2 = new TestPO();
+        rmPO2.setAge(18);
+        rmPO2.setName("张聪伟18");
+        oList.remove(rmPO2);
+        System.out.println(oList.size() + oList.toString());  //移除不成功哦*/
 
 
 
 
 
-
-
-
-        /*name：temp4498861985333927274.tmp
-        absolute path：C:\Users\Congwz\AppData\Local\Temp\temp4498861985333927274.tmp
-        path：C:\Users\Congwz\AppData\Local\Temp\temp4498861985333927274.tmp
-        parent：C:\Users\Congwz\AppData\Local\Temp
-        parent file：C:\Users\Congwz\AppData\Local\Temp
-        测试的临时文件删除成功！*/
-
-
-        /*name：test6541670422126954264.txt
-        absolute path：C:\viverself\test6541670422126954264.txt
-        path：C:\viverself\test6541670422126954264.txt
-        parent：C:\viverself
-        parent file：C:\viverself
-        测试的临时文件删除成功！*/
+        /*四、文件创建时的文件名、路径相关测试*/
 
         /*try {
             //File tempFile = File.createTempFile("temp",null);
@@ -431,33 +465,51 @@ listNoDup2：[a, b, c, 1]*/
             e.printStackTrace();
         }*/
 
+        /*
+        name：temp4498861985333927274.tmp
+        absolute path：C:\Users\Congwz\AppData\Local\Temp\temp4498861985333927274.tmp
+        path：C:\Users\Congwz\AppData\Local\Temp\temp4498861985333927274.tmp
+        parent：C:\Users\Congwz\AppData\Local\Temp
+        parent file：C:\Users\Congwz\AppData\Local\Temp
+        测试的临时文件删除成功！
+        **/
 
 
+        /*
+        name：test6108646453893488455.txt
+        absolute path：C:\viverself\test6108646453893488455.txt
+        path：C:\viverself\test6108646453893488455.txt
+        parent：C:\viverself
+        parent file：C:\viverself
+        Canonical path：C:\viverself\test6108646453893488455.txt
+        Canonical file：C:\viverself\test6108646453893488455.txt
+        测试的临时文件删除成功！
+        **/
+
+
+
+        /*五、测试BigDecimal用于取绝对值判断、负数的加减*/
 
         /*double d1 = 12.10;
-
         double d2 = -1.2;
 
         if(Math.abs(d1-d2) >= 0.1){
-            System.out.println("Error double");
+            System.out.println(Math.abs(d1-d2));  //13.299999999999999
+            System.out.println("Error double");   //Error double
         }
-
 
         BigDecimal bg1 = new BigDecimal(d1).setScale(2,BigDecimal.ROUND_HALF_UP);
         BigDecimal bg2 = new BigDecimal(d2).setScale(2,BigDecimal.ROUND_HALF_UP);
-        //String outd1 = bg1.toString();
-        //double outd1 = bg1.doubleValue();
-        //System.out.println(outd1);
-        if(Math.abs(bg1.doubleValue()-bg2.doubleValue()) >= 0.1){
-            System.out.println("BigDecimal Error double");
-        }
-        System.out.println(bg2);
 
+        if(Math.abs(bg1.doubleValue()-bg2.doubleValue()) >= 0.1){
+            System.out.println("BigDecimal Error double");  //BigDecimal Error double
+        }
+        System.out.println(bg2);  //-1.20
 
         BigDecimal bgsum = new BigDecimal(0);
         for(int i = 0; i< 10; i++){
-            *//*double j = 0.1;
-            bgsum = bgsum.add(new BigDecimal(Double.toString(j)));*//*
+            //double j = 0.1;
+            //bgsum = bgsum.add(new BigDecimal(Double.toString(j)));
 
             BigDecimal j = new BigDecimal(0.1);
             bgsum = bgsum.add(j);
@@ -465,8 +517,7 @@ listNoDup2：[a, b, c, 1]*/
 
         }
         bgsum = bgsum.setScale(2,BigDecimal.ROUND_HALF_UP);
-        System.out.println("0.1的求和："+bgsum);
-
+        System.out.println("0.1的求和："+bgsum);  //0.1的求和：1.00
 
         BigDecimal bgHsjeSum = new BigDecimal("0");
         for(int i = 0; i< 1; i++){
@@ -475,78 +526,43 @@ listNoDup2：[a, b, c, 1]*/
             }
         }
         bgHsjeSum = bgHsjeSum.setScale(2,BigDecimal.ROUND_HALF_UP);
-        System.out.println(bgHsjeSum);*/
-
-        /*String str1 = "hello";
-        String str2 = "he" + new String("llo");
-
-        String str3 = new String("hello");
-        System.out.println(str1==str2);  //false
-        System.out.println(str1==str3);  //false*/
+        System.out.println(bgHsjeSum); //-1.17  */
 
 
-        /*List<String> strList = new ArrayList<>();
 
-        strList.add("a");
-        strList.add("b");
-        strList.add("c");
-        strList.add("d");
+        /*六、java的反射*/
+        /*Field[] fields = TableTypeConsts.class.getFields();
+        List<String> list = new ArrayList<>();
+        List<String> list2 = new ArrayList<>();
+        Map map = new HashMap();
+        for (Field field : fields) {
+            try {
+                Object val = field.get(TableTypeConsts.class);
+                list.add((String) val);  //添加field值
 
-        strList.remove("a");
-        System.out.println(strList.size() + strList.toString());  //移除成功
-
-        List<TestPO> oList = new ArrayList<>();
-        for(int i = 18; i<= 21; i++){
-            TestPO item = new TestPO();
-            item.setAge(i);
-            item.setName("张聪伟"+ i);
-            item.setSex("女");
-            oList.add(item);
-        }
-
-        oList.remove(1);
-        System.out.println(oList.size() + oList.toString()); //移除成功
-
-        TestPO rmPO = new TestPO();
-        rmPO.setAge(21);
-        rmPO.setName("张聪伟21");
-        rmPO.setSex("女");
-        oList.remove(rmPO);
-        System.out.println(oList.size() + oList.toString());  //移除成功
-
-        //3[b, c, d]
-        //3[TestPO(age=18, name=张聪伟18, sex=女), TestPO(age=20, name=张聪伟20, sex=女), TestPO(age=21, name=张聪伟21, sex=女)]
-        //2[TestPO(age=18, name=张聪伟18, sex=女), TestPO(age=20, name=张聪伟20, sex=女)]
-
-        TestPO rmPO2 = new TestPO();
-        rmPO2.setAge(18);
-        rmPO2.setName("张聪伟18");
-        oList.remove(rmPO2);
-        System.out.println(oList.size() + oList.toString());  //移除不成功哦*/
-
-
-        /*String str = "SLDDRW,SLDPRT,PDF,xls,word,";
-        //str = str.replaceAll("(SLDDRW)|(SLDPRT)|(PDF)|(slddrw)|(sldprt)|(pdf)","");
-        *//*if(str.endsWith(",")){
-            str = str.substring(str.lastIndexOf(","),str.length()-1);
-        }*//*
-        List<String> specialTypes = Splitter.on(",").splitToList(str);
-        if(!CollectionUtils.isEmpty(specialTypes)){
-            for(int i = 0; i<specialTypes.size(); i++){
-                String resStr = specialTypes.get(i).replaceAll("(SLDDRW)|(SLDPRT)|(PDF)|(slddrw)|(sldprt)|(pdf)","");
-                if("".equals(resStr)){
-                    specialTypes.remove(i);
-                }
+                String nameVal = field.getName();
+                list2.add(nameVal);  //添加field属性名称
+                map.put(nameVal,val);  //key:field属性名称 value:field值
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
             }
         }
 
-        System.out.println(specialTypes.size()+"\t"+specialTypes.toString());*/
+        System.out.println(list.toString());  //[unprocess_supply, order_details, auto_category, order_handle, offer_info, submitting_purchase_detail, submitting_purchase_nodetail, inquiry_processing, all_orders, review_nodetails, review_details]
+
+        System.out.println(list2.toString());  //[UNPROCESS_SUPPLY, ORDER_DETAILS, AUTO_CATEGORY, ORDER_HANDLE, OFFER_INFO, SUBMITTING_PURCHASE_DETAIL, SUBMITTING_PURCHASE_NODETAIL, INQUIRY_PROCESSING, ALL_ORDERS, REVIEW_NODETAILS, REVIEW_DETAILS]
+
+        System.out.println(map.toString()); //{SUBMITTING_PURCHASE_DETAIL=submitting_purchase_detail, ORDER_DETAILS=order_details, ALL_ORDERS=all_orders, INQUIRY_PROCESSING=inquiry_processing, ORDER_HANDLE=order_handle, SUBMITTING_PURCHASE_NODETAIL=submitting_purchase_nodetail, UNPROCESS_SUPPLY=unprocess_supply, REVIEW_DETAILS=review_details, OFFER_INFO=offer_info, REVIEW_NODETAILS=review_nodetails, AUTO_CATEGORY=auto_category}*/
 
 
 
-    /*public static void main(String[] args) {
 
-    }*/
+        /*七、*/
+
+
+
+
+    }
 
 }
 
