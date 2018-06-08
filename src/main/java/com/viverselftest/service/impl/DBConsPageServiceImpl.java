@@ -49,4 +49,17 @@ public class DBConsPageServiceImpl implements DBConsPageService {
     public List<MapOneToMoreAccountDTO> mybatisOneToMoreAccount() {
         return dbConsPageMapper.mybatisOneToMoreAccount();
     }
+
+
+    /**
+     * 测试mybatis的<if>标签中的函数功能
+     * @param str
+     * @return
+     */
+    @Override
+    public int mybatisIfTagFunction(String str) {
+        int count = dbConsPageMapper.findContainsStrCount(str);
+
+        return count;
+    }
 }

@@ -30,4 +30,11 @@ public interface DBConsPageMapper {
      * @return
      */
     List<MapOneToMoreAccountDTO> mybatisOneToMoreAccount();
+
+    /**
+     * 合计包含str
+     * @param str
+     * @return
+     */
+    int findContainsStrCount(@Param("str") String str);
 }

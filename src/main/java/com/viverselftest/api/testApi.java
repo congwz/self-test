@@ -4,7 +4,9 @@ package com.viverselftest.api;
 import com.google.common.base.Splitter;
 import com.viverselftest.consts.TableTypeConsts;
 import com.viverselftest.dto.outputtest.HandlePlanDetailDTO;
+import com.viverselftest.po.TestLowerOrUpperPO;
 import com.viverselftest.po.TestPO;
+import com.viverselftest.util.CryptUtils;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.security.Key;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -368,6 +371,19 @@ listNoDup2：[a, b, c, 1]*/
     }
 
 
+    @ApiOperation("测试swagger上显示大小写")
+    @GetMapping("/test-swagger-show")
+    public TestLowerOrUpperPO testSwaggerLowerOrUpperShow(){
+        TestLowerOrUpperPO res = new TestLowerOrUpperPO();
+        res.setIds("123");
+        res.setUserNo("01000207");
+        res.setUserName("张聪伟");
+        res.setDepartment_bianHao("1048");
+        res.setDepartment_mingCheng("IT部");
+        return res;
+    }
+
+
 
 
 
@@ -578,12 +594,73 @@ listNoDup2：[a, b, c, 1]*/
 
 
 
-        /*七、*/
+        /*七、测试字符串转double*/
+        /*String a = "0.12";
+        String b = "2.12";
+
+        String s = ".55";  //转换成double的时候，小数点前面自动补0
+
+        double c = 0.99;
+        double d = 2.99;
+        int e = 10;
+        double d1 = Double.parseDouble(a);
+        System.out.println(d1);  //0.12
+        double d2 = Double.parseDouble(b);
+        System.out.println(d2);   //2.12
+        System.out.println(c);   //0.99
+        System.out.println(d);   //2.99
+        System.out.println(e);  //10
+
+        System.out.println(Double.parseDouble(s));  //0.55*/
+
+
+
+        /*八、java中的对称加密算法：AES、DES*/
+        /*String b = "123456";
+        byte[] barry = b.getBytes();
+        for(int i = 0; i< barry.length; i++){
+            System.out.print(barry[i] + "  ");  //49  50  51  52  53  54
+        }
+        try {
+            System.out.println(getKey(barry));  //javax.crypto.spec.SecretKeySpec@18704
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(CryptUtils.encrypt("abc123"));             //98d9a038503205d1
+        System.out.println(CryptUtils.decrypt("98d9a038503205d1"));  //abc123
+
+        *//*DES加密、解密字符串算法(java版)*//*
+        System.out.println(CryptUtils.encrypt("dey-1-23nfd-dfdj:^@f"));             //5593a17201664d8d25aa27fbe15845c7dea947d951a497ff
+        System.out.println(CryptUtils.decrypt("5593a17201664d8d25aa27fbe15845c7dea947d951a497ff"));  //dey-1-23nfd-dfdj:^@f*/
 
 
 
 
+        /*九、*/
+
+
+
+    }//main
+
+
+    private static Key getKey(byte[] arrBTmp) throws Exception {
+        // 创建一个空的8位字节数组（默认值为0）
+        byte[] arrB = new byte[8];
+
+        // 将原始字节数组转换为8位
+        for (int i = 0; i < arrBTmp.length && i < arrB.length; i++) {
+            arrB[i] = arrBTmp[i];
+        }
+
+        // 生成密钥
+        Key key = new javax.crypto.spec.SecretKeySpec(arrB, "DES");
+        return key;
     }
+
+
+
+
 
 }
 

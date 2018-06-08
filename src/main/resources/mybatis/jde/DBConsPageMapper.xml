@@ -48,4 +48,13 @@
     </select>
 
 
+    <!-- indexOf() 测试字符串包含 【*敏 or 董敏敏  返回的indexOf的值都是1】  【*聪返回indexOf的值是-1】 -->
+    <select id="findContainsStrCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(1) from PA_VIVER_TEST
+        <if test="str != null and str != '' and str.indexOf('敏') == -1">
+            where user_name like replace(#{str},'*','%')
+        </if>
+    </select>
+
+
 </mapper>

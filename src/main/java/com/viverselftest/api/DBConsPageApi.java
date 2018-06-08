@@ -76,5 +76,17 @@ public class DBConsPageApi {
     }
 
 
+    /**
+     * 测试mybatis的<if></if>标签中的函数功能
+     * @param str
+     * @return
+     */
+    @ApiOperation(value = "mybatis的<if>标签函数")
+    @GetMapping("/mybatis/if/tag/function/{contain_str}")
+    public ServerResponse mybatisIfTagFunction(@PathVariable(name = "contain_str") String str){
+        return ServerResponse.successCodeMsgData("<if>标签function测试",dbConsPageService.mybatisIfTagFunction(str));
+    }
+
+
 
 }

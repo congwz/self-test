@@ -18,4 +18,13 @@ public interface DBConsPageService {
 
     List<MapOneToMoreAccountDTO> mybatisOneToMoreAccount();
 
+    /**
+     * 测试mybatis的<if>标签中的函数功能
+     * @param str
+     * @return
+     */
+    int mybatisIfTagFunction(String str);
+
+
+
 }

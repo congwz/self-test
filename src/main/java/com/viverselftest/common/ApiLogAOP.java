@@ -1,5 +1,6 @@
 package com.viverselftest.common;
 
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -46,7 +47,9 @@ public class ApiLogAOP {
             //logger.info("args: " + o.getClass() + "  " + o.toString());
             args += o.toString() + " ";
         }
-        logger.info("args: " + args.trim());
+        if(!StringUtils.isEmpty(args.trim())){
+            logger.info("args: " + args.trim());
+        }
 
     }
 }
