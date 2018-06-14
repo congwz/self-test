@@ -6,11 +6,13 @@ import com.viverselftest.consts.TableTypeConsts;
 import com.viverselftest.dto.outputtest.HandlePlanDetailDTO;
 import com.viverselftest.po.TestLowerOrUpperPO;
 import com.viverselftest.po.TestPO;
+import com.viverselftest.service.TestService;
 import com.viverselftest.util.CryptUtils;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +36,10 @@ public class testApi {
     @ResponseBody
     public ApiResDTO classCastException(HttpServletRequest req, ClassCastException e, HttpServletResponse res) {
         return ResUtils.successMsg(res.getHeader("str"));
-    }*/
+   }*/
+
+    @Autowired
+    private TestService testService;
 
     private Logger logger = LoggerFactory.getLogger(testApi.class);
 
@@ -384,6 +389,13 @@ listNoDup2：[a, b, c, 1]*/
     }
 
 
+    @ApiOperation("测试property文件与覆盖")
+    @GetMapping("/test-value-properties")
+    public Map<String,String> testValueProperties(){
+        return testService.testValueProperties();
+    }
+
+
 
 
 
@@ -432,40 +444,67 @@ listNoDup2：[a, b, c, 1]*/
 
         /*三、测试List元素移除--->通过下标/索引移除 or 通过数组元素（完全一样的数组元素才会移除成功）移除*/
 
-        /*List<String> strList = new ArrayList<>();
+//        List<String> strList = new ArrayList<>();
+//
+//        strList.add("a");
+//        strList.add("b");
+//        strList.add("c");
+//        strList.add("d");
+//
+//        strList.remove("a");
+//        System.out.println(strList.size() + strList.toString());  //移除成功 //移除成功  //3[b, c, d]
+//
+//        List<TestPO> oList = new ArrayList<>();
+//        for(int i = 18; i<= 21; i++){
+//            TestPO item = new TestPO();
+//            item.setAge(i);
+//            item.setName("张聪伟"+ i);
+//            item.setSex("女");
+//            oList.add(item);
+//        }
+//
+//        oList.remove(1);
+//        System.out.println(oList.size() + oList.toString()); //3[TestPO(age=18, name=张聪伟18, sex=女), TestPO(age=20, name=张聪伟20, sex=女), TestPO(age=21, name=张聪伟21, sex=女)]
+//
+//        TestPO rmPO = new TestPO();
+//        rmPO.setAge(21);
+//        rmPO.setName("张聪伟21");
+//        rmPO.setSex("女");
+//        oList.remove(rmPO);
+//        System.out.println(oList.size() + oList.toString());  //移除成功  //2[TestPO(age=18, name=张聪伟18, sex=女), TestPO(age=20, name=张聪伟20, sex=女)]
+//
+//        TestPO rmPO2 = new TestPO();
+//        rmPO2.setAge(18);
+//        rmPO2.setName("张聪伟18");
+//        oList.remove(rmPO2);
+//        System.out.println(oList.size() + oList.toString());  //移除不成功哦
+//
+//        System.out.println("/*********************************************************/");
+//        List<String> nullOrEmptyList = new ArrayList<>();
+//        nullOrEmptyList.add("");
+//        nullOrEmptyList.add("XX");
+//        nullOrEmptyList.add("");
+//        nullOrEmptyList.add("null");
+//        nullOrEmptyList.add(null);
+//        nullOrEmptyList.add("yy");
+//        nullOrEmptyList.add(null);
+//        nullOrEmptyList.add("         ");
+//        //8	[, XX, , null, null, yy, null,          ]
+//        System.out.println(nullOrEmptyList.size() + "\t" + nullOrEmptyList.toString());
+//
+//        //移除list中所有null对象
+//        nullOrEmptyList.removeAll(Collections.singleton(null));
+//        //6	[, XX, , null, yy,          ]
+//        System.out.println(nullOrEmptyList.size() + "\t" + nullOrEmptyList);
+//
+//        List<String> tempList = new ArrayList<>();
+//        tempList.add("");
+//        tempList.add("  ");
+//        //移除list中所有""和"  "对象(空格严格匹配才会移除)
+//        nullOrEmptyList.removeAll(tempList);
+//        //4	[XX, null, yy,          ]
+//        System.out.println(nullOrEmptyList.size() + "\t" + nullOrEmptyList);
 
-        strList.add("a");
-        strList.add("b");
-        strList.add("c");
-        strList.add("d");
-
-        strList.remove("a");
-        System.out.println(strList.size() + strList.toString());  //移除成功 //移除成功  //3[b, c, d]
-
-        List<TestPO> oList = new ArrayList<>();
-        for(int i = 18; i<= 21; i++){
-            TestPO item = new TestPO();
-            item.setAge(i);
-            item.setName("张聪伟"+ i);
-            item.setSex("女");
-            oList.add(item);
-        }
-
-        oList.remove(1);
-        System.out.println(oList.size() + oList.toString()); //3[TestPO(age=18, name=张聪伟18, sex=女), TestPO(age=20, name=张聪伟20, sex=女), TestPO(age=21, name=张聪伟21, sex=女)]
-
-        TestPO rmPO = new TestPO();
-        rmPO.setAge(21);
-        rmPO.setName("张聪伟21");
-        rmPO.setSex("女");
-        oList.remove(rmPO);
-        System.out.println(oList.size() + oList.toString());  //移除成功  //2[TestPO(age=18, name=张聪伟18, sex=女), TestPO(age=20, name=张聪伟20, sex=女)]
-
-        TestPO rmPO2 = new TestPO();
-        rmPO2.setAge(18);
-        rmPO2.setName("张聪伟18");
-        oList.remove(rmPO2);
-        System.out.println(oList.size() + oList.toString());  //移除不成功哦*/
 
 
 
