@@ -676,7 +676,27 @@ listNoDup2：[a, b, c, 1]*/
 
 
 
-        /*九、*/
+        /*九、double转String 会显示科学技术样式的数值，通过DecimalFormat，可以让结果是正常数值*/
+        /*double a = 10400055.45;
+        DecimalFormat format = new DecimalFormat("#.00");  //四舍五入，小数点后面保留2位
+        String aMoney = format.format(a);
+        System.out.println(Double.toString(a));  //1.040005545E7【科学计数法】
+        System.out.println(aMoney);  //10400055.45
+
+        //使用BigDecimal进行double转String
+        BigDecimal b = new BigDecimal(Double.toString(a));
+        System.out.println(b.setScale(2,BigDecimal.ROUND_HALF_UP).toString());  //10400055.45*/
+
+
+        /*十、String用,连接*/
+        /*List<String> mail = new ArrayList<>();
+        //添加采购单发送邮件给供应商的操作记录
+        for(int x = 0; x < 3; x++){
+            mail.add("congwz@outlook.com" + x);
+        }
+        String emailAddr = String.join(",",mail); //congwz@outlook.com0,congwz@outlook.com1,congwz@outlook.com2
+        System.out.println(emailAddr);*/
+
 
 
 
