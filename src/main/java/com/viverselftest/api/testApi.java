@@ -13,8 +13,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -696,6 +699,53 @@ listNoDup2：[a, b, c, 1]*/
         }
         String emailAddr = String.join(",",mail); //congwz@outlook.com0,congwz@outlook.com1,congwz@outlook.com2
         System.out.println(emailAddr);*/
+
+        /*十一、测试list赋值后remove*/
+        /*List<String> a = new ArrayList<>();
+        a.add("a");
+        a.add("b");
+        a.add("c");
+        List<String> b = new ArrayList<>();
+        b.add("C");  //这样才不会影响List a的元素
+
+        *//*b = a;
+        b.remove("a");
+        b.remove("b"); //这样也会同时remove List a中的元素 *//*
+
+        System.out.println(a.size() + "\t" + a.toString());
+        System.out.println(b.size() + "\t" + b.toString());*/
+
+
+        /*BigDecimal a = new BigDecimal("0");
+
+
+        a = a.add(new BigDecimal("0"));
+        a = a.add(new BigDecimal("0"));
+        a = a.add(new BigDecimal("1.00"));
+        a = a.add(new BigDecimal("3.03"));
+
+        System.out.println(a.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue());*/
+
+        String emailAdminUser = "viver.zhang";
+        //发送邮件
+        String content = "发送邮件-----Viver123";
+        //发邮件给管理员
+        String url = "https://emailapi.harmontronics.com/email/" +
+                "?token=email_test_token" +
+                "&username=" + emailAdminUser +
+                "&subject=harmontronics-test for send email." +
+                "&content=" + content;
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
+        String result = responseEntity.getBody();
+        System.out.println(result);  // {"result": 1}
+        //HttpStatus statusCode = responseEntity.getStatusCode();
+        int statusCodeValue = responseEntity.getStatusCodeValue();
+        if (statusCodeValue != 200) {
+            System.out.println("send email fail.");
+        }else {
+            System.out.println("send email success."); // send email success.
+        }
 
 
 

@@ -1,6 +1,6 @@
-package com.harmontronics.erp.util;
+package com.viverselftest.util;
 
-import com.harmontronics.erp.exception.ErrorException;
+import com.viverselftest.exception.ErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
