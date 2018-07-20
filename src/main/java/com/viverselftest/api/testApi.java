@@ -2,6 +2,7 @@ package com.viverselftest.api;
 
 //import com.harmontronics.erp.util.StrUtils;
 import com.google.common.base.Splitter;
+import com.viverselftest.common.ServerResponse;
 import com.viverselftest.consts.TableTypeConsts;
 import com.viverselftest.dao.jde.InquireOnlineMapper;
 import com.viverselftest.dto.TestNullOrEmptyDTO;
@@ -414,8 +415,8 @@ listNoDup2：[a, b, c, 1]*/
      */
     @ApiOperation("测试前端传参时null和空字符串的区别")
     @PostMapping("/test-nullOrEmpty-Param")
-    public String testNullOrEmptyParam(@RequestBody List<TestNullOrEmptyDTO> add_dto){
-        return testService.testNullOrEmptyParam(add_dto);
+    public ServerResponse testNullOrEmptyParam(@RequestBody List<TestNullOrEmptyDTO> add_dto){
+        return ServerResponse.successCodeMsgData("添加成功",testService.testNullOrEmptyParam(add_dto));
     }
 
 
