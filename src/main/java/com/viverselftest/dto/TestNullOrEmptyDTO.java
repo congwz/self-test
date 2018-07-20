@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * Created by Congwz on 2018/7/20.
  */
-//@Data
+@Data
 public class TestNullOrEmptyDTO {
 
     //部门编号
@@ -17,7 +17,7 @@ public class TestNullOrEmptyDTO {
     //用户编号
     private String userno;
 
-    public String getPartno() {
+    /*public String getPartno() {
         return partno;
     }
 
@@ -40,5 +40,14 @@ public class TestNullOrEmptyDTO {
     public void setUserno(String userno) {
         //this.userno = userno == null ? "" : userno ;
         this.userno = userno;
-    }
+    }*/
+
+    /*@Override
+    public String toString() {
+        return "TestNullOrEmptyDTO{" +
+                "partno='" + partno + '\'' +
+                ", partname='" + partname + '\'' +
+                ", userno='" + userno + '\'' +
+                '}';
+    }*/
 }

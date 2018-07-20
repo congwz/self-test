@@ -416,6 +416,9 @@ listNoDup2：[a, b, c, 1]*/
     @ApiOperation("测试前端传参时null和空字符串的区别")
     @PostMapping("/test-nullOrEmpty-Param")
     public ServerResponse testNullOrEmptyParam(@RequestBody List<TestNullOrEmptyDTO> add_dto){
+        for(int i =0; i < add_dto.size(); i++){
+            System.out.println("userno: " + add_dto.get(i).getUserno());
+        }
         return ServerResponse.successCodeMsgData("添加成功",testService.testNullOrEmptyParam(add_dto));
     }
 
