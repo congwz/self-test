@@ -3,4 +3,24 @@
 <mapper namespace="com.viverselftest.dao.jde.testMapper">
 
 
+
+    <!-- addNullOrEmpty -->
+    <insert id="addNullOrEmpty" parameterType="java.util.List">
+        insert into PA_VIVER_TEST_DEPARTMENT
+        (
+        partno,
+        partname,
+        userno
+        )
+        <foreach collection="list" item="item" index="index" separator="union" open="(" close=")">
+            (
+            select
+            #{item.partno},
+            #{item.partname},
+            #{item.userno}
+            from dual
+            )
+        </foreach>
+    </insert>
+
 </mapper>

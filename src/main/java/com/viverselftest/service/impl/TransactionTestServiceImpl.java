@@ -1,13 +1,21 @@
 package com.viverselftest.service.impl;
 
 import com.viverselftest.dao.jde.TransactionTestMapper;
+import com.viverselftest.dto.inquireonline.hcSupplierQuotedGenDTO;
 import com.viverselftest.exception.ErrorDataException;
+import com.viverselftest.exception.ErrorException;
 import com.viverselftest.service.TransactionTestService;
 import com.viverselftest.util.ErrorMsgUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 /**
  * Created by Congwz on 2018/7/17.
@@ -36,4 +44,8 @@ public class TransactionTestServiceImpl implements TransactionTestService {
         }
 
     }
+
+
+
+
 }

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viverselftest.dao.jde.InquireOnlineMapper">
+
+
+
+    <resultMap id="hcSupplierHPD" type="com.viverselftest.dto.inquireonline.hcSupplierQuotedGenDTO">
+        <id property="qpnumber" column="QPNumber" />
+
+        <result property="qpcompanyCode" column="QPCompanyCode"/>
+        <result property="qpcompanyName" column="QPCompanyName"/>
+        <result property="qpsendAddressCode" column="qpsendAddressCode"/>
+        <result property="qpsendAddress" column="qpsendAddress"/>
+        <result property="qpcurrency" column="QPCurrency"/>
+        <result property="qporiginator" column="QPOriginator"/>
+        <result property="qporiginalDate" column="qporiginalDate"/>
+        <result property="qpendDate" column="QPEndDate"/>
+        <result property="qpbranchCode" column="QPBranchCode"/>
+        <result property="qpmaterialType" column="QPMaterialType"/>
+        <result property="qpurgent" column="QPURGENT"/>
+
+        <collection property="suppliersCode" ofType="java.lang.String">
+            <result property="qpslsuppliercode" column="QPSLSupplierCode" />
+        </collection>
+
+        <collection property="details" ofType="com.viverselftest.dto.inquireonline.hcSupplierQuotedGenDetailDTO">
+            <result property="qpddepartmentCode" column="QPDDepartmentCode" />
+            <result property="qpddepartmentName" column="QPDDepartmentName" />
+            <result property="qpdfindNum" column="QPDFindNum" />
+            <result property="qpditemNo" column="QPDItemNo" />
+            <result property="qpditemName" column="QPDItemName" />
+            <result property="qpdrequiredDate" column="QPDRequiredDate" />
+            <result property="qpditemUnit" column="QPDItemUnit" />
+            <result property="qpdmanufactureNo" column="QPDManufactureNo" />
+            <result property="qpdmanufactureName" column="QPDManufactureName" />
+            <result property="qpdspec" column="QPDSpec" />
+            <result property="qpdrev" column="QPDRev" />
+            <result property="qpddrawNo" column="QPDDrawNo" />
+            <result property="qpdqty" column="qpdqty" />
+            <result property="qpdrequireBillNo" column="QPDRequireBillNo" />
+            <result property="qpdrbnfindNum" column="QPDRBNFindNum" />
+            <result property="qpdcompanyCode" column="QPDCompanyCode" />
+            <result property="qpdcompanyName" column="QPDCompanyName" />
+            <result property="qpdstandardCode" column="QPDStandardCode" />
+            <result property="qpdstandardName" column="QPDStandardName" />
+            <result property="qpdcustomCode" column="QPDCustomCode" />
+            <result property="qpdcustomName" column="QPDCustomName" />
+            <result property="qpdmodule" column="QPDModule" />
+            <result property="qpdisUrgent" column="QPDIsUrgent" />
+        </collection>
+    </resultMap>
+
+
+
+    <!--=======================================对接供应商报价系统==========================================-->
+
+    <!-- 查询生成的报价信息 -->
+    <select id="findHcSupplierQuotedInfo" parameterType="com.viverselftest.dto.inquireonline.InquireOnlineHdDTO" resultMap="hcSupplierHPD">
+        select pqh.qpnumber,pqh.qpcompanycode,pqh.qpcompanyname,pqh.qpsendaddresscode,pqh.qpsendaddress,
+        pqh.qpcurrency,pqh.qporiginator,pqh.qporiginaldate,pqh.qpenddate,pqh.qpbranchcode,pqh.qpmaterialtype,pqh.qpurgent,
+        pqhs.qpslsuppliercode,pqd.qpddepartmentcode,pqd.qpddepartmentname,pqd.qpdfindnum,pqd.qpditemno,pqd.qpditemname,pqd.qpdrequireddate,
+        pqd.qpditemunit,pqd.qpdmanufactureno,pqd.qpdmanufacturename,pqd.qpdspec,pqd.qpdrev,pqd.qpddrawno,pqd.qpdqty,pqd.qpdrequirebillno,
+        pqd.qpdrbnfindnum,pqd.qpdcompanycode,pqd.qpdcompanyname,pqd.qpdstandardcode,pqd.qpdstandardname,pqd.qpdcustomcode,
+        pqd.qpdcustomname,pqd.qpdmodule,pqd.qpdisurgent
+        from PA_QUOTEDPRICE pqh
+        join PA_QUOTEDPRICE_SUPPLIER pqhs on pqh.qpnumber = pqhs.qpnumber
+        join PA_QUOTEDPRICE_DETAIL pqd on pqh.qpnumber = pqd.qpnumber
+        <where>
+            pqh.qpnumber in
+            <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+                #{item.QPNumber}
+            </foreach>
+        </where>
+    </select>
+
+
+
+
+</mapper>

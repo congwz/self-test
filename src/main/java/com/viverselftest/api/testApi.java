@@ -3,18 +3,24 @@ package com.viverselftest.api;
 //import com.harmontronics.erp.util.StrUtils;
 import com.google.common.base.Splitter;
 import com.viverselftest.consts.TableTypeConsts;
+import com.viverselftest.dao.jde.InquireOnlineMapper;
+import com.viverselftest.dto.TestNullOrEmptyDTO;
+import com.viverselftest.dto.inquireonline.InquireOnlineHdDTO;
+import com.viverselftest.dto.inquireonline.hcSupplierQuotedGenDTO;
 import com.viverselftest.dto.outputtest.HandlePlanDetailDTO;
 import com.viverselftest.po.TestLowerOrUpperPO;
 import com.viverselftest.po.TestPO;
 import com.viverselftest.service.TestService;
 import com.viverselftest.util.CryptUtils;
+import com.viverselftest.util.TestUtill;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -43,6 +49,9 @@ public class testApi {
 
     @Autowired
     private TestService testService;
+
+
+
 
     private Logger logger = LoggerFactory.getLogger(testApi.class);
 
@@ -398,6 +407,17 @@ listNoDup2：[a, b, c, 1]*/
         return testService.testValueProperties();
     }
 
+    /**
+     * 测试前端传参时null和""的区别
+     * @param add_dto
+     * @return
+     */
+    @ApiOperation("测试前端传参时null和空字符串的区别")
+    @PostMapping("/test-nullOrEmpty-Param")
+    public String testNullOrEmptyParam(@RequestBody List<TestNullOrEmptyDTO> add_dto){
+        return testService.testNullOrEmptyParam(add_dto);
+    }
+
 
 
 
@@ -726,7 +746,8 @@ listNoDup2：[a, b, c, 1]*/
 
         System.out.println(a.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue());*/
 
-        String emailAdminUser = "viver.zhang";
+        /*十二、直接调用接口发送邮件*/
+        /*String emailAdminUser = "viver.zhang";
         //发送邮件
         String content = "发送邮件-----Viver123";
         //发邮件给管理员
@@ -745,7 +766,10 @@ listNoDup2：[a, b, c, 1]*/
             System.out.println("send email fail.");
         }else {
             System.out.println("send email success."); // send email success.
-        }
+        }*/
+
+
+
 
 
 

@@ -1,9 +1,13 @@
 package com.viverselftest.service;
 
+import com.viverselftest.dao.jde.testMapper;
+import com.viverselftest.dto.TestNullOrEmptyDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,6 +15,9 @@ import java.util.Map;
  */
 @Service
 public class TestServiceImpl implements TestService {
+
+    @Autowired
+    private testMapper testMapper;
 
     @Value("${test.value}")
     private String properValue;
@@ -39,5 +46,22 @@ public class TestServiceImpl implements TestService {
         map.put("properValue",properValue);
         map.put("properValueOverride",properValueOverride);
         return map;
+    }
+
+
+    /**
+     * 测试前端传参时null和""的区别
+     * @param add_dto
+     * @return
+     */
+    @Override
+    public String testNullOrEmptyParam(List<TestNullOrEmptyDTO> add_dto) {
+        int wCount = testMapper.addNullOrEmpty(add_dto);
+        if(wCount > 0 ){
+            return "add ok.";
+        }
+
+        return "add fail!";
+
     }
 }
