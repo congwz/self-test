@@ -773,6 +773,58 @@ listNoDup2：[a, b, c, 1]*/
         }*/
 
 
+        /*十三、格式化字符串->String.format()*/
+        /*String format = "<xml>\n" + "<Encrypt><![CDATA[%1$s]]></Encrypt>\n"
+                + "<MsgSignature><![CDATA[%2$s]]></MsgSignature>\n"
+                + "<TimeStamp>%3$s</TimeStamp>\n" + "<Nonce><![CDATA[%4$s]]></Nonce>\n" + "</xml>";
+
+        String encrypt = "1a",signature = "2b",timestamp = "3c",nonce = "4d";
+        System.out.println(String.format(format,encrypt, signature, timestamp, nonce));*/
+
+        /*
+        <xml>
+        <Encrypt><![CDATA[1a]]></Encrypt>
+        <MsgSignature><![CDATA[2b]]></MsgSignature>
+        <TimeStamp>3c</TimeStamp>
+        <Nonce><![CDATA[4d]]></Nonce>
+        </xml>
+        * */
+
+        /*十四、Integer比较时用==的大坑，-128到127之间==起作用，不在范围内，则需要用equals比较*/
+
+        /*Integer i = 127;
+        Integer ii = 127;
+        Integer x = 130;
+        Integer xx = 130;
+        int a = 150;
+        int aa = 150;
+        if (i == ii) {
+            System.out.println("i == ii.");  //i == ii.
+        }else {
+            System.out.println("i != ii.");
+        }
+
+        if (x == xx) {
+            System.out.println("x == xx.");
+        }else {
+            System.out.println("x != xx.");  //x != xx.
+        }
+        if(x.equals(xx)){
+            System.out.println("x equals xx.");  //x equals xx.
+        }else {
+            System.out.println("x not equals xx.");
+        }
+
+        if (a == aa) {
+            System.out.println("a == aa.");  //a == aa.
+        }else {
+            System.out.println("a != aa.");
+        }*/
+
+
+
+        /*十五、*/
+
 
 
 
