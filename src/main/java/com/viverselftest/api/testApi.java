@@ -823,9 +823,23 @@ listNoDup2：[a, b, c, 1]*/
 
 
 
-        /*十五、*/
+        /*十五、判断是否包含汉字*/
+        /*String src = "*不";
+        char[] t1 = null;
+        t1 = src.toCharArray();
+
+        for (int i = 0; i < t1.length; i++) {
+            // 判断是否为汉字字符
+            if (java.lang.Character.toString(t1[i]).matches(
+                    "[\\u4E00-\\u9FA5]+")) {
+                src = "-1";
+                break;
+            }
+        }
+        System.out.println(src);*/
 
 
+        /*十六、*/
 
 
 

@@ -7,6 +7,7 @@ import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
 import cn.afterturn.easypoi.word.WordExportUtil;
+import com.viverselftest.dto.inquireonline.InquireOnlineConditionsDTO;
 import com.viverselftest.po.ExcelExportBigDataPO;
 import com.viverselftest.po.ExcelExportOneToMorePO;
 import com.viverselftest.po.ExcelExportPersonPO;
@@ -452,6 +453,91 @@ public class EasyPOIApi {
         workbook.write(fos);
         fos.close();
     }
+
+
+
+
+
+    /*============================================导出excel-使用模板+指令==================================*/
+    /**
+     * 根据查询条件导出报价信息
+     * @param search_dto
+     */
+    @ApiOperation(value = "根据查询条件导出报价excel")
+    @PostMapping("/export")
+    public int export(@RequestBody InquireOnlineConditionsDTO search_dto){
+        easyPOIService.export(search_dto, "01000207", "张聪伟");
+        return 0;
+    }
+
+
+    /**
+     * 指令导出excel
+     * easypoi的三目运算  t.age == 24 ? '无' : t.age 格式为字符串
+     */
+    @ApiOperation(value = "指令导出excel")
+    @PostMapping("/export/test")
+    public void exportTest(HttpServletResponse response){
+        List<ExcelExportPersonPO> list = new ArrayList<>();
+
+        ExcelExportPersonPO person1 = new ExcelExportPersonPO();
+        ExcelExportPersonPO person2 = new ExcelExportPersonPO();
+        ExcelExportPersonPO person3 = new ExcelExportPersonPO();
+
+        person1.setId(1);
+        person1.setName("Viver");
+        person1.setSex("女");
+        person1.setAge(24);
+        person1.setJobDate("2017-09-04");
+
+        person2.setId(2);
+        person2.setName("池昌旭");
+        person2.setSex("男");
+        person2.setAge(28);
+        person2.setJobDate("2016-12-12");
+
+        person3.setId(3);
+        person3.setName("李钟硕");
+        person3.setSex("男");
+        person3.setAge(999);
+        person3.setJobDate("2000-01-01");
+
+        list.add(person1);
+        list.add(person2);
+        list.add(person3);
+
+        Map<String,Object> mapData = new HashMap<>();
+        mapData.put("personList",list);  //直接是list,不需要封装为map,作为模板导出成功了哟
+        TemplateExportParams params = new TemplateExportParams("C:/excel/1.xlsx");
+        //标题开始行
+        params.setHeadingStartRow(0);
+        //标题行数
+        params.setHeadingRows(1);
+        //设置sheetName，若不设置该参数，则使用原本的sheet名称
+        params.setSheetName("person");
+        Workbook workbook = ExcelExportUtil.exportExcel(params,mapData);
+
+        /*写入文件*/
+        File file = new File("C:/excel");
+        if(!file.exists()){
+            file.mkdirs();
+        }
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream("C:/excel/templateExportExcelTest.xlsx");
+            workbook.write(fos);
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("指令模板导出Excel Success!!! -》templateExportExcelTest.xlsx");
+
+
+    }
+
 
 
 
