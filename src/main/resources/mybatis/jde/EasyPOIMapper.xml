@@ -44,6 +44,24 @@
         from PA_VIVER_TEST &lt;!&ndash;where work_code = #{work_code} &ndash;&gt;&lt;!&ndash;and display_code = #{display_code}&ndash;&gt;
     </select>-->
 
+
+    <resultMap id="exportOneToMore" type="com.viverselftest.po.InquireOnlineExcelPO">
+        <!--<id column="userno" property="user_id"></id>-->
+        <result column="QPNumber" property="QPNumber"/>
+
+        <collection property="detail" ofType="com.viverselftest.po.InquireOnlineExcelProviderPO">
+            <result column="QPEndDate" property="QPEndDate"/>
+            <result column="QPStatus" property="QPStatus"/>
+            <result column="QPOriginalDate" property="QPOriginalDate"/>
+            <result column="QPBranchName" property="QPBranchName"/>
+            <result column="QPOriginator" property="QPOriginator"/>
+            <result column="QPCompany" property="QPCompany"/>
+            <result column="provider_name" property="provider_name"/>
+            <result column="quotedprice_total" property="quotedprice_total"/>
+            <result column="quoted_tag" property="quoted_tag"/>
+        </collection>
+    </resultMap>
+
     <select id="findOneToMoreExcelExportData" resultMap="excelOneToMoreExport">
         select pvu.userno,pvu.username,pvd.partno,pvd.partname,
         <!--id,-->
@@ -66,23 +84,38 @@
     <select id="findQuotedHead" parameterType="com.viverselftest.dto.inquireonline.InquireOnlineConditionsHelpDTO" resultType="com.viverselftest.po.InquireOnlineHeadPO">
         select rownum rn,t.* from
         (
-        select pqh.qpnumber QPNumber,pqh.qpenddate QPEndDate,
+        select distinct pqh.qpnumber QPNumber,pqh.qpenddate QPEndDate,
         (case when t.bjzt like '%取消%' then '取消' when t.bjzt like '%终止%' then '终止'
         when t.bjzt like '%进行中%' then '进行中' when t.bjzt like '%已过期%' then '已过期' else '结束' end) QPStatus,
         pqh.qporiginaldate QPOriginalDate,pqh.qpcompanycode QPCompanyCode,pqh.qpcompanyname QPCompanyName,
         pqh.qpbranchcode QPBranchCode,(select trim(drdl01) from prodctl.f0005 where drsy = '00' and drrt = '33' and trim(drky) = pqh.qpbranchcode) QPBranchName,pqh.qpcreateby QPCreateBy,pqh.qporiginator QPOriginator,
-        pqh.qpcompanycode||' '||pqh.qpcompanyname QPCompany
+        pqh.qpcompanycode||' '||pqh.qpcompanyname QPCompany,
+        pqhs.qpslsuppliercode,trim(f0101.abalph) provider_name,tp.quotedprice_total,tiq.qpdslisquoted,
+        trim((case when tiq.qpdslisquoted = '0' then '*' end) || ' ' || pqhs.qpslsuppliercode) quoted_tag
         from PA_QUOTEDPRICE pqh
+        join PA_QUOTEDPRICE_SUPPLIER pqhs on pqh.qpnumber = pqhs.qpnumber
         join
-        (select pqh.qpnumber,listagg((case when pqh.QPStatus = '3' then '终止' when pqh.QPStatus = '4' then '取消'
+        (select pqh.qpnumber,pqhs.qpslsuppliercode,
+        listagg((case when pqh.QPStatus = '3' then '终止' when pqh.QPStatus = '4' then '取消'
         when pqds.qpnumber is null and to_char(sysdate,'YYYY-MM-DD HH24:MI') > pqh.qpenddate then '已过期'
         when pqds.qpnumber is not null then '结束'
         when pqds.qpnumber is null and to_char(sysdate,'YYYY-MM-DD HH24:MI') &lt;= pqh.qpenddate then '进行中' end), ',') within GROUP(order by(pqh.qpnumber)) as bjzt
         from PA_QUOTEDPRICE pqh
         join PA_QUOTEDPRICE_SUPPLIER pqhs on pqh.qpnumber = pqhs.qpnumber
         left join PA_QUOTEDPRICE_DETAIL_SUPPLIER pqds on pqhs.qpnumber = pqds.qpnumber and pqhs.qpslsuppliercode = pqds.qpdslsuppliercode
-        group by pqh.qpnumber
-        ) t on pqh.qpnumber = t.qpnumber
+        group by pqh.qpnumber,pqhs.qpslsuppliercode
+        ) t on pqhs.qpnumber = t.qpnumber and pqhs.qpslsuppliercode = t.qpslsuppliercode
+        left join
+        (
+        select pqds.qpnumber,pqds.qpdslsuppliercode,
+        sum(case when pqds.qpdsluntaxmoney is null or pqds.qpdsluntaxmoney = -1 then 0 else pqds.qpdsluntaxmoney end) quotedprice_total
+        from PA_QUOTEDPRICE_DETAIL_SUPPLIER pqds
+        group by pqds.qpnumber,pqds.qpdslsuppliercode
+        ) tp on pqhs.qpnumber = tp.qpnumber and pqhs.qpslsuppliercode = tp.qpdslsuppliercode
+        left join
+        (select distinct pqds.qpnumber,pqds.qpdslsuppliercode,pqds.qpdslisquoted from PA_QUOTEDPRICE_DETAIL_SUPPLIER pqds where pqds.qpdslisquoted = '0') tiq
+        on pqhs.qpnumber = tiq.qpnumber and pqhs.qpslsuppliercode = tiq.qpdslsuppliercode
+        left join f0101 on to_char(f0101.aban8) = pqhs.qpslsuppliercode
         <where>
             <if test="branch_code != null and branch_code != '' ">
                 pqh.qpbranchcode in (${branch_code})
@@ -105,6 +138,114 @@
             order by ${sort_colum} ${sort_rule}
         </if>
 
+    </select>
+
+    <select id="findQuotedHeadRes" parameterType="java.util.List"  resultMap="exportOneToMore">
+        select * from
+        <foreach collection="list" item="item" index="index" separator="union" open="(" close=")">
+            (
+            select
+            #{item.QPNumber} QPNumber,
+            #{item.QPEndDate} QPEndDate,
+            <if test="item.QPStatus == null">
+                '' QPStatus,
+            </if>
+            <if test="item.QPStatus != null">
+                #{item.QPStatus} QPStatus,
+            </if>
+            #{item.QPOriginalDate} QPOriginalDate,
+            #{item.QPBranchName} QPBranchName,
+            #{item.QPOriginator} QPOriginator,
+            #{item.QPCompany} QPCompany,
+            #{item.provider_name} provider_name,
+            <if test="item.quotedprice_total == null">
+                0 quotedprice_total,
+            </if>
+            <if test="item.quotedprice_total != null">
+                #{item.quotedprice_total} quotedprice_total,
+            </if>
+            <if test="item.quoted_tag == null">
+                '' quoted_tag,
+            </if>
+            <if test="item.quoted_tag != null">
+                #{item.quoted_tag} quoted_tag
+            </if>
+            from dual
+            )
+        </foreach>
+    </select>
+
+    <select id="findQuotedHeadPage" parameterType="java.util.Map" resultType="java.lang.String">
+        select * from (
+        select tmp_page.*,rownum rn from
+        (
+        <foreach collection="listRes" item="item" index="index" separator="union">
+            (
+            select
+            #{item.QPNumber} QPNumber
+            from dual
+            )
+        </foreach>
+        ) tmp_page where rownum &lt;= #{pageNumber}*#{pageSize} ) where rn > #{pageNumber}*#{pageSize} - #{pageSize}
+    </select>
+
+    <!-- 导出一对多数据的excel -->
+    <select id="exportOneToMoreExcel" parameterType="com.viverselftest.dto.inquireonline.InquireOnlineConditionsHelpDTO"  resultMap="exportOneToMore">
+        select rownum rn,t.* from
+        (
+        select distinct pqh.qpnumber QPNumber,pqh.qpenddate QPEndDate,
+        (case when t.bjzt like '%取消%' then '取消' when t.bjzt like '%终止%' then '终止'
+        when t.bjzt like '%进行中%' then '进行中' when t.bjzt like '%已过期%' then '已过期' else '结束' end) QPStatus,
+        pqh.qporiginaldate QPOriginalDate,pqh.qpcompanycode QPCompanyCode,pqh.qpcompanyname QPCompanyName,
+        pqh.qpbranchcode QPBranchCode,(select trim(drdl01) from prodctl.f0005 where drsy = '00' and drrt = '33' and trim(drky) = pqh.qpbranchcode) QPBranchName,pqh.qpcreateby QPCreateBy,pqh.qporiginator QPOriginator,
+        pqh.qpcompanycode||' '||pqh.qpcompanyname QPCompany,
+        pqhs.qpslsuppliercode,trim(f0101.abalph) provider_name,tp.quotedprice_total,tiq.qpdslisquoted,
+        trim((case when tiq.qpdslisquoted = '0' then '*' end) || ' ' || pqhs.qpslsuppliercode) quoted_tag
+        from PA_QUOTEDPRICE pqh
+        join PA_QUOTEDPRICE_SUPPLIER pqhs on pqh.qpnumber = pqhs.qpnumber
+        join
+        (select pqh.qpnumber,pqhs.qpslsuppliercode,
+        listagg((case when pqh.QPStatus = '3' then '终止' when pqh.QPStatus = '4' then '取消'
+        when pqds.qpnumber is null and to_char(sysdate,'YYYY-MM-DD HH24:MI') > pqh.qpenddate then '已过期'
+        when pqds.qpnumber is not null then '结束'
+        when pqds.qpnumber is null and to_char(sysdate,'YYYY-MM-DD HH24:MI') &lt;= pqh.qpenddate then '进行中' end), ',') within GROUP(order by(pqh.qpnumber)) as bjzt
+        from PA_QUOTEDPRICE pqh
+        join PA_QUOTEDPRICE_SUPPLIER pqhs on pqh.qpnumber = pqhs.qpnumber
+        left join PA_QUOTEDPRICE_DETAIL_SUPPLIER pqds on pqhs.qpnumber = pqds.qpnumber and pqhs.qpslsuppliercode = pqds.qpdslsuppliercode
+        group by pqh.qpnumber,pqhs.qpslsuppliercode
+        ) t on pqhs.qpnumber = t.qpnumber and pqhs.qpslsuppliercode = t.qpslsuppliercode
+        left join
+        (
+        select pqds.qpnumber,pqds.qpdslsuppliercode,
+        sum(case when pqds.qpdsluntaxmoney is null or pqds.qpdsluntaxmoney = -1 then 0 else pqds.qpdsluntaxmoney end) quotedprice_total
+        from PA_QUOTEDPRICE_DETAIL_SUPPLIER pqds
+        group by pqds.qpnumber,pqds.qpdslsuppliercode
+        ) tp on pqhs.qpnumber = tp.qpnumber and pqhs.qpslsuppliercode = tp.qpdslsuppliercode
+        left join
+        (select distinct pqds.qpnumber,pqds.qpdslsuppliercode,pqds.qpdslisquoted from PA_QUOTEDPRICE_DETAIL_SUPPLIER pqds where pqds.qpdslisquoted = '0') tiq
+        on pqhs.qpnumber = tiq.qpnumber and pqhs.qpslsuppliercode = tiq.qpdslsuppliercode
+        left join f0101 on to_char(f0101.aban8) = pqhs.qpslsuppliercode
+        <where>
+            <if test="branch_code != null and branch_code != '' ">
+                pqh.qpbranchcode in (${branch_code})
+            </if>
+            <if test="materiel_type != null and materiel_type != '' ">
+                and pqh.qpmaterialtype in (${materiel_type})
+            </if>
+            <if test="urgency != null and urgency != '' ">
+                and pqh.qpurgent in (${urgency})
+            </if>
+        </where>
+        ) t
+        <where>
+            <if test="head_conditions != null">
+                and  ${head_conditions}
+            </if>
+        </where>
+
+        <if test="sort_colum != null and sort_colum != '' ">
+            order by ${sort_colum} ${sort_rule}
+        </if>
     </select>
 
     <!-- 查询报价单明细 -->

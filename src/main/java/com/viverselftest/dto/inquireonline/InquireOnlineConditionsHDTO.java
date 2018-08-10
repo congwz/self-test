@@ -37,4 +37,13 @@ public class InquireOnlineConditionsHDTO {
 
     //询价人名字
     private String QPOriginator;
+
+    //供应商编号
+    private String QPSLSupplierCode;
+
+    //供应商名称
+    private String provider_name;
+
+    //报价总金额
+    private String quotedprice_total;
 }

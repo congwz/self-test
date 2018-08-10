@@ -1,5 +1,6 @@
 package com.viverselftest.dao.jde;
 
+import com.viverselftest.dto.inquireonline.InquireOnlineConditionsDTO;
 import com.viverselftest.dto.inquireonline.InquireOnlineConditionsHelpDTO;
 import com.viverselftest.po.*;
 import org.apache.ibatis.annotations.Insert;
@@ -43,6 +44,30 @@ public interface EasyPOIMapper {
      * @return
      */
     List<InquireOnlineHeadPO> findQuotedHead(InquireOnlineConditionsHelpDTO helpSearchDTO);
+
+    /**
+     * 对查询的报价表头结果格式化
+     * @param listh
+     * @return
+     */
+    List<InquireOnlineExcelPO> findQuotedHeadRes(List<InquireOnlineHeadPO> listh);
+
+    /**
+     * 查询格式化的报价表头结果分页的报价单号
+     * @param listRes
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    List<String> findQuotedHeadPage(@Param("listRes") List<InquireOnlineExcelPO> listRes,
+                                    @Param("pageNumber") int pageNumber,
+                                    @Param("pageSize") int pageSize);
+
+    /**
+     * 导出一对多数据的excel
+     * @return
+     */
+    List<InquireOnlineExcelPO> exportOneToMoreExcel(InquireOnlineConditionsHelpDTO helpSearchDTO);
 
     /**
      * 查询报价单明细

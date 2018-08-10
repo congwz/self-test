@@ -1,10 +1,15 @@
 package com.viverselftest.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.viverselftest.dao.jde.EasyPOIMapper;
+import com.viverselftest.dto.PageDTO;
 import com.viverselftest.dto.inquireonline.InquireOnlineConditionsDTO;
 import com.viverselftest.dto.inquireonline.InquireOnlineConditionsHelpDTO;
 import com.viverselftest.po.ExcelExportOneToMorePO;
 import com.viverselftest.po.ExcelExportSimplePO;
+import com.viverselftest.po.InquireOnlineExcelPO;
+import com.viverselftest.po.InquireOnlineHeadPO;
 import com.viverselftest.service.EasyPOIService;
 import com.viverselftest.util.ExportExcelUtill;
 import com.viverselftest.util.QueryUtils;
@@ -55,6 +60,72 @@ public class EasyPOIServiceImpl implements EasyPOIService {
         return easyPOIMapper.findOneToMoreExcelExportData();
     }
 
+
+    /**
+     * 获取报价单表头
+     * @param search_dto
+     * @return
+     */
+    @Override
+    public PageDTO getQuotedInfoByHD(InquireOnlineConditionsDTO search_dto) {
+        InquireOnlineConditionsHelpDTO helpSearchDTO = new InquireOnlineConditionsHelpDTO();
+
+        PageDTO pageDTO = new PageDTO();
+        int pageNumber = search_dto.getPageNumber();
+        int pageSize = search_dto.getPageSize();
+        //PageHelper.startPage(pageNumber, pageSize);
+
+        List<InquireOnlineHeadPO> listh = null;
+        List<InquireOnlineExcelPO> listres = null;
+        List<InquireOnlineExcelPO> list = new ArrayList<>();
+
+        helpSearchDTO.setBranch_code(search_dto.getBranch_code());
+        String material_type = search_dto.getMateriel_type().replaceAll("(STANDARD)","S").replaceAll("(CUSTOM)","C");
+        helpSearchDTO.setMateriel_type(material_type);
+        helpSearchDTO.setUrgency(search_dto.getUrgency());
+        helpSearchDTO.setHead_conditions(QueryUtils.getQueryCondition(search_dto.getHead_conditions()));
+        helpSearchDTO.setDetail_conditions(QueryUtils.getQueryCondition(search_dto.getDetail_conditions()));
+        helpSearchDTO.setSort_colum(search_dto.getSort_colum());
+        helpSearchDTO.setSort_rule(search_dto.getSort_rule());
+
+        if("H".equals(search_dto.getHd_type())){
+            //查询报价单表头
+            /* 这样的写法不能保证排序后仍然保持原序且查询结果存在字段为null需要特殊处理
+            listh = easyPOIMapper.findQuotedHead(helpSearchDTO);
+            System.out.println("listh: " + listh.toString());
+            listres = easyPOIMapper.findQuotedHeadRes(listh);
+            System.out.println("listres: " + listres.toString());
+            */
+
+            listres = easyPOIMapper.exportOneToMoreExcel(helpSearchDTO);
+            System.out.println("listres: " + listres);
+            List<String> listPnumberPage = easyPOIMapper.findQuotedHeadPage(listres,pageNumber,pageSize);
+            for(int i = 0; i<listres.size(); i++){
+                boolean quick = true;
+                for(int j = 0; j<listPnumberPage.size(); j++){
+                    quick = false;
+                    if(listPnumberPage.get(i).equals(listres.get(j).getQPNumber())){
+                        list.add(listres.get(i));
+                    }
+                }
+                if(quick){
+                    break;
+                }
+            }
+            System.out.println("list: " + list.toString());
+            //list = easyPOIMapper.findQuotedHeadPage(listh,pageNumber,pageSize);
+        }/*else if("D".equals(search_dto.getHd_type())){
+            //查询报价单明细
+            list = inquireOnlineMapper.findQuotedDetail(helpSearchDTO);
+        }*/
+
+        pageDTO.setPageNumber(pageNumber);
+        pageDTO.setPageSize(pageSize);
+        pageDTO.setTotal(listres.size());
+        pageDTO.setData(list);
+
+        return pageDTO;
+    }
 
     @Override
     @Async
@@ -107,5 +178,36 @@ public class EasyPOIServiceImpl implements EasyPOIService {
         }
 
 
+    }
+
+
+    /**
+     * 导出一对多数据的excel
+     * @return
+     */
+    @Override
+    public List<InquireOnlineExcelPO> exportOneToMoreExcel(InquireOnlineConditionsDTO search_dto) {
+        InquireOnlineConditionsHelpDTO helpSearchDTO = new InquireOnlineConditionsHelpDTO();
+
+        helpSearchDTO.setBranch_code(search_dto.getBranch_code());
+        String material_type = search_dto.getMateriel_type().replaceAll("(STANDARD)","S").replaceAll("(CUSTOM)","C");
+        helpSearchDTO.setMateriel_type(material_type);
+        helpSearchDTO.setUrgency(search_dto.getUrgency());
+        helpSearchDTO.setHead_conditions(QueryUtils.getQueryCondition(search_dto.getHead_conditions()));
+        helpSearchDTO.setDetail_conditions(QueryUtils.getQueryCondition(search_dto.getDetail_conditions()));
+        helpSearchDTO.setSort_colum(search_dto.getSort_colum());
+        helpSearchDTO.setSort_rule(search_dto.getSort_rule());
+        String hOrD = search_dto.getHd_type();
+
+        List list = new ArrayList();
+        if("H".equals(hOrD)){
+            //查询报价单表头
+            list = easyPOIMapper.exportOneToMoreExcel(helpSearchDTO);
+        }else if("D".equals(hOrD)){
+            //查询报价单明细
+            //list = easyPOIMapper.findQuotedDetail(helpSearchDTO);
+        }
+
+        return list;
     }
 }

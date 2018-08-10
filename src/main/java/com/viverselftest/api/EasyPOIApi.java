@@ -7,11 +7,9 @@ import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
 import cn.afterturn.easypoi.word.WordExportUtil;
+import com.viverselftest.dto.PageDTO;
 import com.viverselftest.dto.inquireonline.InquireOnlineConditionsDTO;
-import com.viverselftest.po.ExcelExportBigDataPO;
-import com.viverselftest.po.ExcelExportOneToMorePO;
-import com.viverselftest.po.ExcelExportPersonPO;
-import com.viverselftest.po.ExcelExportSimplePO;
+import com.viverselftest.po.*;
 import com.viverselftest.po.word.WordExportTemplateHardPO;
 import com.viverselftest.service.EasyPOIService;
 import com.viverselftest.util.ExcelUtill;
@@ -457,6 +455,16 @@ public class EasyPOIApi {
 
 
 
+    /**
+     * 查询报价单表头一对多显示与查询
+     * @param search_dto
+     * @return
+     */
+    @ApiOperation("获取报价单表头一对多显示与查询")
+    @PostMapping("/get-info-by-conditions")
+    public PageDTO getQuotedInfoByHD(@RequestBody InquireOnlineConditionsDTO search_dto) {
+        return easyPOIService.getQuotedInfoByHD(search_dto);
+    }
 
     /*============================================导出excel-使用模板+指令==================================*/
     /**
@@ -487,7 +495,7 @@ public class EasyPOIApi {
         person1.setId(1);
         person1.setName("Viver");
         person1.setSex("女");
-        person1.setAge(24);
+        person1.setAge(24000);
         person1.setJobDate("2017-09-04");
 
         person2.setId(2);
@@ -508,7 +516,7 @@ public class EasyPOIApi {
 
         Map<String,Object> mapData = new HashMap<>();
         mapData.put("personList",list);  //直接是list,不需要封装为map,作为模板导出成功了哟
-        TemplateExportParams params = new TemplateExportParams("C:/excel/1.xlsx");
+        TemplateExportParams params = new TemplateExportParams("C:/excel/2.xlsx");
         //标题开始行
         params.setHeadingStartRow(0);
         //标题行数
@@ -536,6 +544,27 @@ public class EasyPOIApi {
         System.out.println("指令模板导出Excel Success!!! -》templateExportExcelTest.xlsx");
 
 
+    }
+
+
+    /**
+     * 导出一对多数据的excel支持搜索和排序
+     * @param search_dto
+     * @throws IOException
+     */
+    @ApiOperation("导出一对多数据的excel支持搜索和排序")
+    @PostMapping("/export/oneToMore")
+    public void exportOneToMoreExcel(@RequestBody InquireOnlineConditionsDTO search_dto) throws IOException {
+
+        List<InquireOnlineExcelPO> list = easyPOIService.exportOneToMoreExcel(search_dto);
+
+        ExportParams exportParams = new ExportParams("","","export_one_to_more");
+        Workbook workbook = ExcelExportUtil.exportExcel(exportParams, InquireOnlineExcelPO.class,list);
+
+        FileOutputStream fos = new FileOutputStream("C:/excel/exportOneToMore.xls");
+        workbook.write(fos);
+        fos.close();
+        System.out.println("export one to more data success.");
     }
 
 
