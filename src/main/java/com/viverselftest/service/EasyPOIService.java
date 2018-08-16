@@ -34,4 +34,15 @@ public interface EasyPOIService {
      * @return
      */
     List<InquireOnlineExcelPO> exportOneToMoreExcel(InquireOnlineConditionsDTO search_dto);
+
+
+
+
+
+
+    /**
+     * 行转列导出excel明细与供应商
+     * @param search_dto
+     */
+    void exportDetailAndProvider(InquireOnlineConditionsDTO search_dto);
 }

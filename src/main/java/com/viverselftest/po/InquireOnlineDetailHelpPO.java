@@ -3,24 +3,10 @@ package com.viverselftest.po;
 import lombok.Data;
 
 /**
- * Created by Congwz on 2018/7/12.
+ * Created by Congwz on 2018/8/13.
  */
 @Data
-public class InquireOnlineDetailPO {
-
-    private int rn;
-
-    //供应商编号
-    private String QPSLSupplierCode;
-
-    //供应商名称
-    private String provider_name;
-
-    //供应商编号和名称
-    private String supplier_code_name;
-
-    //报价单号
-    private String QPNumber;
+public class InquireOnlineDetailHelpPO {
 
     //报价单行号
     private String QPDFindNum;
@@ -30,9 +16,6 @@ public class InquireOnlineDetailPO {
 
     //物料名称
     private String QPDItemName;
-
-    //报价状态(OR单针对供应商的状态)
-    private String QPDSLStatus;
 
     //制造商部件号
     private String QPDManufactureNo;
@@ -142,14 +125,19 @@ public class InquireOnlineDetailPO {
     //采购取消/终止的备注
     private String QPDRBNRemark;
 
+
+    //供应商备注
+    private String QPDSLRemark;
+
     //承诺交期
     private String QPDSLAcceptDate;
 
     //未税单价
     private Double QPDSLUnTaxMoney;
 
-    //供应商备注
-    private String QPDSLRemark;
+
+    //报价状态(OR单针对供应商的状态)
+    private String QPDSLStatus;
 
 
 
@@ -157,8 +145,6 @@ public class InquireOnlineDetailPO {
     private String QPDStatus;
 
 
-    //供应商编号与名称拼接
-    private String supplier;
 
     //定制件类型编号与名称拼接
     private String QPDCustom;
@@ -174,8 +160,4 @@ public class InquireOnlineDetailPO {
 
     //公司编号与名称拼接(表头公司)
     private String QPCompany;
-
-
-
-
 }

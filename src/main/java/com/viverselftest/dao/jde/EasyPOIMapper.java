@@ -77,6 +77,21 @@ public interface EasyPOIMapper {
     List<InquireOnlineDetailPO> findQuotedDetail(InquireOnlineConditionsHelpDTO helpSearchDTO);
 
 
+    /**
+     * 查询报价单明细与供应商（一对多）
+     * @param helpSearchDTO
+     * @return
+     */
+    List<InquireOnlineDetailExcelPO> findQuotedDetailExcel(InquireOnlineConditionsHelpDTO helpSearchDTO);
+
+    /**
+     * 查询报价单号供应商与明细（一对多）
+     * @param helpSearchDTO
+     * @return
+     */
+    List<InquireOnlineDetailExcelHelpPO> findQuotedDetailHelp(InquireOnlineConditionsHelpDTO helpSearchDTO);
+
+
 
     @Insert("insert into pa_export_task (id, work_code, user_name, report_title, file_name, file_type,file_url, start_time,end_time, status,down_litm) "
             + "values (#{id}, #{work_code}, #{user_name}, #{report_title}, #{file_name}, #{file_type}, #{file_url}, #{start_time}, #{end_time}, #{status},#{down_litm})")

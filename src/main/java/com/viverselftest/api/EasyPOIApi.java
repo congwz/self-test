@@ -568,6 +568,17 @@ public class EasyPOIApi {
     }
 
 
+    /**
+     * 行转列导出excel明细与供应商
+     * @param search_dto
+     */
+    @ApiOperation("行转列导出excel明细与供应商")
+    @PostMapping("/export/detail/provider")
+    public void exportDetailAndProvider(@RequestBody InquireOnlineConditionsDTO search_dto) {
+        easyPOIService.exportDetailAndProvider(search_dto);
+    }
+
+
 
 
 

@@ -840,6 +840,12 @@ listNoDup2：[a, b, c, 1]*/
 
 
         /*十六、*/
+        /*String a = "'1','2'";
+        if(a.startsWith("'") && a.endsWith("'")){
+            System.out.println("yes");  //yes
+        }else {
+            System.out.println("no");
+        }*/
 
 
 

@@ -61,6 +61,40 @@
             <result column="quoted_tag" property="quoted_tag"/>
         </collection>
     </resultMap>
+    
+    
+    <resultMap id="oneToMoreDP" type="com.viverselftest.po.InquireOnlineDetailExcelPO">
+        <id column="QPNumber" property="QPNumber" />
+        <id column="QPDFindNum" property="QPDFindNum" />
+        <result column="QPDItemNo" property="QPDItemNo" />
+        <result column="QPDItemName" property="QPDItemName" />
+
+        <collection property="detail_providers" ofType="com.viverselftest.po.InquireOnlineDProviderExcelPO">
+            <result column="QPSLSupplierCode" property="QPSLSupplierCode" />
+            <result column="provider_name" property="provider_name" />
+            <result column="supplier" property="supplier" />
+            <result column="QPDSLAcceptDate" property="QPDSLAcceptDate" />
+            <result column="QPDSLUnTaxMoney" property="QPDSLUnTaxMoney" />
+            <result column="QPDSLStatus" property="QPDSLStatus" />
+        </collection>
+    </resultMap>
+
+    <resultMap id="oneToMoreNPD" type="com.viverselftest.po.InquireOnlineDetailExcelHelpPO">
+        <id column="QPNumber" property="QPNumber" />
+        <id column="QPSLSupplierCode" property="QPSLSupplierCode" />
+        <result column="provider_name" property="provider_name" />
+        <result column="supplier" property="supplier" />
+
+        <collection property="details" ofType="com.viverselftest.po.InquireOnlineDetailHelpPO">
+            <id column="QPDFindNum" property="QPDFindNum" />
+            <result column="QPDItemNo" property="QPDItemNo" />
+            <result column="QPDItemName" property="QPDItemName" />
+            <result column="QPDSLAcceptDate" property="QPDSLAcceptDate" />
+            <result column="QPDSLUnTaxMoney" property="QPDSLUnTaxMoney" />
+            <result column="QPDSLStatus" property="QPDSLStatus" />
+
+        </collection>
+    </resultMap>
 
     <select id="findOneToMoreExcelExportData" resultMap="excelOneToMoreExport">
         select pvu.userno,pvu.username,pvd.partno,pvd.partname,
@@ -250,6 +284,133 @@
 
     <!-- 查询报价单明细 -->
     <select id="findQuotedDetail" parameterType="com.viverselftest.dto.inquireonline.InquireOnlineConditionsHelpDTO" resultType="com.viverselftest.po.InquireOnlineDetailPO">
+        select rownum rn,t.* from
+        (
+        select distinct pqhs.qpslsuppliercode QPSLSupplierCode,pqd.qpnumber QPNumber,pqd.qpdfindnum QPDFindNum,
+        pqd.qpditemno QPDItemNo,pqd.qpditemname QPDItemName,
+        (case when NVL(pqd.qpdstatus,'N') = '3' then '终止' when NVL(pqd.qpdstatus,'N') = '4' then '取消'
+        when pqds.qpnumber is not null then '结束'
+        when NVL(pqd.qpdstatus,'N') = 'N' and pqds.qpnumber is null and to_char(sysdate,'YYYY-MM-DD HH24:MI') > pqh.qpenddate then '已过期' end) QPDSLStatus,
+        pqd.qpdmanufactureno QPDManufactureNo,pqd.qpdmanufacturename QPDManufactureName,pqd.qpdspec QPDSpec,pqd.qpditemunit QPDItemUnit,
+        pqd.qpddrawno QPDDrawNo,pqd.qpdrev QPDRev,pqd.qpdcustomcode QPDCustomCode,pqd.qpdcustomname QPDCustomName,
+        pqd.qpdstandardcode QPDStandardCode,pqd.qpdstandardname QPDStandardName,pqd.qpdmodule QPDModule,
+        pqd.qpdisurgent QPDIsUrgent,pqd.qpdrequireddate QPDRequiredDate,pqh.qpcreatedate QPCreateDate,
+        pqds.qpdslsupplieruseraccount QPDSLSupplierUserAccount,pqds.qpdslsupplierusername QPDSLSupplierUserName,
+        pqh.qpsendaddresscode QPSendAddressCode,pqh.qpsendaddress QPSendAddress,pqh.qpcurrency,
+        pqd.qpdrequirebillno QPDRequireBillNo,'OR' ysdhlx,pqd.qpdcompanycode QPDCompanyCode,
+        pqd.qpdcompanyname QPDCompanyName,pqd.qpdrbnfindnum QPDRBNFindNum,pqh.qpenddate QPEndDate,
+        pqds.qpdslcreatedate QPDAnswerDate,pqh.qporiginaldate QPOriginalDate,
+        pqh.qporiginator QPOriginator,pqh.qpcompanycode QPCompanyCode,pqh.qpcompanyname QPCompanyName,
+        pqd.qpdquitdate QPDQuitDate,pqd.qpdstopdate QPDStopDate,
+        pqd.qpddepartmentcode QPDDepartmentCode,pqd.qpddepartmentname QPDDepartmentName,
+        pqd.qpdrbnremark QPDRBNRemark,pqds.qpdslacceptdate QPDSLAcceptDate,
+        pqds.qpdsluntaxmoney QPDSLUnTaxMoney,pqds.qpdslremark QPDSLRemark,
+        trim(abalph) provider_name,cusOA.email provider_email,
+        pqhs.qpslsuppliercode||' '||trim(abalph) supplier,
+        ( pqhs.qpslsuppliercode || ' ' || trim(abalph) ) supplier_code_name,
+        pqd.qpdcustomcode||' '||pqd.qpdcustomname QPDCustom,
+        pqd.qpdstandardcode||' '||pqd.qpdstandardname QPDStandard,
+        pqh.qpsendaddresscode||' '||pqh.qpsendaddress QPSend,
+        pqd.qpdcompanycode||' '||pqd.qpdcompanyname QPDCompany,
+        pqh.qpcompanycode||' '||pqh.qpcompanyname QPCompany
+        from PA_QUOTEDPRICE_DETAIL pqd
+        join PA_QUOTEDPRICE pqh on pqd.qpnumber = pqh.qpnumber
+        join PA_QUOTEDPRICE_SUPPLIER pqhs on pqh.qpnumber = pqhs.qpnumber
+        left join PA_QUOTEDPRICE_DETAIL_SUPPLIER pqds on pqd.qpnumber = pqds.qpnumber and pqd.qpdfindnum = pqds.qpdslfindnum and pqhs.qpslsuppliercode = pqds.qpdslsuppliercode
+        left join f0101 on to_char(f0101.aban8) = pqhs.qpslsuppliercode
+        left join (select * from CRM_CustomerInfo where type = 2) cusOA on pqhs.qpslsuppliercode = cusOA.engname
+        <where>
+            <if test="branch_code != null and branch_code != '' ">
+                pqh.qpbranchcode in (${branch_code})
+            </if>
+            <if test="materiel_type != null and materiel_type != '' ">
+                and pqh.qpmaterialtype in (${materiel_type})
+            </if>
+            <if test="urgency != null and urgency != '' ">
+                and pqh.qpurgent in (${urgency})
+            </if>
+        </where>
+        ) t
+        <where>
+            <if test="detail_conditions != null">
+                and  ${detail_conditions}
+            </if>
+        </where>
+
+        <if test="sort_colum != null and sort_colum != '' ">
+            order by ${sort_colum} ${sort_rule}
+        </if>
+
+    </select>
+
+
+
+
+
+
+    <!-- 查询报价单明细与供应商（一对多） -->
+    <select id="findQuotedDetailExcel" parameterType="com.viverselftest.dto.inquireonline.InquireOnlineConditionsHelpDTO" resultMap="oneToMoreDP">
+        select rownum rn,t.* from
+        (
+        select distinct pqhs.qpslsuppliercode QPSLSupplierCode,pqd.qpnumber QPNumber,pqd.qpdfindnum QPDFindNum,
+        pqd.qpditemno QPDItemNo,pqd.qpditemname QPDItemName,
+        (case when NVL(pqd.qpdstatus,'N') = '3' then '终止' when NVL(pqd.qpdstatus,'N') = '4' then '取消'
+        when pqds.qpnumber is not null then '结束'
+        when NVL(pqd.qpdstatus,'N') = 'N' and pqds.qpnumber is null and to_char(sysdate,'YYYY-MM-DD HH24:MI') > pqh.qpenddate then '已过期' end) QPDSLStatus,
+        pqd.qpdmanufactureno QPDManufactureNo,pqd.qpdmanufacturename QPDManufactureName,pqd.qpdspec QPDSpec,pqd.qpditemunit QPDItemUnit,
+        pqd.qpddrawno QPDDrawNo,pqd.qpdrev QPDRev,pqd.qpdcustomcode QPDCustomCode,pqd.qpdcustomname QPDCustomName,
+        pqd.qpdstandardcode QPDStandardCode,pqd.qpdstandardname QPDStandardName,pqd.qpdmodule QPDModule,
+        pqd.qpdisurgent QPDIsUrgent,pqd.qpdrequireddate QPDRequiredDate,pqh.qpcreatedate QPCreateDate,
+        pqds.qpdslsupplieruseraccount QPDSLSupplierUserAccount,pqds.qpdslsupplierusername QPDSLSupplierUserName,
+        pqh.qpsendaddresscode QPSendAddressCode,pqh.qpsendaddress QPSendAddress,pqh.qpcurrency,
+        pqd.qpdrequirebillno QPDRequireBillNo,'OR' ysdhlx,pqd.qpdcompanycode QPDCompanyCode,
+        pqd.qpdcompanyname QPDCompanyName,pqd.qpdrbnfindnum QPDRBNFindNum,pqh.qpenddate QPEndDate,
+        pqds.qpdslcreatedate QPDAnswerDate,pqh.qporiginaldate QPOriginalDate,
+        pqh.qporiginator QPOriginator,pqh.qpcompanycode QPCompanyCode,pqh.qpcompanyname QPCompanyName,
+        pqd.qpdquitdate QPDQuitDate,pqd.qpdstopdate QPDStopDate,
+        pqd.qpddepartmentcode QPDDepartmentCode,pqd.qpddepartmentname QPDDepartmentName,
+        pqd.qpdrbnremark QPDRBNRemark,pqds.qpdslacceptdate QPDSLAcceptDate,
+        pqds.qpdsluntaxmoney QPDSLUnTaxMoney,pqds.qpdslremark QPDSLRemark,
+        trim(abalph) provider_name,cusOA.email provider_email,
+        pqhs.qpslsuppliercode||' '||trim(abalph) supplier,
+        pqd.qpdcustomcode||' '||pqd.qpdcustomname QPDCustom,
+        pqd.qpdstandardcode||' '||pqd.qpdstandardname QPDStandard,
+        pqh.qpsendaddresscode||' '||pqh.qpsendaddress QPSend,
+        pqd.qpdcompanycode||' '||pqd.qpdcompanyname QPDCompany,
+        pqh.qpcompanycode||' '||pqh.qpcompanyname QPCompany
+        from PA_QUOTEDPRICE_DETAIL pqd
+        join PA_QUOTEDPRICE pqh on pqd.qpnumber = pqh.qpnumber
+        join PA_QUOTEDPRICE_SUPPLIER pqhs on pqh.qpnumber = pqhs.qpnumber
+        left join PA_QUOTEDPRICE_DETAIL_SUPPLIER pqds on pqd.qpnumber = pqds.qpnumber and pqd.qpdfindnum = pqds.qpdslfindnum and pqhs.qpslsuppliercode = pqds.qpdslsuppliercode
+        left join f0101 on to_char(f0101.aban8) = pqhs.qpslsuppliercode
+        left join (select * from CRM_CustomerInfo where type = 2) cusOA on pqhs.qpslsuppliercode = cusOA.engname
+        <where>
+            <if test="branch_code != null and branch_code != '' ">
+                pqh.qpbranchcode in (${branch_code})
+            </if>
+            <if test="materiel_type != null and materiel_type != '' ">
+                and pqh.qpmaterialtype in (${materiel_type})
+            </if>
+            <if test="urgency != null and urgency != '' ">
+                and pqh.qpurgent in (${urgency})
+            </if>
+        </where>
+        ) t
+        <where>
+            <if test="detail_conditions != null">
+                and  ${detail_conditions}
+            </if>
+        </where>
+
+        <if test="sort_colum != null and sort_colum != '' ">
+            order by ${sort_colum} ${sort_rule}
+        </if>
+
+    </select>
+
+
+    <!-- 查询报价单明细与供应商（一对多） -->
+    <select id="findQuotedDetailHelp" parameterType="com.viverselftest.dto.inquireonline.InquireOnlineConditionsHelpDTO" resultMap="oneToMoreNPD">
         select rownum rn,t.* from
         (
         select distinct pqhs.qpslsuppliercode QPSLSupplierCode,pqd.qpnumber QPNumber,pqd.qpdfindnum QPDFindNum,
