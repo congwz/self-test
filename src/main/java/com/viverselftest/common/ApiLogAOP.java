@@ -2,6 +2,7 @@ package com.viverselftest.common;
 
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -52,4 +53,20 @@ public class ApiLogAOP {
         }
 
     }
+
+
+    /**
+     * api方法正常执行结束后返回结果
+     * @param result
+     */
+    @AfterReturning(returning="result",pointcut="log()")
+    public void resMessage(Object result) {
+        if(result != null){
+            logger.info("*********打印结果信息开始**********");
+            logger.info("RESULT:"+ result);
+            logger.info("*********打印结果信息结束**********");
+        }
+
+    }
+
 }

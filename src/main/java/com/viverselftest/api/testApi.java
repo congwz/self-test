@@ -6,7 +6,9 @@ import com.viverselftest.common.ServerResponse;
 import com.viverselftest.consts.TableTypeConsts;
 import com.viverselftest.dao.jde.InquireOnlineMapper;
 import com.viverselftest.dto.TestNullOrEmptyDTO;
+import com.viverselftest.dto.inquireonline.ContactResponseEntity;
 import com.viverselftest.dto.inquireonline.InquireOnlineHdDTO;
+import com.viverselftest.dto.inquireonline.hcSupplierEmailDTO;
 import com.viverselftest.dto.inquireonline.hcSupplierQuotedGenDTO;
 import com.viverselftest.dto.outputtest.HandlePlanDetailDTO;
 import com.viverselftest.po.TestLowerOrUpperPO;
@@ -16,6 +18,9 @@ import com.viverselftest.util.CryptUtils;
 import com.viverselftest.util.TestUtill;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.sf.json.JSON;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -516,6 +521,12 @@ listNoDup2：[a, b, c, 1]*/
 //        nullOrEmptyList.add("yy");
 //        nullOrEmptyList.add(null);
 //        nullOrEmptyList.add("         ");
+//        //nullOrEmptyList.remove("");
+//        /*List<String> tempList = new ArrayList<>();
+//        tempList.add("");
+//        nullOrEmptyList.removeAll(tempList);
+//        nullOrEmptyList.removeAll(Collections.singleton(null));
+//        System.out.println(nullOrEmptyList.toString() + nullOrEmptyList.size());*/
 //        //8	[, XX, , null, null, yy, null,          ]
 //        System.out.println(nullOrEmptyList.size() + "\t" + nullOrEmptyList.toString());
 //
@@ -846,6 +857,35 @@ listNoDup2：[a, b, c, 1]*/
         }else {
             System.out.println("no");
         }*/
+
+
+        List<String> supplierCodeList = new ArrayList<>();
+        supplierCodeList.add("10276");
+        String url = "http://172.28.10.247:8006/api/purchase/queryContactInfo";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("token", "test_token_supplier");
+        HttpEntity<List> request = new HttpEntity<>(supplierCodeList, headers);
+        RestTemplate restTemplate = new RestTemplate();
+        Map map = restTemplate.postForObject(url, request, Map.class);
+
+        List<ContactResponseEntity> supplierEmail1 = (List<ContactResponseEntity>) map.get("data");
+        /*List<ContactResponseEntity> supplierEmail = com.alibaba.fastjson.JSON.parseArray((String) map.get("data"),ContactResponseEntity.class);*/
+
+        JSONArray jsonarray = JSONArray.fromObject(map.get("data"));
+        List<ContactResponseEntity> supplierEmail = JSONArray.toList(jsonarray , ContactResponseEntity.class);
+
+        /*[{supplierCode=110276, supplierName=苏州贝雅得自动化科技有限公司, userMailAddresses=[1131150178@qq.com]}]
+        [ContactResponseEntity(supplierCode=110276, supplierName=苏州贝雅得自动化科技有限公司, userMailAddresses=[1131150178@qq.com])]
+        110276*/
+
+        System.out.println((supplierEmail1.toString() == null ? new ArrayList() : supplierEmail1.toString()));
+        System.out.println((supplierEmail.toString() == null ? new ArrayList() : supplierEmail.toString()));
+
+        for (ContactResponseEntity i : supplierEmail) {
+            System.out.println(i.getSupplierCode());
+        }
+
 
 
 
