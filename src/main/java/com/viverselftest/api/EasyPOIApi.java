@@ -20,7 +20,10 @@ import freemarker.template.TemplateException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.ss.format.CellFormat;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -198,6 +201,7 @@ public class EasyPOIApi {
     public void testSimpleExcelExport(HttpServletResponse response, @RequestParam("workCode") String workCode) throws IOException {
 
         List<ExcelExportSimplePO> list = easyPOIService.findSimpleExcelExportData(workCode);
+        List<ExcelExportSimplePO> listHelp = list;
 
         ExportParams exportParams = new ExportParams("工号-分部管理","ExcelExport1");
         //导出 工号对应管理的分部信息
@@ -481,7 +485,7 @@ public class EasyPOIApi {
 
     /**
      * 指令导出excel
-     * easypoi的三目运算  t.age == 24 ? '无' : t.age 格式为字符串
+     * easypoi的三目运算  t.age == 24 ? 999 : t.age 格式为字符串
      */
     @ApiOperation(value = "指令导出excel")
     @PostMapping("/export/test")
@@ -504,7 +508,7 @@ public class EasyPOIApi {
         person2.setAge(28);
         person2.setJobDate("2016-12-12");
 
-        person3.setId(3);
+        person3.setId(2);
         person3.setName("李钟硕");
         person3.setSex("男");
         person3.setAge(999);
@@ -516,7 +520,7 @@ public class EasyPOIApi {
 
         Map<String,Object> mapData = new HashMap<>();
         mapData.put("personList",list);  //直接是list,不需要封装为map,作为模板导出成功了哟
-        TemplateExportParams params = new TemplateExportParams("C:/excel/2.xlsx");
+        TemplateExportParams params = new TemplateExportParams("C:/excel/1.xlsx");
         //标题开始行
         params.setHeadingStartRow(0);
         //标题行数
@@ -525,6 +529,34 @@ public class EasyPOIApi {
         params.setSheetName("person");
         Workbook workbook = ExcelExportUtil.exportExcel(params,mapData);
 
+
+        //根据某列的值设置整行的字体加粗
+        int nCol = ExcelExportPersonPO.class.getDeclaredFields().length;
+        System.out.println(nCol);
+        Sheet sheet =  workbook.getSheetAt(0);
+        int firstRow = 1;
+        int allRows = list.size();
+        //Row row = sheet.getRow(0);
+        Row row = null;
+        Cell cell = null;
+        CellStyle style = workbook.createCellStyle();
+        Font font = workbook.createFont();
+
+        for (; firstRow <= allRows; firstRow++) {
+            row = sheet.getRow(firstRow);
+            for (int j = 0; j < nCol; j++) {
+                //if("2".equals(list.get(firstRow).getId())){
+                if(2 == (list.get(firstRow-1).getId())){
+                    cell = row.getCell(j);
+                    font.setBold(true);
+                    style.setFont(font);
+                    cell.setCellStyle(style);
+                }
+            }
+        }
+
+
+
         /*写入文件*/
         File file = new File("C:/excel");
         if(!file.exists()){
@@ -532,7 +564,7 @@ public class EasyPOIApi {
         }
         FileOutputStream fos = null;
         try {
-            fos = new FileOutputStream("C:/excel/templateExportExcelTest.xlsx");
+            fos = new FileOutputStream("C:/excel/ll.xlsx");
             workbook.write(fos);
             fos.close();
         } catch (FileNotFoundException e) {
@@ -541,7 +573,7 @@ public class EasyPOIApi {
             e.printStackTrace();
         }
 
-        System.out.println("指令模板导出Excel Success!!! -》templateExportExcelTest.xlsx");
+        System.out.println("指令模板导出Excel Success!!! -》ll.xlsx");
 
 
     }

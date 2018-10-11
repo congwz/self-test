@@ -41,6 +41,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -859,7 +860,7 @@ listNoDup2：[a, b, c, 1]*/
         }*/
 
 
-        List<String> supplierCodeList = new ArrayList<>();
+        /*List<String> supplierCodeList = new ArrayList<>();
         supplierCodeList.add("10276");
         String url = "http://172.28.10.247:8006/api/purchase/queryContactInfo";
         HttpHeaders headers = new HttpHeaders();
@@ -870,21 +871,44 @@ listNoDup2：[a, b, c, 1]*/
         Map map = restTemplate.postForObject(url, request, Map.class);
 
         List<ContactResponseEntity> supplierEmail1 = (List<ContactResponseEntity>) map.get("data");
-        /*List<ContactResponseEntity> supplierEmail = com.alibaba.fastjson.JSON.parseArray((String) map.get("data"),ContactResponseEntity.class);*/
+        *//*List<ContactResponseEntity> supplierEmail = com.alibaba.fastjson.JSON.parseArray((String) map.get("data"),ContactResponseEntity.class);*//*
 
         JSONArray jsonarray = JSONArray.fromObject(map.get("data"));
         List<ContactResponseEntity> supplierEmail = JSONArray.toList(jsonarray , ContactResponseEntity.class);
 
-        /*[{supplierCode=110276, supplierName=苏州贝雅得自动化科技有限公司, userMailAddresses=[1131150178@qq.com]}]
+        *//*[{supplierCode=110276, supplierName=苏州贝雅得自动化科技有限公司, userMailAddresses=[1131150178@qq.com]}]
         [ContactResponseEntity(supplierCode=110276, supplierName=苏州贝雅得自动化科技有限公司, userMailAddresses=[1131150178@qq.com])]
-        110276*/
+        110276*//*
 
         System.out.println((supplierEmail1.toString() == null ? new ArrayList() : supplierEmail1.toString()));
         System.out.println((supplierEmail.toString() == null ? new ArrayList() : supplierEmail.toString()));
 
         for (ContactResponseEntity i : supplierEmail) {
             System.out.println(i.getSupplierCode());
-        }
+        }*/
+
+        //List<String>转换成List<Integer>
+        /*List<String> strList = new ArrayList<>();
+        strList.add("11");
+        strList.add("22");
+        strList.add("33");
+        System.out.println("strList: " + strList.toString());
+
+        //List<Integer> intList = strList.stream().map(Integer::parseInt).collect(Collectors.toList());
+        List<Integer> intList = strList.stream().map(s->Integer.parseInt(s)).collect(Collectors.toList());
+        System.out.println("intList: " + intList.toString());
+
+        List<Integer> list = intList.stream().map(i->Integer.parseInt(String.valueOf(i))).collect(Collectors.toList());
+        System.out.println("list: " + list.toString());*/
+
+        /*
+        strList: [11, 22, 33]
+        intList: [11, 22, 33]
+        list: [11, 22, 33]
+        * */
+
+
+
 
 
 
