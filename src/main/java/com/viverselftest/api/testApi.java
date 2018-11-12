@@ -48,11 +48,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/test/console")
 public class testApi {
 
-    /*    @ExceptionHandler(value = ClassCastException.class)
-    @ResponseBody
-    public ApiResDTO classCastException(HttpServletRequest req, ClassCastException e, HttpServletResponse res) {
-        return ResUtils.successMsg(res.getHeader("str"));
-   }*/
 
     @Autowired
     private TestService testService;
@@ -419,14 +414,14 @@ listNoDup2：[a, b, c, 1]*/
      * @param add_dto
      * @return
      */
-    @ApiOperation("测试前端传参时null和空字符串的区别")
-    @PostMapping("/test-nullOrEmpty-Param")
-    public ServerResponse testNullOrEmptyParam(@RequestBody List<TestNullOrEmptyDTO> add_dto){
-        for(int i =0; i < add_dto.size(); i++){
-            System.out.println("userno: " + add_dto.get(i).getUserno());
-        }
-        return ServerResponse.successCodeMsgData("添加成功",testService.testNullOrEmptyParam(add_dto));
-    }
+//    @ApiOperation("测试前端传参时null和空字符串的区别")
+//    @PostMapping("/test-nullOrEmpty-Param")
+//    public ServerResponse testNullOrEmptyParam(@RequestBody List<TestNullOrEmptyDTO> add_dto){
+//        for(int i =0; i < add_dto.size(); i++){
+//            System.out.println("userno: " + add_dto.get(i).getUserno());
+//        }
+//        return ServerResponse.successCodeMsgData("添加成功",testService.testNullOrEmptyParam(add_dto));
+//    }
 
 
 
@@ -906,6 +901,47 @@ listNoDup2：[a, b, c, 1]*/
         intList: [11, 22, 33]
         list: [11, 22, 33]
         * */
+
+
+        TestPO t1 = new TestPO();
+        t1.setName("啦啦啦");
+        t1.setAge(21);
+        t1.setSex("女");
+
+        TestPO t2 = new TestPO();
+        t2.setName("啦啦啦2");
+        t2.setAge(22);
+        t2.setSex("女2");
+
+        TestPO t3 = new TestPO();
+        t3.setName("啦啦啦3");
+        t3.setAge(22);
+        t3.setSex("女3");
+        List<TestPO> list = new ArrayList<>();
+
+        list.add(t2);
+        list.add(t1);
+        list.add(t3);
+        TestPO person = list.stream()
+                .findFirst().get();
+        //System.out.println(person.toString());
+
+
+
+        /*List<TestPO> res = list.stream().filter(
+                x -> x.getAge()==22).collect(Collectors.toList());*/
+        List<TestPO> res = list.stream().filter(
+                x -> Objects.equals(x.getAge(),22)).collect(Collectors.toList());
+        System.out.println(res);
+
+        System.out.println(new Date());
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yy");
+        String yearYY = sdf.format(new Date());
+        System.out.println(yearYY);
+        int a = 1+Integer.valueOf("18000043".substring(2));
+        System.out.println(a);
+        System.out.println(String.format("%06d", a));
 
 
 

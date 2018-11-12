@@ -25,11 +25,12 @@ public class Swagger {
 
     @Bean
     public Docket swaggerConfig(){
-        /*return new Docket(DocumentationType.SWAGGER_2)
+        return new Docket(DocumentationType.SWAGGER_2)
                 .globalOperationParameters(newArrayList(
                         new ParameterBuilder()
                         .name("language")
-                        .description("语言")
+                        /*.description("语言")*/
+                        .description("language")
                         .modelRef(new ModelRef("string"))
                         .parameterType("header")
                         .required(false)
@@ -40,7 +41,7 @@ public class Swagger {
                         .description("token")
                         .modelRef(new ModelRef("String"))
                         .parameterType("header")
-                        .required(false)
+                        .required(true)
                         .build()
 
                  ))
@@ -52,8 +53,8 @@ public class Swagger {
                 .select()
                 .paths(PathSelectors.regex("/api/.*"))
                 .build()
-                .apiInfo(viverApiInfo());*/
-        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(viverApiInfo());
+        /*return new Docket(DocumentationType.SWAGGER_2)
                 .pathMapping("/")
                 .produces(Sets.newHashSet("application/json;charset=UTF-8"))
                 .groupName("Viver-Self-Test")
@@ -62,7 +63,7 @@ public class Swagger {
                 .apis(RequestHandlerSelectors.basePackage("com.viverselftest.api"))
                 //.paths(PathSelectors.regex("/api/.*"))
                 .build()
-                .apiInfo(viverApiInfo());
+                .apiInfo(viverApiInfo());*/
     }
 
     private ApiInfo viverApiInfo(){
