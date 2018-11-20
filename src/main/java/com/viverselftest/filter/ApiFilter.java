@@ -21,8 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.Map;
 
-@Configuration
-public class ApiFilter extends WebMvcConfigurerAdapter {
+//@Configuration
+//public class ApiFilter extends WebMvcConfigurerAdapter {
+public class ApiFilter {
 
     @Autowired
     private ErrorMsgUtils errorMsgUtils;

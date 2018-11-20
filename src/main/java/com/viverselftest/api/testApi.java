@@ -37,10 +37,13 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.security.Key;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
@@ -409,9 +412,16 @@ listNoDup2：[a, b, c, 1]*/
         return testService.testValueProperties();
     }
 
+
+    @ApiOperation("测试Date和TIMESTAMP")
+    @GetMapping("/test-date-timestemp")
+    public void testDateAndTimeStemp(){
+        testService.testDateAndTimeStemp();
+    }
+
     /**
      * 测试前端传参时null和""的区别
-     * @param add_dto
+     * @param //add_dto
      * @return
      */
 //    @ApiOperation("测试前端传参时null和空字符串的区别")
@@ -930,7 +940,7 @@ listNoDup2：[a, b, c, 1]*/
 
         /*List<TestPO> res = list.stream().filter(
                 x -> x.getAge()==22).collect(Collectors.toList());*/
-        List<TestPO> res = list.stream().filter(
+        /*List<TestPO> res = list.stream().filter(
                 x -> Objects.equals(x.getAge(),22)).collect(Collectors.toList());
         System.out.println(res);
 
@@ -941,7 +951,44 @@ listNoDup2：[a, b, c, 1]*/
         System.out.println(yearYY);
         int a = 1+Integer.valueOf("18000043".substring(2));
         System.out.println(a);
-        System.out.println(String.format("%06d", a));
+        System.out.println(String.format("%06d", a));*/
+
+
+        //String path = "go/1530599530209/主视图.PNG";
+        //String path = "https://hc-oss01.oss-cn-shanghai.aliyuncs.com/go/1530599530209/主视图.PNG";
+        String OSS_PATH = "https://hc-oss01.oss-cn-shanghai.aliyuncs.com/";
+        /*if (path.startsWith(OSS_PATH)) {
+            path = path.substring(path.indexOf(OSS_PATH) + OSS_PATH.length());
+        }
+        System.out.println(path);*/
+
+        //String t = "https://hc-oss01.oss-cn-shanghai.aliyuncs.com/upload/测试pdf3_1539744168891";
+        String t = "https://hc-oss01.oss-cn-shanghai.aliyuncs.com/upload/XtraReportPO_1541645487725/2.pdf";
+        //t = t.substring(t.indexOf(OSS_PATH) + OSS_PATH.length() + 7).split("_")[0] + "_" + t.substring(t.lastIndexOf("/")+1);
+
+        /*Pattern pattern = Pattern.compile("(https://hc-oss01.oss-cn-shanghai.aliyuncs.com/upload/)");
+        Pattern pattern2 = Pattern.compile("\\d+/");
+        Matcher matcher = pattern.matcher(t);
+        t = matcher.replaceAll("");
+        Matcher matcher2 = pattern2.matcher(t);
+        t = matcher2.replaceAll("");*/
+
+
+        /*t = t.substring(t.indexOf(OSS_PATH) + OSS_PATH.length() + 7);
+        Pattern pattern = Pattern.compile("\\d+/");
+        Matcher matcher = pattern.matcher(t);
+        t = matcher.replaceAll("");
+        t = t.split("_")[0] + "_p" + t.split("_")[1];
+
+        System.out.println(t);*/
+
+        Date d = new Date();
+        //Date d2 = new Date("Fri Nov 16 09:13:14 CST 2018");
+        Timestamp tim = new Timestamp(d.getTime());
+        /*Fri Nov 16 09:21:19 CST 2018
+        2018-11-16 09:21:19.088*/
+        System.out.println(d);
+        System.out.println(tim);
 
 
 

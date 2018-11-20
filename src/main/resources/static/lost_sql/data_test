@@ -1,0 +1,146 @@
+insert into PA_VIVER_LOST(id,image,title,content,name,user_id,create_date,update_date,province,city,is_lost,money,remark)
+(
+select sys_guid(),'img/items/item-wallet.jpeg','钱包','本人不小心遗失一个黑色钱包，内有身份证，银行卡和一些现金。本人不小心遗失一个黑色钱包，内有身份证，银行卡和一些现金。',
+'郝先生','','2018-11-27','','河南省','郑州市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-dog.jpeg','爱犬遗失','爱犬在附近小区走丢，脖子上挂着一个小铃铛，希望看见的人可以与我联系。',
+'陈小姐','','2018-11-26','','江苏省','南通市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-pc.jpg','手提电脑','联想电脑：i5配置，内存8G，装有移动硬盘。',
+'王女士','','2018-11-26','','四川省','成都市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-mobile.jpg','丢失了手机','手机OPPOA5幻镜粉64G，有白色外壳的OA5幻镜粉64G，有白色外壳laOA5幻镜粉64G，有白色手机OPPOA5幻镜粉64G外壳',
+'','','2018-11-27','','河南省','郑州市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-wallet.jpeg','钱包','本人不小心遗失一个黑色钱包，内有身份证，银行卡和一些现金。本人不小心遗失一个黑色钱包，内有身份证，银行卡和一些现金。',
+'郝先生','','2018-11-26','','河南省','郑州市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-dog.jpeg','爱犬遗失','爱犬在附近小区走丢，脖子上挂着一个小铃铛，希望看见的人可以与我联系。',
+'陈小姐','','2018-11-25','','江苏省','南通市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-pc.jpg','手提电脑','联想电脑：i5配置，内存8G，装有移动硬盘。',
+'王女士','','2018-11-25','','四川省','成都市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-mobile.jpg','丢失了手机','手机OPPOA5幻镜粉64G，有白色外壳的OA5幻镜粉64G，有白色外壳laOA5幻镜粉64G，有白色手机OPPOA5幻镜粉64G外壳',
+'','','2018-11-26','','河南省','郑州市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-wallet.jpeg','钱包','本人不小心遗失一个黑色钱包，内有身份证，银行卡和一些现金。本人不小心遗失一个黑色钱包，内有身份证，银行卡和一些现金。',
+'郝先生','','2018-11-25','','河南省','郑州市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-dog.jpeg','爱犬遗失','爱犬在附近小区走丢，脖子上挂着一个小铃铛，希望看见的人可以与我联系。',
+'陈小姐','','2018-11-28','','江苏省','南通市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-mobile.jpg','丢失了手机','手机OPPOA5幻镜粉64G，有白色外壳的OA5幻镜粉64G，有白色外壳laOA5幻镜粉64G，有白色手机OPPOA5幻镜粉64G外壳',
+'','','2018-11-26','','河南省','郑州市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-pc.jpg','手提电脑','联想电脑：i5配置，内存8G，装有移动硬盘。',
+'王女士','','2018-11-27','','四川省','成都市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-wallet.jpeg','钱包','本人不小心遗失一个黑色钱包，内有身份证，银行卡和一些现金。本人不小心遗失一个黑色钱包，内有身份证，银行卡和一些现金。',
+'郝先生','','2018-11-25','','河南省','郑州市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-dog.jpeg','爱犬遗失','爱犬在附近小区走丢，脖子上挂着一个小铃铛，希望看见的人可以与我联系。',
+'陈小姐','','2018-11-26','','江苏省','南通市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-pc.jpg','手提电脑','联想电脑：i5配置，内存8G，装有移动硬盘。',
+'王女士','','2018-11-29','','四川省','成都市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-mobile.jpg','丢失了手机','手机OPPOA5幻镜粉64G，有白色外壳的OA5幻镜粉64G，有白色外壳laOA5幻镜粉64G，有白色手机OPPOA5幻镜粉64G外壳',
+'','','2018-11-27','','河南省','郑州市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-wallet.jpeg','钱包','本人不小心遗失一个黑色钱包，内有身份证，银行卡和一些现金。本人不小心遗失一个黑色钱包，内有身份证，银行卡和一些现金。',
+'郝先生','','2018-11-25','','河南省','郑州市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-dog.jpeg','爱犬遗失','爱犬在附近小区走丢，脖子上挂着一个小铃铛，希望看见的人可以与我联系。',
+'陈小姐','','2018-11-26','','江苏省','南通市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-pc.jpg','手提电脑','联想电脑：i5配置，内存8G，装有移动硬盘。',
+'王女士','','2018-11-28','','四川省','成都市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-mobile.jpg','丢失了手机','手机OPPOA5幻镜粉64G，有白色外壳的OA5幻镜粉64G，有白色外壳laOA5幻镜粉64G，有白色手机OPPOA5幻镜粉64G外壳',
+'','','2018-11-16','','河南省','郑州市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-wallet.jpeg','钱包','本人不小心遗失一个黑色钱包，内有身份证，银行卡和一些现金。本人不小心遗失一个黑色钱包，内有身份证，银行卡和一些现金。',
+'郝先生','','2018-11-06','','河南省','郑州市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-dog.jpeg','爱犬遗失','爱犬在附近小区走丢，脖子上挂着一个小铃铛，希望看见的人可以与我联系。',
+'陈小姐','','2018-11-26','','江苏省','南通市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-mobile.jpg','丢失了手机','手机OPPOA5幻镜粉64G，有白色外壳的OA5幻镜粉64G，有白色外壳laOA5幻镜粉64G，有白色手机OPPOA5幻镜粉64G外壳',
+'','','2018-11-16','','河南省','郑州市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-pc.jpg','手提电脑','联想电脑：i5配置，内存8G，装有移动硬盘。',
+'王女士','','2018-11-19','','四川省','成都市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-wallet.jpeg','钱包','本人不小心遗失一个黑色钱包，内有身份证，银行卡和一些现金。本人不小心遗失一个黑色钱包，内有身份证，银行卡和一些现金。',
+'郝先生','','2018-11-27','','河南省','郑州市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-dog.jpeg','爱犬遗失','爱犬在附近小区走丢，脖子上挂着一个小铃铛，希望看见的人可以与我联系。',
+'陈小姐','','2018-11-26','','江苏省','南通市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-pc.jpg','手提电脑','联想电脑：i5配置，内存8G，装有移动硬盘。',
+'王女士','','2018-11-26','','四川省','成都市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-mobile.jpg','丢失了手机','手机OPPOA5幻镜粉64G，有白色外壳的OA5幻镜粉64G，有白色外壳laOA5幻镜粉64G，有白色手机OPPOA5幻镜粉64G外壳',
+'','','2018-11-27','','河南省','郑州市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-wallet.jpeg','钱包','本人不小心遗失一个黑色钱包，内有身份证，银行卡和一些现金。本人不小心遗失一个黑色钱包，内有身份证，银行卡和一些现金。',
+'郝先生','','2018-11-26','','河南省','郑州市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-dog.jpeg','爱犬遗失','爱犬在附近小区走丢，脖子上挂着一个小铃铛，希望看见的人可以与我联系。',
+'陈小姐','','2018-11-25','','江苏省','南通市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-pc.jpg','手提电脑','联想电脑：i5配置，内存8G，装有移动硬盘。',
+'王女士','','2018-11-25','','四川省','成都市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-mobile.jpg','丢失了手机','手机OPPOA5幻镜粉64G，有白色外壳的OA5幻镜粉64G，有白色外壳laOA5幻镜粉64G，有白色手机OPPOA5幻镜粉64G外壳',
+'','','2018-11-26','','河南省','郑州市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-wallet.jpeg','钱包','本人不小心遗失一个黑色钱包，内有身份证，银行卡和一些现金。本人不小心遗失一个黑色钱包，内有身份证，银行卡和一些现金。',
+'郝先生','','2018-11-25','','河南省','郑州市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-dog.jpeg','爱犬遗失','爱犬在附近小区走丢，脖子上挂着一个小铃铛，希望看见的人可以与我联系。',
+'陈小姐','','2018-11-28','','江苏省','南通市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-mobile.jpg','丢失了手机','手机OPPOA5幻镜粉64G，有白色外壳的OA5幻镜粉64G，有白色外壳laOA5幻镜粉64G，有白色手机OPPOA5幻镜粉64G外壳',
+'','','2018-11-26','','河南省','郑州市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-pc.jpg','手提电脑','联想电脑：i5配置，内存8G，装有移动硬盘。',
+'王女士','','2018-11-27','','四川省','成都市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-wallet.jpeg','钱包','本人不小心遗失一个黑色钱包，内有身份证，银行卡和一些现金。本人不小心遗失一个黑色钱包，内有身份证，银行卡和一些现金。',
+'郝先生','','2018-11-25','','河南省','郑州市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-dog.jpeg','爱犬遗失','爱犬在附近小区走丢，脖子上挂着一个小铃铛，希望看见的人可以与我联系。',
+'陈小姐','','2018-11-26','','江苏省','南通市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-pc.jpg','手提电脑','联想电脑：i5配置，内存8G，装有移动硬盘。',
+'王女士','','2018-11-29','','四川省','成都市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-mobile.jpg','丢失了手机','手机OPPOA5幻镜粉64G，有白色外壳的OA5幻镜粉64G，有白色外壳laOA5幻镜粉64G，有白色手机OPPOA5幻镜粉64G外壳',
+'','','2018-11-27','','河南省','郑州市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-wallet.jpeg','钱包','本人不小心遗失一个黑色钱包，内有身份证，银行卡和一些现金。本人不小心遗失一个黑色钱包，内有身份证，银行卡和一些现金。',
+'郝先生','','2018-11-25','','河南省','郑州市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-dog.jpeg','爱犬遗失','爱犬在附近小区走丢，脖子上挂着一个小铃铛，希望看见的人可以与我联系。',
+'陈小姐','','2018-11-26','','江苏省','南通市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-pc.jpg','手提电脑','联想电脑：i5配置，内存8G，装有移动硬盘。',
+'王女士','','2018-11-28','','四川省','成都市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-mobile.jpg','丢失了手机','手机OPPOA5幻镜粉64G，有白色外壳的OA5幻镜粉64G，有白色外壳laOA5幻镜粉64G，有白色手机OPPOA5幻镜粉64G外壳',
+'','','2018-11-16','','河南省','郑州市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-wallet.jpeg','钱包','本人不小心遗失一个黑色钱包，内有身份证，银行卡和一些现金。本人不小心遗失一个黑色钱包，内有身份证，银行卡和一些现金。',
+'郝先生','','2018-11-06','','河南省','郑州市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-dog.jpeg','爱犬遗失','爱犬在附近小区走丢，脖子上挂着一个小铃铛，希望看见的人可以与我联系。',
+'陈小姐','','2018-11-26','','江苏省','南通市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-mobile.jpg','丢失了手机','手机OPPOA5幻镜粉64G，有白色外壳的OA5幻镜粉64G，有白色外壳laOA5幻镜粉64G，有白色手机OPPOA5幻镜粉64G外壳',
+'','','2018-11-16','','河南省','郑州市','Y','','' from dual
+union
+select sys_guid(),'img/items/item-pc.jpg','手提电脑','联想电脑：i5配置，内存8G，装有移动硬盘。',
+'王女士','',to_char(sysdate,'yyyy-MM-dd'),'','四川省','成都市','Y','','' from dual
+)

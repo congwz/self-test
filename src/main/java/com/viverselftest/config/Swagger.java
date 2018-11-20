@@ -27,22 +27,22 @@ public class Swagger {
     public Docket swaggerConfig(){
         return new Docket(DocumentationType.SWAGGER_2)
                 .globalOperationParameters(newArrayList(
-                        new ParameterBuilder()
+                        /*new ParameterBuilder()
                         .name("language")
-                        /*.description("语言")*/
+                        *//*.description("语言")*//*
                         .description("language")
                         .modelRef(new ModelRef("string"))
                         .parameterType("header")
                         .required(false)
-                        .build(),
+                        .build(),*/
 
-                        new ParameterBuilder()
+                        /*new ParameterBuilder()
                         .name("token")
                         .description("token")
                         .modelRef(new ModelRef("String"))
                         .parameterType("header")
                         .required(true)
-                        .build()
+                        .build()*/
 
                  ))
                 .groupName("Viver-Self-Test")

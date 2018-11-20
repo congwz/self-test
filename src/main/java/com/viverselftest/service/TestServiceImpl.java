@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.xml.crypto.Data;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +51,17 @@ public class TestServiceImpl implements TestService {
         return map;
     }
 
+    /**
+     * 测试Date和TIMESTAMP
+     */
+    @Override
+    public void testDateAndTimeStemp() {
+        Date d = new Date();
+        Timestamp t = new Timestamp(d.getTime());
+        System.out.println(d);
+        System.out.println(t);
+        testMapper.addDateToTimeStemp(t);
+    }
 
     /**
      * 测试前端传参时null和""的区别

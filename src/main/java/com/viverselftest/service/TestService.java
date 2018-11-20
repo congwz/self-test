@@ -13,6 +13,11 @@ public interface TestService {
     Map testValueProperties();
 
     /**
+     * 测试Date和TIMESTAMP
+     */
+    void testDateAndTimeStemp();
+
+    /**
      * 测试前端传参时null和""的区别
      * @param add_dto
      * @return
