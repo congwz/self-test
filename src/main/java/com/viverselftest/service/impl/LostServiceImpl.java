@@ -4,12 +4,17 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.viverselftest.dao.jde.LostMapper;
 import com.viverselftest.dto.PageDTO;
+import com.viverselftest.exception.ErrorException;
 import com.viverselftest.po.lost.LostPO;
+import com.viverselftest.po.lost.UserInfoPO;
 import com.viverselftest.service.LostService;
+import com.viverselftest.util.CryptUtils;
+import com.viverselftest.util.ErrorMsgUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Congwz on 2018/11/12.
@@ -19,6 +24,12 @@ public class LostServiceImpl implements LostService {
 
     @Autowired
     private LostMapper lostMapper;
+
+    @Autowired
+    private ErrorMsgUtils errorMsgUtils;
+
+    @Autowired
+    public CryptUtils crptUtill;
 
 
     /**
@@ -40,6 +51,28 @@ public class LostServiceImpl implements LostService {
 
         return pageDTO;
     }
+
+    /**
+     * 注册
+     * @param user
+     */
+    @Override
+    public void addUserRegisterInfo(UserInfoPO user) {
+
+        //检查用户是否已注册过
+        int isRegisterAccount = lostMapper.findUserIsRegisterCount(user);
+        if(isRegisterAccount > 0) {
+            throw new ErrorException("200000", errorMsgUtils.errorMsg("", "200000"));
+        }
+
+        //Cipher加密
+        user.setPassword(crptUtill.encrypt(user.getPassword()));
+        user.setId(UUID.randomUUID().toString());
+
+        lostMapper.addRegisterInfo(user);
+    }
+
+
 
 
 }

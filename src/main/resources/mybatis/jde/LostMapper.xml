@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viverselftest.dao.jde.LostMapper">
+
+    <!-- 添加用户注册信息 -->
+    <insert id="addRegisterInfo" parameterType="com.viverselftest.po.lost.UserInfoPO">
+        insert into pa_viver_lost_reg
+        (
+        id,
+        account,
+        password,
+        email,
+        <if test="qq != null and qq != '' ">
+            qq,
+        </if>
+        <if test="phone != null and phone != '' ">
+            phone,
+        </if>
+        <if test="age != null and age != -1 ">
+            age,
+        </if>
+        <if test="sex != null and sex != -1">
+            sex,
+        </if>
+        create_date,
+        is_delete
+        )
+        values
+        (
+        #{id},
+        #{account},
+        #{password},
+        #{email},
+        <if test="qq != null and qq != '' ">
+            #{qq},
+        </if>
+        <if test="phone != null and phone != '' ">
+            #{phone},
+        </if>
+        <if test="age != null and age != -1 ">
+            #{age},
+        </if>
+        <if test="sex != null and sex != -1">
+            #{sex},
+        </if>
+        to_char(sysdate,'yyyy-MM-dd HH24:mi:ss'),
+        'N'
+        )
+    </insert>
+
+</mapper>

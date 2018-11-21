@@ -1,6 +1,7 @@
 package com.viverselftest.dao.jde;
 
 import com.viverselftest.po.lost.LostPO;
+import com.viverselftest.po.lost.UserInfoPO;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
@@ -22,4 +23,18 @@ public interface LostMapper {
             + "where is_lost = 'Y' "
             + "order by create_date")
     List<LostPO> findLostList();
+
+    /**
+     * 合计用户已注册账号
+     * @param user
+     * @return
+     */
+    @Select("select count(1) from pa_viver_lost_reg where is_delete = 'N' and account = #{account} ")
+    int findUserIsRegisterCount(UserInfoPO user);
+
+    /**
+     * 添加用户注册信息
+     * @param user
+     */
+    void addRegisterInfo(UserInfoPO user);
 }

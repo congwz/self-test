@@ -1,15 +1,13 @@
 package com.viverselftest.api;
 
 import com.viverselftest.dto.PageDTO;
+import com.viverselftest.po.lost.UserInfoPO;
 import com.viverselftest.service.LostService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,6 +38,16 @@ public class LostApi {
         response.setHeader("Access-Control-Allow-Origin","*");
         response.setHeader("Access-Control-Allow-Headers","x-requested-with,content-type");
         return lostService.getLostList(pageNumber,pageSize);
+    }
+
+    /**
+     * 注册
+     * @param user
+     */
+    @ApiOperation(value = "注册")
+    @PostMapping("/register")
+    public void addUserRegisterInfo(@RequestBody UserInfoPO user){
+        lostService.addUserRegisterInfo(user);
     }
 
 }
