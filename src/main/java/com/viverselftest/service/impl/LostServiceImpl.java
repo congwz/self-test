@@ -72,7 +72,17 @@ public class LostServiceImpl implements LostService {
         lostMapper.addRegisterInfo(user);
     }
 
-
-
-
+    /**
+     * 验证用户名是否已存在
+     * @param account
+     * @return
+     */
+    @Override
+    public boolean verfityAccount(String account) {
+        int count = lostMapper.findUserIsRegister(account);
+        if(count > 0) {
+            return true;
+        }
+        return false;
+    }
 }

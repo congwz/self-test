@@ -50,4 +50,15 @@ public class LostApi {
         lostService.addUserRegisterInfo(user);
     }
 
+    /**
+     * 验证用户名是否已存在
+     * @param account
+     * @return
+     */
+    @ApiOperation(value = "验证用户名")
+    @GetMapping("/account-verify")
+    public boolean verfityAccount(@RequestParam(name = "account") String account){
+        return lostService.verfityAccount(account);
+    }
+
 }

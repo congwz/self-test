@@ -37,4 +37,7 @@ public interface LostMapper {
      * @param user
      */
     void addRegisterInfo(UserInfoPO user);
+
+    @Select("select count(1) from pa_viver_lost_reg where is_delete = 'N' and account = #{account} ")
+    int findUserIsRegister(String account);
 }

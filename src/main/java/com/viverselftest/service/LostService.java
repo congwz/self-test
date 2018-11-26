@@ -21,4 +21,11 @@ public interface LostService {
      * @param user
      */
     void addUserRegisterInfo(UserInfoPO user);
+
+    /**
+     * 验证用户名是否已存在
+     * @param account
+     * @return
+     */
+    boolean verfityAccount(String account);
 }
