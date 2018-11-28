@@ -28,4 +28,12 @@ public interface LostService {
      * @return
      */
     boolean verfityAccount(String account);
+
+    /**
+     * 登录时检查用户名和密码
+     * @param account
+     * @param password
+     * @return
+     */
+    String checkLogin(String account, String password);
 }

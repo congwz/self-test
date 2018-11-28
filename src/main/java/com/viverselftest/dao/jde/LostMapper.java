@@ -2,6 +2,7 @@ package com.viverselftest.dao.jde;
 
 import com.viverselftest.po.lost.LostPO;
 import com.viverselftest.po.lost.UserInfoPO;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
@@ -40,4 +41,11 @@ public interface LostMapper {
 
     @Select("select count(1) from pa_viver_lost_reg where is_delete = 'N' and account = #{account} ")
     int findUserIsRegister(String account);
+
+    @Select("SELECT COUNT(1) FROM pa_viver_lost_reg WHERE IS_DELETE = 'N' AND ACCOUNT = #{account} ")
+    int findUserAccountInUse(String account);
+
+    @Select("SELECT count(1) FROM Pa_Viver_Lost_Reg WHERE IS_DELETE = 'N' AND ACCOUNT = #{account} and password = #{password} ")
+    int findUserAccountAndPassword(@Param("account") String account,
+                                   @Param("password") String password);
 }

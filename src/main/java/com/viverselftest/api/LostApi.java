@@ -5,11 +5,9 @@ import com.viverselftest.po.lost.UserInfoPO;
 import com.viverselftest.service.LostService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -59,6 +57,19 @@ public class LostApi {
     @GetMapping("/account-verify")
     public boolean verfityAccount(@RequestParam(name = "account") String account){
         return lostService.verfityAccount(account);
+    }
+
+    /**
+     * 登录时检查用户名和密码
+     * @param account
+     * @param password
+     * @return
+     */
+    @ApiOperation(value = "检查用户名和密码")
+    @GetMapping("/check-login")
+    public String checkLogin(@RequestParam(value = "account") String account,
+                             @RequestParam(value = "password") String password){
+        return lostService.checkLogin(account,password);
     }
 
 }

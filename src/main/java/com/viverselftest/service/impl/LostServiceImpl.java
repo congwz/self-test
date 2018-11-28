@@ -85,4 +85,29 @@ public class LostServiceImpl implements LostService {
         }
         return false;
     }
+
+    /**
+     * 登录时检查用户名和密码
+     * @param account
+     * @param password
+     * @return
+     */
+    @Override
+    public String checkLogin(String account, String password) {
+        System.out.println(CryptUtils.decrypt("54a58e33746bb2c65a03b16f6137bad0"));
+        //检查用户名是否存在且没有被删除/禁用
+        int accountCount = lostMapper.findUserAccountInUse(account);
+        if(accountCount == 0) {
+            throw new ErrorException("200001", errorMsgUtils.errorMsg("", "200001"));
+        }
+        password = CryptUtils.encrypt(password);
+        //检查密码是否匹配
+        int pwdCount = lostMapper.findUserAccountAndPassword(account,password);
+        if(pwdCount == 0) {
+            throw new ErrorException("200002", errorMsgUtils.errorMsg("", "200002"));
+        }
+
+
+        return "OK!";
+    }
 }
