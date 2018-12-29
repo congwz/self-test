@@ -982,13 +982,35 @@ listNoDup2：[a, b, c, 1]*/
 
         System.out.println(t);*/
 
-        Date d = new Date();
-        //Date d2 = new Date("Fri Nov 16 09:13:14 CST 2018");
-        Timestamp tim = new Timestamp(d.getTime());
-        /*Fri Nov 16 09:21:19 CST 2018
-        2018-11-16 09:21:19.088*/
-        System.out.println(d);
-        System.out.println(tim);
+//        Date d = new Date();
+//        //Date d2 = new Date("Fri Nov 16 09:13:14 CST 2018");
+//        Timestamp tim = new Timestamp(d.getTime());
+//        /*Fri Nov 16 09:21:19 CST 2018
+//        2018-11-16 09:21:19.088*/
+//        System.out.println(d);
+//        System.out.println(tim);
+
+
+        //String test = "x; font-size: 16px; line-height:/advertorial#/product/detail?detailId=90&amp;manufac/advertorial#/product/detail?detailId=3148&amp;manufacturer=JSCC&amp;manufacturer_no=90YF90GV22+90GF15RC><img style=tnufac/advertorial#/product/detail?detailId=8&a";
+
+        /*String test = "http://127.0.0.1:3012/card#/?id=41&amp;manufacturer=GLOBE&amp;manufacturer_no=HL402B-25mm></iframe>/127.0.0.1:3012/card#/?id=55&amp;manufacturer=GLOBE&amp;manufacturer_no=HL402B-25mm></";*/
+
+        //String regex ="product/detail\\?detailId=([0-9]+)";
+        /*String regex ="/card#/\\?id=([0-9]+)";
+        Pattern pattern= Pattern.compile(regex);
+        Matcher m = pattern.matcher(test);
+        List<String> sb = new ArrayList<>();
+
+
+        while (m.find()) {
+            int i = 1;
+            sb.add(m.group(i));
+            i++;
+        }
+        System.out.println(sb);*/
+
+
+
 
 
 
