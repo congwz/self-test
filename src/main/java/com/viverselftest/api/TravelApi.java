@@ -1,15 +1,23 @@
 package com.viverselftest.api;
 
+import cn.afterturn.easypoi.excel.ExcelExportUtil;
+import cn.afterturn.easypoi.excel.entity.ExportParams;
+import com.viverselftest.po.ExcelExportBigDataPO;
 import com.viverselftest.vo.TravelCommonVO;
 import com.viverselftest.vo.TravelHomeCityVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -23,7 +31,7 @@ public class TravelApi {
 
     @ApiOperation(value = "获取首页数据")
     @GetMapping("/home-city")
-    public TravelHomeCityVO getLostList(@RequestParam(name="city") String city){
+    public TravelHomeCityVO getLostList(@RequestParam(name="city") String city) throws IOException {
         TravelHomeCityVO res = new TravelHomeCityVO();
         List<TravelCommonVO>  swiperList = new ArrayList<>();
         for(int i=1; i<4; i++) {
@@ -105,6 +113,38 @@ public class TravelApi {
             }
             weekendList.add(item);
         }
+
+        //加长时间请求
+        /*List<ExcelExportBigDataPO> list = new ArrayList<>();
+        Workbook workbook = null;
+        Date startDate = new Date();
+        ExportParams exportParams = new ExportParams("大数据导出Excel测试","BigData");
+        for(int i = 0; i < 1000000; i++){ // 一百万数据量
+            ExcelExportBigDataPO item = new ExcelExportBigDataPO();
+            item.setId(i);
+            item.setWork_code("0"+i);
+            item.setUser_name(i+"TestName"+i);
+            item.setBirthday(new Date());
+            item.setPhone("1525130526"+i);
+            item.setUserRemark(i+"大数据测试备注属性");
+            list.add(item);
+
+            if(list.size() == 10000){
+                workbook = ExcelExportUtil.exportBigExcel(exportParams,ExcelExportBigDataPO.class,list);
+                list.clear();
+            }
+        }//for
+
+        ExcelExportUtil.closeExportBigExcel();
+        System.out.println(new Date().getTime() - startDate.getTime());
+        File saveFile = new File("C:/excel");
+        if(!saveFile.exists()){
+            saveFile.mkdirs();
+        }
+        FileOutputStream fos = new FileOutputStream("C:/excel/BigDataExcel.xlsx");
+        workbook.write(fos);
+        fos.close();*/
+
         res.setCity(city);
         res.setSwiperList(swiperList);
         res.setIconList(iconList);
