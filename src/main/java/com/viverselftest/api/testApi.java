@@ -1,50 +1,24 @@
 package com.viverselftest.api;
 
 //import com.harmontronics.erp.util.StrUtils;
-import com.google.common.base.Splitter;
-import com.viverselftest.common.ServerResponse;
-import com.viverselftest.consts.TableTypeConsts;
-import com.viverselftest.dao.jde.InquireOnlineMapper;
-import com.viverselftest.dto.TestNullOrEmptyDTO;
-import com.viverselftest.dto.inquireonline.ContactResponseEntity;
-import com.viverselftest.dto.inquireonline.InquireOnlineHdDTO;
-import com.viverselftest.dto.inquireonline.hcSupplierEmailDTO;
-import com.viverselftest.dto.inquireonline.hcSupplierQuotedGenDTO;
 import com.viverselftest.dto.outputtest.HandlePlanDetailDTO;
 import com.viverselftest.po.TestLowerOrUpperPO;
 import com.viverselftest.po.TestPO;
 import com.viverselftest.service.TestService;
-import com.viverselftest.util.CryptUtils;
-import com.viverselftest.util.TestUtill;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import net.sf.json.JSON;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.mail.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.security.Key;
-import java.sql.Timestamp;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 
 @RestController
@@ -56,6 +30,7 @@ public class testApi {
     private TestService testService;
 
 
+    private static Email email;
 
 
     private Logger logger = LoggerFactory.getLogger(testApi.class);
@@ -1009,6 +984,27 @@ listNoDup2：[a, b, c, 1]*/
         }
         System.out.println(sb);*/
 
+
+        /*opendevice加盐值的MD5加密*/
+        /*Map<String, String> pwdMap = PasswordUtil.generatePassword("111111");
+        System.out.println(pwdMap.get("password"));
+        System.out.println(pwdMap.get("salt"));*/
+
+
+        /*passport向外发送的邮件*/
+
+        //String url = "https://emailapi.harmontronics.com/email/?token=email_test_token&username="+ "viver.zhang" + "&subject="+"TEST"+"&content=" + "你好呀！";
+
+
+        //String url = "https://emailapi.harmontronics.com/email/?token=email_test_token&username="+ "1131150178@qq.com" + "&subject="+"TEST"+"&content=" + "你好呀！";
+
+        //String url = "https://emailapi.harmontronics.com/email/?token=email_test_token&username="+ "congwz@outlook.com" + "&subject="+"TEST"+"&content=" + "你好呀！";
+
+        /*String url = "https://emailapi.harmontronics.com/email/?token=email_test_token&username="+ "viver.zhang" + "&subject="+"TEST"+"&content=" + "你好啊！\r\n 我是瀚川发出的测试邮件哦";
+
+        RestTemplate restTemplate = new RestTemplate();
+        String ss = restTemplate.getForObject(url, String.class);
+        System.out.println("send email success, " + ss); // send email success, {"result": 1}*/
 
 
 

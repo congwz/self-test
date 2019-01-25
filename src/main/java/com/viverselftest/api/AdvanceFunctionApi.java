@@ -1,5 +1,7 @@
 package com.viverselftest.api;
 
+import com.viverselftest.po.MailPO;
+import com.viverselftest.service.EmailService;
 import com.viverselftest.service.ZipUtilPackageServices;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -9,11 +11,9 @@ import net.lingala.zip4j.model.ZipModel;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
@@ -30,10 +30,13 @@ public class AdvanceFunctionApi {
     @Autowired
     private ZipUtilPackageServices zipUtilPackageServices;
 
+    @Autowired
+    private EmailService emailService;
+
 
     @ApiOperation(value = "下载zip文件(LiMing-net.lingala.zip4j)")
     @PostMapping("/download/zip")
-    public void downloadZip(HttpServletResponse response) throws IOException,InterruptedException,ZipException{
+    public void downloadZip(HttpServletResponse response) throws IOException, InterruptedException, ZipException {
 
         List<File> fileList = new ArrayList<>();
 
@@ -53,8 +56,8 @@ public class AdvanceFunctionApi {
                 //Calendar.getInstance().getTimeInMillis()
                 //+ "_" + new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date())  //“包含:的特殊字符不能识别,允许空格”
                 new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())
-                +"_" + fileList.size() + ".zip";
-        String zipPathFileName = "/zip123"+"/"+zipFileName; //“/zip123”等同于“C:\\zip123”
+                        + "_" + fileList.size() + ".zip";
+        String zipPathFileName = "/zip123" + "/" + zipFileName; //“/zip123”等同于“C:\\zip123”
 
         ZipModel zipModel = new ZipModel();
         zipModel.setFileNameCharset("GBK");  //"UTF-8"会乱码哦，所以要用GBK
@@ -65,7 +68,7 @@ public class AdvanceFunctionApi {
             zipFileDir.mkdirs(); //可创建层级文件夹(目录)
         }*/
         //FileOutputStream fileOutputStream = new FileOutputStream(new File(zipPathFileName));
-        ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(new File(zipPathFileName)),zipModel);
+        ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(new File(zipPathFileName)), zipModel);
         //ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(zipFileDir),zipModel);
 
         ZipParameters zipParameters = new ZipParameters();
@@ -73,9 +76,9 @@ public class AdvanceFunctionApi {
         zipParameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
 
         for (File fileItem : fileList) {
-            zipOutputStream.putNextEntry(fileItem,zipParameters);
+            zipOutputStream.putNextEntry(fileItem, zipParameters);
 
-            if(fileItem.isDirectory()){
+            if (fileItem.isDirectory()) {
                 zipOutputStream.close();
                 continue;
             }
@@ -94,14 +97,14 @@ public class AdvanceFunctionApi {
         zipOutputStream.close();
 
         //下载压缩包
-        response.setHeader("Content-disposition", "attachment;filename=" + URLEncoder.encode(zipFileName,"UTF-8"));
+        response.setHeader("Content-disposition", "attachment;filename=" + URLEncoder.encode(zipFileName, "UTF-8"));
         response.setContentType("application/octet-stream");
 
         FileInputStream fileInputStream = new FileInputStream(zipPathFileName);
         BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
         byte[] bytes = new byte[bufferedInputStream.available()];
         bufferedInputStream.read(bytes);  //读
-        OutputStream outputStream =response.getOutputStream();
+        OutputStream outputStream = response.getOutputStream();
         outputStream.write(bytes);  //写
 
         bufferedInputStream.close();
@@ -133,8 +136,8 @@ public class AdvanceFunctionApi {
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             String line = "";
             line = bufferedReader.readLine();
-            while (line != null){
-                System.out.println("读取：line"+"\t"+line);
+            while (line != null) {
+                System.out.println("读取：line" + "\t" + line);
                 line = bufferedReader.readLine(); //终止循环
             }
             inputStreamReader.close();
@@ -144,8 +147,8 @@ public class AdvanceFunctionApi {
             StringBuilder sb = new StringBuilder();
             FileReader fileReader = new FileReader(txtFile1);
             int line2 = fileReader.read();
-            while (line2 != -1){
-                sb.append((char)line2);
+            while (line2 != -1) {
+                sb.append((char) line2);
                 line2 = fileReader.read();
             }
 
@@ -159,11 +162,28 @@ public class AdvanceFunctionApi {
 
         System.out.println("zip压缩==================================================");
         //压缩
-        zipUtilPackageServices.zipDownload(response,txtFile1);
+        zipUtilPackageServices.zipDownload(response, txtFile1);
 
 
+    }
 
+    /**
+     * 使用瀚川邮箱向外发送邮件
+     * @param to
+     */
+    @ApiOperation(value = "发送邮件")
+    @GetMapping("/send-email")
+    public void sendEmail(@RequestParam("email_to") String to) {
+       /*Spring通过MimeMessageHelper发送邮件*/
+        MailPO item = new MailPO();
+        item.setFrom("viver.zhang@harmontronics.com");
+        item.setTo(to);
 
+        try {
+            emailService.sendMail(MailPO.build(item.getFrom(), item.getTo()));
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 
 }
