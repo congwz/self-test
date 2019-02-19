@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>失物招领注册页面</title>
+    <link rel="shortcut icon" href="img/favicon.jpg">
+
+    <link rel="stylesheet" href="css/register.css">
+
+    <!-- 引入bootstrap -->
+    <link rel="stylesheet" href="bootstrap/bootstrap.min.css">
+    <script src="bootstrap/jquery-3.3.1.min.js"></script>
+    <script src="bootstrap/bootstrap.min.js"></script>
+
+    <script src="js/register.js"></script>
+
+    <link rel="stylesheet" href="css/sweetalert.css">
+    <script src="js/sweetalert.min.js"></script>
+
+</head>
+<body>
+
+
+<div class="line-orange">
+    <span class="newest-lost">注册</span>
+</div>
+
+<!-- 注册表单 -->
+<div class="reg-form-info">
+
+    <form action="form-horizontal">
+        <div class="form-group">
+            <label for="name" class="control-label col-sm-2">
+                <img src="img/register-must.png" alt="">
+                账 号：
+            </label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="name" placeholder="请输入账号">
+            </div>
+            <div class="col-sm-6 tip-info">
+                <i></i>
+                <span class="tip">5-20个字符，一个汉字为两个字符。支持数字，字母和下划线</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="password" class="control-label col-sm-2">
+                <img src="img/register-must.png">
+                密 码：
+            </label>
+            <div class="col-sm-4">
+                <input type="password" class="form-control" id="password" placeholder="请输入密码">
+            </div>
+            <div class="col-sm-6 tip-info">
+                <i></i>
+                <span class="tip">密码长度6～14位，字母区分大小写</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">
+                密码强度：
+            </label>
+            <div class="col-sm-2">
+                <b class="pwd-rank" id="pwd-rank"></b>
+            </div>
+            <div class="col-sm-4">
+                <em class="active" id="active"></em>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="passwordConfirm" class="control-label col-sm-2">
+                <img src="img/register-must.png">
+                密码确认：
+            </label>
+            <div class="col-sm-4">
+                <input type="password" class="form-control" id="passwordConfirm" placeholder="请再次输入密码">
+            </div>
+            <div class="col-sm-6 tip-info">
+                <i></i>
+                <span class="tip">须和上方的密码一致</span>
+                <!--<img class="tip-ok" src="img/register-ok.gif" alt="">-->
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="email" class="control-label col-sm-2">
+                <img src="img/register-must.png">
+                邮 箱：
+            </label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="email" placeholder="请输入邮箱">
+            </div>
+            <div class="col-sm-6 tip-info">
+                <i></i>
+                <span class="tip">请输入有效的邮件地址，当密码遗失时凭此领取</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="qq" class="control-label col-sm-2">QQ：</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="qq" placeholder="请输入QQ账号">
+            </div>
+            <div class="col-sm-6 tip-info" id="qq-number">
+                <i></i>
+                <span class="tip">请填写你的QQ号码</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="phone" class="control-label col-sm-2">手 机：</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="phone" placeholder="请输入手机号">
+            </div>
+            <div class="col-sm-6 tip-info" id="phone-number">
+                <i></i>
+                <span class="tip">如：152xxxx5260</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="age" class="control-label col-sm-2">年 龄：</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="age" placeholder="请输入年龄">
+            </div>
+            <!--<div class="col-sm-6 tip-info" id="age-number">
+                <i></i>
+                <span class="tip"></span>
+            </div>-->
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">性 别：</label>
+            <div class="col-sm-6">
+                <label class="sex">
+                    <input type="radio" value="male" name="sex">
+                    <span>男</span>
+                </label>
+
+                <label class="sex col-sm-offset-1">
+                    <input type="radio" value="female" name="sex">
+                    <span>女</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2">注册协议：</label>
+            <div class="col-sm-6">
+                <textarea class="form-control register-protocol" readonly="readonly"
+                          style="background-color: #fff;resize: none">&lt;&lt;失物招领网协议&gt;&gt;&#10;&#10;一、失物招领网(以下简称本平台)旨在提供失物招领信息并帮助失主找回失物,我们仅提供对应信息的发布,不会以任何方式传递或传送实物;&#13;&#13;二、本平台不提供任何关于第三方所发布信息的真实性调查, 用户需要自行甄别并选择有效信息. 如有异议可以通过平台提供的联系方式进行沟通确认, 如引起纠纷, 本平台不承担任何法律责任;&#10;&#10;三、本平台主要内容来自第三方的发布, 如有信息侵犯了其他个人或机构的合法权益, 请来电或致函告知, 本平台将在核实后予以删除或修改。&#10;&#10;四、注册信息和隐私保护&#10;       4．1　失物招领网帐号（即失物招领网用户ID）的所有权归失物招领网，用户完成注册申请手续后，获得失物招领网帐号的使用权。用户应提供及时、详尽及准确的个人资料，并不断更新注册资料，符合及时、详尽准确的要求。所有原始键入的资料将引用为注册资料。如果因注册信息不真实而引起的问题，并对问题发生所带来的后果，失物招领网不负任何责任。&#10;       4．2　用户不应将其帐号、密码转让或出借予他人使用。如用户发现其帐号遭他人非法使用，应立即通知失物招领网。因黑客行为或用户的保管疏忽导致帐号、密码遭他人非法使用，失物招领网不承担任何责任。&#10;       4．3　失物招领网不对外公开或向第三方提供单个用户的注册资料，除非：&#10;           （1）事先获得用户的明确授权；&#10;           （2）只有透露你的个人资料，才能提供你所要求的产品和服务；&#10;           （3）根据有关的法律法规要求；&#10;           （4）按照相关政府主管部门的要求；&#10;           （5）为维护失物招领网的合法权益。&#10;       4．4　在你注册失物招领网帐户，使用其他失物招领网产品或服务，访问失物招领网网页, 或参加促销和有奖游戏时，失物招领网会收集你的个人身份识别资料，并会将这些资料用于：改进为你提供的服务及网页内容。&#10;&#10;五、使用规则&#10;       用户在使用失物招领网服务时，必须遵守中华人民共和国相关法律法规的规定，用户应同意将不会利用本服务进行任何违法或不正当的活动。
+                </textarea>
+            </div>
+        </div>
+
+        <div class="clear"></div>
+
+        <div class="form-group" id="check-out">
+            <label class="control-label col-sm-2"></label>
+            <!--<input type="checkbox" class="col-sm-2 check-agree" id="check-agree">-->
+            <label class="check-agree" onclick="agreeClick()">
+                <span>✔</span>
+            </label>
+            <b class="agree">同意并遵守注册协议</b>
+        </div>
+
+        <!-- 按钮组 -->
+        <div class="form-group text-center btn-regres">
+            <input type="button" class="btn btn-primary register col-sm-2 col-sm-offset-2" value="注 册"
+                   id="register" onclick="registerFn()">
+            <input type="reset" class="btn btn-default reset col-sm-2 col-sm-offset-2" value="重 置" id="reset">
+        </div>
+    </form>
+
+</div>
+
+<!-- 模态框 -->
+<div class="modal fade my-modal-register" role="dialog" id="my-modal-register">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">温馨提示</h4>
+            </div>
+            <div class="modal-body">
+                请阅读并勾选同意注册协议！
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">了解了</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!-- 页脚 -->
+<div class="footer">
+    <div class="footer-head">
+        <span>|</span>
+        <a href="http://www.shiwurenling.com/data/mianzeshengming.html" target="_blank">免责声明</a>
+        <span>|</span>
+        <a href="http://www.shiwurenling.com/about/" target="_blank">关于我们</a>
+        <span>|</span> 网站合作
+        <span>|</span> 联系我们
+        <span>|</span>
+    </div>
+    <table>
+        <tbody>
+        <tr>
+            <td>
+                2018-2019
+                <strong>
+                    <a href="http://www.shiwurenling.com/" target="_blank">失物认领网</a>
+                </strong>
+                (苏ICP备16028560号)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Copyright © 2007-2016 Suzhou Harmontronics Automation Technology Co.,Ltd. All rights reserved
+                <a href="https://baike.baidu.com/item/%E8%8B%8F%E5%B7%9E%E7%80%9A%E5%B7%9D%E6%99%BA%E8%83%BD%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/19843110?fr=aladdin"
+                   target="_blank">苏州瀚川智能科技股份有限公司</a> 版权所有
+            </td>
+        </tr>
+        <tr>
+            <td>
+                地址：苏州工业园区胜浦佳胜路. 违法和不良信息举报电话：<em>15251305260</em>
+                举报邮箱：congwz@outlook.com
+            </td>
+        </tr>
+        <tr>
+            <td>提醒：禁止发布任何违反国家法律、法规的言论与图片等内容；本站内容均来自个人观点与网络等信息，非本站认同之观点.</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="footer-img">
+        <ul>
+            <li><img src="img/footer/footer_1.jpg"></li>
+            <li><img src="img/footer/footer_2.jpg"></li>
+            <li><img src="img/footer/footer_3.jpg"></li>
+            <li><img src="img/footer/footer_4.jpg"></li>
+            <li><img src="img/footer/footer_5.jpg"></li>
+        </ul>
+    </div>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+
+    <script src="bootstrap/jquery-3.3.1.min.js"></script>
+    <!-- 引入bootstrap -->
+    <link rel="stylesheet" href="bootstrap/bootstrap.min.css">
+    <script src="bootstrap/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="css/sweetalert.css">
+    <script src="js/sweetalert.min.js"></script>
+
+
+
+    <style type="text/css">
+        .checkbox-test {
+            width: 20px;
+            height: 30px;
+        }
+
+        .checkbox-label {
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            /*background-color: #FF7600;*/
+            border: 1px solid #f0ad4e;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .checkbox-label span {
+            text-align: center;
+            height: 20px;
+            width: 20px;
+            display: inline-block;
+            margin-left: 4px;
+            color: #fff;
+        }
+
+        .run {
+            width: 30px;
+            height: 30px;
+            /*background-color: #FF7600;*/
+            border: 1px solid #f0ad4e;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            left: 0;
+            top: 146px;
+
+            -webkit-transform: scale(0) rotate(720deg);
+            -moz-transform: scale(0) rotate(720deg);
+            -ms-transform: scale(0) rotate(720deg);
+            transform: scale(0) rotate(720deg);
+            opacity: 0;
+            -webkit-transition: all 0.5s;
+            -moz-transition: all 0.5s;
+            transition: all 0.5s;
+        }
+
+
+        /*.no-select {
+            width:30px;
+            height:30px;
+            border:1px solid red;
+            position:relative;
+            animation:myfirst 1s;
+            -moz-animation:myfirst 1s; !* Firefox *!
+            -webkit-animation:myfirst 1s; !* Safari and Chrome *!
+            -o-animation:myfirst 1s; !* Opera *!
+        }
+        @keyframes myfirst
+        {
+            0%   {left:0px; top:0px;}
+            25%  {left:3px; top:2px;}
+            50%  {left:-1px; top:2px;}
+            75%  {left:0px; top:-3px;}
+            100% {left:0px; top:0px;}
+        }*/
+
+
+
+        .no-select {
+            -webkit-transform: scale(0) rotate(720deg);
+            -moz-transform: scale(0) rotate(720deg);
+            -ms-transform: scale(0) rotate(720deg);
+            transform: scale(0) rotate(720deg);
+            opacity: 0;
+            -webkit-transition: all 0.5s;
+            -moz-transition: all 0.5s;
+            transition: all 0.5s;
+        }
+
+        .no-select {
+            -webkit-transform: scale(1) rotate(0deg);
+            -moz-transform: scale(1) rotate(0deg);
+            -ms-transform: scale(1) rotate(0deg);
+            transform: scale(1) rotate(0deg);
+            opacity: 1;
+        }
+
+        .run2 {
+            -webkit-transform: scale(1) rotate(0deg);
+            -moz-transform: scale(1) rotate(0deg);
+            -ms-transform: scale(1) rotate(0deg);
+            transform: scale(1) rotate(0deg);
+            opacity: 1;
+        }
+
+        .test-name {
+            border: 1px solid red;
+            position: relative;;
+        }
+
+        .test-swapper {
+            /*width: 100%;
+            height: 100%;
+            background-color: #ccc;
+            opacity: 0.5;
+            position: absolute;
+            top: 0;
+            z-index: 1;
+            text-align: center;
+            margin: 0 auto;*/
+
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            background-color: #ccc;
+            opacity: 0.5;
+            z-index: 1000;
+            /*display: none;*/
+        }
+        .test-swapper .gif {
+            height: 32px;
+            width: 32px;
+            background: url('img/loader.gif');
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            margin-left: -16px;
+            margin-top: -16px;
+            z-index: 1001;
+        }
+
+        .i-btn-test {
+            margin-left: 680px;
+            position: relative;
+        }
+        .i-btn {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+            border: 1px solid #FF7600;
+            margin-right: 10px;
+
+            -webkit-transition: background .2s ease;
+            -o-transition: background .2s ease ;
+            -moz-transition: background .2s ease;
+            transition: background .2s ease;
+        }
+        .i-btn:after {
+            content: "";
+            width: 18px;
+            height: 18px;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+
+            position: absolute;
+            top: 0;
+            margin-left: -5px;
+
+            -webkit-transition: background .2s ease;
+            -o-transition: background .2s ease ;
+            -moz-transition: background .2s ease;
+            transition: background .2s ease;
+
+        }
+
+        .i-btn:hover {
+            background: #ff7e00;
+        }
+
+        .i-btn:hover:after {
+            background: #ff7e00;
+            opacity: 0.3;
+            border: 2px solid transparent;
+        }
+
+
+
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<input type="button" onclick="btnClick()" value="测试" />
+
+<hr>
+
+<input type="checkbox" class="checkbox-test">
+
+<hr>
+
+<label class="checkbox-label" onclick="cbClick()">
+    <span id="cb-span">✔</span>
+</label>
+<div id="run" class="run"></div>
+
+<hr>
+<!--<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+    Launch demo modal
+</button>
+
+&lt;!&ndash; Modal &ndash;&gt;
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">温馨提示</h4>
+            </div>
+            <div class="modal-body">
+                请阅读注册协议
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">同意</button>
+            </div>
+        </div>
+    </div>
+</div>-->
+
+<!--data-toggle="modal" data-target="#my-about"-->
+<div class="form-group text-center btn-regres">
+    <input type="button" class="btn btn-primary register col-sm-2 col-sm-offset-2" value="注 册"
+           id="register" onclick="registerFn()">
+    <input type="reset" class="btn btn-default reset col-sm-2 col-sm-offset-2" value="重 置" id="reset">
+</div>
+
+<div class="modal fade my-modal" role="dialog" id="my-about">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">温馨提示</h4>
+            </div>
+            <div class="modal-body">
+                请阅读注册协议
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">了解了</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div style="clear: both"></div>
+
+<hr>
+<br>
+<button id="btnDialog">网页弹框测试</button>
+
+<br>
+<hr>
+<br>
+<input type="text" placeholder="请输入名字" id="test-name">
+<button id="submit-name">提交</button>
+
+
+<!--<div class="test-swapper">
+    <div class="gif"></div>
+</div>-->
+
+<hr>
+<br>
+<div class="i-btn-test">
+    <i class="i-btn"></i>
+    <i class="i-btn"></i>
+    <i class="i-btn"></i>
+</div>
+
+<script type="text/javascript">
+    function cbClick() {
+        var cbLabel = document.getElementsByClassName('checkbox-label');
+        var cbLabelColor = cbLabel[0].style.backgroundColor;
+        /*if(cbLabelColor == 'rgb(255, 118, 0)') {
+            cbLabel[0].style.backgroundColor = '#fff';
+        }else {
+            cbLabel[0].style.backgroundColor = '#FF7600';
+
+        }*/
+        var run = document.getElementById('run');
+        run.className += ' run2';
+        cbLabel[0].style.visibility = 'hidden';
+
+    }
+
+
+    function btnClick() {
+        //var url='http:172.28.101.161:7000/api/lost/page-list'+'?pageNumber=1&pageSize=5';
+        var url='http:127.0.0.1:7000/api/lost/page-list'+'?pageNumber=1&pageSize=5';
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            crossDomain : true,
+            success: function (res) {
+                var num_entries = res.data.total;
+                var list = res.data.data;
+                for(var i = 0; i<list.length; i++) {
+                    console.log(list[i].city);
+                }
+            },
+            error: function (e) {
+                console.log('ajax error!');
+            }
+        });
+    }
+
+    function registerFn() {
+        $('#my-about').modal();
+
+        //保存用户注册信息
+
+    }
+
+
+    /*网页弹框*/
+    var btnDialog = document.getElementById('btnDialog');
+    btnDialog.onclick = function () {
+        /*swal({
+            title: '成功啦',
+            text: '成功演示demo',
+            type: "success",
+            confirmButtonText: '确定',
+            confirmButtonColor: '#FF7600'
+        })*/
+
+        /*swal({
+                title: "注册成功",
+                text: "信息已保存",
+                type: "success",
+                /!*showCancelButton: true,*!/
+                showConfirmButton: false,
+                confirmButtonColor: "#FF7600",
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                timer: 1500,
+                /!*closeOnConfirm: true,
+                closeOnCancel: true*!/
+            });*/
+
+        swal({
+            title: "注册成功",
+            text: "信息已保存",
+            type: "success",
+            showCancelButton: true,
+            confirmButtonText: '登录',
+            cancelButtonText: "关闭",
+            confirmButtonColor: '#FF7600',
+            cancelButtonColor: '#E6E6E6',
+            animation: "slide-from-bottom",
+            allowOutsideClick: true,
+            closeOnConfirm: false
+        },function () {
+            window.location.href = 'lost-test.html?flag=1&role=roleStr';
+        })
+
+
+    }
+
+
+    /*输入框抖动*/
+    $('#submit-name').click(function () {
+        var testName = $('#test-name').val();
+        console.log($('#test-name'))
+        if(testName == '') {
+            $('#test-name').animate({left: "-10px"}, 100).animate({left: "10px"}, 100)
+                .animate({left: "-10px"}, 100).animate({left: "10px"}, 100).animate({left: "0px"}, 100);
+            $('#test-name').addClass('test-name');
+        }else {
+            $('#test-name').removeClass('test-name');
+        }
+        return false;
+    });
+
+
+</script>
+
+</body>
+</html>

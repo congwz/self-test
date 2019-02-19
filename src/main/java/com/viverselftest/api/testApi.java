@@ -1006,6 +1006,25 @@ listNoDup2：[a, b, c, 1]*/
         String ss = restTemplate.getForObject(url, String.class);
         System.out.println("send email success, " + ss); // send email success, {"result": 1}*/
 
+        /*List<String> stramList0 = null;
+        List<String> stramList1 = new ArrayList<>();
+        List<String> stramList2 = new ArrayList<>();
+        stramList2.add("a");
+        stramList2.add("c");
+        stramList2.add("d");
+        stramList2.add("b");
+
+        //stramList2.stream().forEach(str -> System.out.println(str));
+        //stramList1.stream().forEach(str -> System.out.println(str));
+        //stramList0.stream().forEach(str -> System.out.println(str)); //空指针异常
+
+        //stramList2.forEach(str -> System.out.println(str));
+        //stramList1.forEach(str -> System.out.println(str));
+        //stramList0.forEach(str -> System.out.println(str));  //空指针异常*/
+
+
+        System.out.println(System.currentTimeMillis()); //1548406316209  1548406723403
+
 
 
 

@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>失物-招领网</title>
+
+    <link rel="shortcut icon" href="img/favicon.jpg">
+
+    <!-- 引入bootstrap -->
+    <link rel="stylesheet" href="bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="css/lost.css">
+
+    <script src="bootstrap/jquery-3.3.1.min.js"></script>
+    <script src="bootstrap/bootstrap.min.js"></script>
+
+    <script src="js/lost.js"></script>
+    <script src="js/page_ajax.js"></script>
+
+    <!-- 引入jQuery pagination插件 -->
+    <link rel="stylesheet" href="css/pagination.css"/>
+    <script type="text/javascript" src="js/jquery.pagination.js"></script>
+
+</head>
+<body>
+
+<!-- 页面加载未完成时的进度条 -->
+<div class="loading">
+    <div class="pic"></div>
+</div>
+
+<div class="h-sp">
+
+    <div class="head">
+        <div class="head-left">
+            <div class="logo">
+                <img src="img/logo.png" alt="这是网站logo">
+            </div>
+            <div class="nav">
+                <ul>
+                    <li>
+                        <a href="javascript:;">全国</a>
+                        <!--<i class="arrow"></i>-->
+                        <!--ul>li*3>a[href="javascript:;"]-->
+                        <div class="all-cover">
+                            <ul>
+                                <li><a href="javascript:;">北京</a></li>
+                                <li><a href="javascript:;">上海</a></li>
+                                <li><a href="javascript:;">天津</a></li>
+                                <li><a href="javascript:;">江苏</a></li>
+                                <li><a href="javascript:;">河南</a></li>
+                                <li><a href="javascript:;">湖南</a></li>
+                                <li><a href="javascript:;">浙江</a></li>
+                                <li><a href="javascript:;">广东</a></li>
+                                <li><a href="javascript:;">四川</a></li>
+                                <li><a href="javascript:;">广西</a></li>
+                                <li><a href="javascript:;">山西</a></li>
+                                <li><a href="javascript:;">辽宁</a></li>
+                                <li><a href="javascript:;">吉林</a></li>
+                                <li><a href="javascript:;">黑龙江</a></li>
+                                <li><a href="javascript:;">安徽</a></li>
+                                <li><a href="javascript:;">海南</a></li>
+                                <li><a href="javascript:;">贵州</a></li>
+                                <li><a href="javascript:;">福建</a></li>
+                                <li><a href="javascript:;">甘肃</a></li>
+                                <li><a href="javascript:;">云南</a></li>
+                                <li><a href="javascript:;">新疆</a></li>
+                                <li><a href="javascript:;">青海</a></li>
+                                <li><a href="javascript:;">陕西</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="#">失物</a>
+                    </li>
+                    <li>
+                        <a href="#">招领</a>
+                    </li>
+                    <li>
+                        <a href="#">关注</a>
+                    </li>
+                    <li>
+                        <a href="#">联系我们</a>
+                        <ul>
+                            <li>
+                                <a href="javascript:;">电话</a>
+                                <ul>
+                                    <li><a href="javascript:;">15251305260</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:;">地址</a>
+                                <ul>
+                                    <li><a href="javascript:;">苏州市工业园区佳胜路</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:;">社交</a>
+                                <ul>
+                                    <li><a href="javascript:;">微信：testWeChart</a></li>
+                                    <li><a href="javascript:;">QQ：123</a></li>
+                                    <li><a href="javascript:;">微博：testBlog</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="middle">
+            <div class="search">
+                <input type="text" placeholder="请输入搜索内容">
+                <button type="button" class="search-btn"></button>
+            </div>
+            <div class="my-publish">
+                <i class="my-publish-img"></i>
+                我发布的
+                <i class="my-publish-count">0</i>
+            </div>
+        </div>
+        <div class="head-right">
+            <span id="account"></span>
+            <button type="button" class="btn btn-default" id="login-btn">登录</button>
+            <button type="button" class="btn btn-warning my-register-btn" id="register-btn"><a href="register.html"
+                                                                                               target="_blank">注册</a>
+            </button>
+            <button type="button" class="btn btn-danger">发布</button>
+        </div>
+    </div>
+
+    <!--todo 插入动画图片-->
+
+    <div class="main">
+
+        <div class="line-orange">
+            <span class="newest-lost">最新失物与招领</span>
+        </div>
+
+        <div class="lost-found">
+            <div class="lost">
+                <div class="more">
+                    <a href="#">更多>></a>
+                </div>
+                <!--轮播组件Carousel （滚动广告）-->
+                <!--<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                    &lt;!&ndash;轮播组件中的...&ndash;&gt;
+                    <ol class="carousel-indicators">
+                        <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                        <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                        <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                        <li data-target="#carousel-example-generic" data-slide-to="3"></li>
+                        <li data-target="#carousel-example-generic" data-slide-to="4"></li>
+                    </ol>
+
+                    &lt;!&ndash;轮播组件的轮播内容&ndash;&gt;
+                    <div class="carousel-inner" role="listbox">
+                        <div class="item active">
+                            <img src="img/dog.png" alt="寻爱犬-阿拉斯加">
+                            <div class="carousel-caption">
+                                <h1>狗</h1><br><span>时间：2018-10-24</span><br><span>地点：苏州工业园区斜塘老街附近</span>
+                                &lt;!&ndash;<p>大家有看到的帮忙留意一下，名叫大王，叫它名字应该会有反应的！耳朵毛发较少，体重差不多六七十斤。</p>&ndash;&gt;
+                                <p class="btn-primary btn-sm lianxi-juli">联系方式：15251305555 &emsp;&emsp;&emsp;&emsp;
+                                    石女士</p>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <img src="img/cat.jpg" alt="寻猫启示">
+                            <div class="carousel-caption">
+                                <h1>猫</h1><br><span>时间：2018-10-11 23:55</span><br><span>地点：电器城b区火车站附近</span>
+                                &lt;!&ndash;<p>家猫是一只已绝育的杂色母猫名为艾草.五斤左右看起来很瘦.指甲还未修剪 胆子很小怕生 眼睛非常大琥珀色 肚子白色毛发 背部为黄黑灰相间 尾巴是灰黑色 请各位爱心人士看到帮忙留意 或者有些抓猫者已抓走艾草 也恳请通知本人。</p>&ndash;&gt;
+                                <p class="btn-primary btn-sm lianxi-juli">联系方式：15113862882 &emsp;&emsp;&emsp;&emsp;
+                                    陆小明</p>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <img src="img/bag.png" alt="手提包">
+                            <div class="carousel-caption">
+                                <h1>箱包</h1><br><span>时间：2018-10-06 凌晨三点</span><br><span>地点：观前街</span>
+                                &lt;!&ndash;<p>遗失箱包一个，如有看到烦请联系本人，必有重谢</p>&ndash;&gt;
+                                <p class="btn-primary btn-sm lianxi-juli">联系方式：18031302682 &emsp;&emsp;&emsp;&emsp;
+                                    郝先生</p>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <img src="img/dog2.png" alt="寻狗启示">
+                            <div class="carousel-caption">
+                                <h1>狗</h1><br><span>时间：2018-10-01 中午一点左右</span><br><span>地点：岳麓区麓谷街道长庆六期社区</span>
+                                &lt;!&ndash;<p>狗狗名叫曼丽，品种巨贵，已成年公狗（比正常成年巨贵偏矮一点，由于比较挑食所以很瘦）我们带去过的地方以及可能去的地方都有找过，有人看到过，有一个男子尾随，调监控无果，现求助各位帮忙留意，有看到的请帮忙带回家或送至就近宠物店并联系我们（照片拍摄于中秋节，实际看上去比照片上干净 因为刚洗过澡）</p>&ndash;&gt;
+                                <p class="btn-primary btn-sm lianxi-juli">联系方式：15084897176 &emsp;&emsp;&emsp;&emsp;
+                                    李先生</p>
+                                <p class="btn-primary btn-sm lianxi-juli">联系方式：15084839443 &emsp;&emsp;&emsp;&emsp;
+                                    黄小姐</p>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <img src="img/mobile.jpg" alt="华为mate7">
+                            <div class="carousel-caption">
+                                <h1>电子产品</h1><br><span>时间：2018-09-27</span><br><span>地点：苏州中心北区5F</span>
+                                &lt;!&ndash;<p>遗失一部华为mate7</p>&ndash;&gt;
+                                <p class="btn-primary btn-sm lianxi-juli">联系方式：13591308600 &emsp;&emsp;&emsp;&emsp;
+                                    上官琦</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    &lt;!&ndash;轮播组件左右滑动的箭头/向左、向右的箭头&ndash;&gt;
+                    <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                        <span class="sr-only">上一页</span>
+                    </a>
+                    <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                        <span class="sr-only">下一页</span>
+                    </a>
+                </div>-->
+
+                <!-- 自己写焦点轮播图 -->
+                <div class="lunbo-wrap" id="lunbo-wrap">
+                    <ul id="lunbo-pic">
+                        <li class="lunbo-show">
+                            <a href="#"><img src="img/dog.png" alt="寻爱犬-阿拉斯加"></a>
+                            <div class="lunbo-caption">
+                                <h1>狗</h1>
+                                <br><span class="lunbo-time">时间：2018-10-24</span><br>
+                                <span class="lunbo-addr">地点：苏州工业园区斜塘老街附近</span>
+                                <p class="btn-primary btn-sm lianxi-juli">联系方式：15251305555 &emsp;&emsp;&emsp;&emsp;
+                                    石女士</p>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="#"><img src="img/cat.jpg" alt="寻猫启示"></a>
+                            <div class="lunbo-caption">
+                                <h1>猫</h1>
+                                <br><span class="lunbo-time">时间：2018-10-11 23:55</span><br>
+                                <span class="lunbo-addr">地点：电器城b区火车站附近</span>
+                                <p class="btn-primary btn-sm lianxi-juli">联系方式：15113862882 &emsp;&emsp;&emsp;&emsp;
+                                    陆小明</p>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="#"><img src="img/bag.png" alt="手提包"></a>
+                            <div class="lunbo-caption">
+                                <h1>箱包</h1>
+                                <br><span class="lunbo-time">时间：2018-10-06</span>
+                                <br><span class="lunbo-addr">地点：观前街</span>
+                                <p class="btn-primary btn-sm lianxi-juli">联系方式：18031302682 &emsp;&emsp;&emsp;&emsp;
+                                    郝先生</p>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="#"><img src="img/dog2.png" alt="寻狗启示"></a>
+                            <div class="lunbo-caption">
+                                <h1>狗</h1>
+                                <br><span class="lunbo-time">时间：2018-10-01 13:15</span>
+                                <br><span class="lunbo-addr">地点：岳麓区麓谷街道长庆六期社区</span>
+                                <p class="btn-primary btn-sm lianxi-juli">联系方式：15084839443 &emsp;&emsp;&emsp;&emsp;
+                                    黄小姐</p>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="#"><img src="img/mobile.jpg" alt="华为mate7"></a>
+                            <div class="lunbo-caption">
+                                <h1>电子产品</h1>
+                                <br><span class="lunbo-time">时间：2018-09-27</span><br>
+                                <span class="lunbo-addr">地点：苏州中心北区5F</span>
+                                <p class="btn-primary btn-sm lianxi-juli">联系方式：13591308600 &emsp;&emsp;&emsp;&emsp;
+                                    上官琦</p>
+                            </div>
+                        </li>
+                    </ul>
+                    <ul id="lunbo-list">
+                        <li class="lunbo-on"></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                    <a href="javascript:;" class="lunbo-prev" id="lunbo-prev"><</a>
+                    <a href="javascript:;" class="lunbo-next" id="lunbo-next">></a>
+                </div>
+
+            </div>
+            <div class="found" id="found_toltip">
+                <div class="more">
+                    <a href="#">更多>></a>
+                </div>
+                <div id="scroll-swapper">
+                    <ul id="scroll-loop1">
+                        <li>
+                            <a href="#">
+                                <i class="circle"></i>
+                                <div class="time">
+                                    2018-10-03 13:13<span class="small-txt">-21:00</span>
+                                </div>
+                                <h5 title="陈凡在中南小区附近遗失的宠物狗已招领">陈凡在中南小区附近遗失的宠物狗已招领</h5>
+                                <!--<h5 class="my-tooltip" id="toltip-cf">陈凡在中南小区附近遗失的宠物狗已招领</h5>-->
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="circle"></i>
+                                <div class="time">
+                                    2018-10-11 09:35
+                                </div>
+                                <h5 title="李小姐在穹窿山遗失的女士皮包已招领">李小姐在穹窿山遗失的女士皮包已招领</h5>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="circle"></i>
+                                <div class="time">
+                                    2018-08-38 16:01
+                                </div>
+                                <h5 title="姚先生在地铁站遗失的箱包已招领">姚先生在地铁站遗失的箱包已招领</h5>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                                <i class="circle"></i>
+                                <div class="time">
+                                    2018-09-27 19:55
+                                </div>
+                                <h5 title="胡筱筱在苏州市工业园区独墅湖影剧院内遗失的太阳眼镜已招领，为表达谢意，酬金人民币100元整。">
+                                    胡筱筱在苏州市工业园区独墅湖影剧院内遗失的太阳眼镜已招领，为表达谢意，酬金人民币100元整。
+                                </h5>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                                <i class="circle"></i>
+                                <div class="time">
+                                    2018-10-25 08:26
+                                </div>
+                                <h5 title="慕容先生在自己的门店附近遗失的哈士奇已招领">慕容先生在自己的门店附近遗失的哈士奇已招领</h5>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul id="scroll-loop2"></ul>
+                </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="line-orange">
+            <span class="newest-lost">寻物</span>
+        </div>
+
+        <!--寻物分页展示-->
+        <!--<div>
+            <div id="Pagination"></div>
+        </div>-->
+        <div id="swapper"></div>
+        <div class="clear"></div>
+        <table>
+            <tbody>
+            <tr>
+                <td>
+                    <div id="Pagination"></div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+
+    <!-- 遮罩层 -->
+    <div id="mask"></div>
+    <!-- 登录框 -->
+    <div class="login" id="login-dialog">
+        <div class="login-sp">
+            <div class="login-header">
+                <h3>登录失物招领网</h3>
+                <i class="no-login" id="close"></i>
+            </div>
+            <div class="login-body">
+                <input class="user-in" id="user-in-account" type="text" placeholder="请输入账号">
+                <input class="user-in" id="user-in-password" type="password" placeholder="请输入密码">
+            </div>
+            <div class="user-info">
+                <div class="info-left">
+                    <!--name属性在与后台交互的时候必传值哦-->
+                    <input type="checkbox" name="" id="check" checked>
+                    <label for="check">30天内自动登录</label>
+                </div>
+                <div class="info-right">
+                    <a href="https://www.baidu.com" target="_blank">忘记密码</a>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="login-btn" id="user-login">
+                <a href="javascript:;">登录</a>
+            </div>
+            <div class="login-footer">
+                <p>其他登录方式</p>
+
+                <div class="img">
+                    <ul>
+                        <li><a class="wechart" href="javascript:;"></a></li>
+                        <li><a class="qq" href="javascript:;"></a></li>
+                        <li><a class="weibo" href="javascript:;"></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 登录验证后台返回提示的错误信息弹框 -->
+    <div id="login-back-msg" class="login-back-msg"></div>
+
+
+    <!-- 回到顶部 -->
+    <a href="javascript:;" id="back-to-top" title="回到顶部"></a>
+
+</div>
+
+<!-- 页脚 -->
+<div class="footer">
+    <div class="footer-head">
+        <span>|</span>
+        <a href="http://www.shiwurenling.com/data/mianzeshengming.html" target="_blank">免责声明</a>
+        <span>|</span>
+        <a href="http://www.shiwurenling.com/about/" target="_blank">关于我们</a>
+        <span>|</span> 网站合作
+        <span>|</span> 联系我们
+        <span>|</span>
+    </div>
+    <table>
+        <tbody>
+        <tr>
+            <td>
+                2018-2019
+                <strong>
+                    <a href="http://www.shiwurenling.com/" target="_blank">失物认领网</a>
+                </strong>
+                (苏ICP备16028560号)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Copyright © 2007-2016 Suzhou Harmontronics Automation Technology Co.,Ltd. All rights reserved
+                <a href="https://baike.baidu.com/item/%E8%8B%8F%E5%B7%9E%E7%80%9A%E5%B7%9D%E6%99%BA%E8%83%BD%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/19843110?fr=aladdin"
+                   target="_blank">苏州瀚川智能科技股份有限公司</a> 版权所有
+            </td>
+        </tr>
+        <tr>
+            <td>
+                地址：苏州工业园区胜浦佳胜路. 违法和不良信息举报电话：<em>15251305260</em>
+                举报邮箱：congwz@outlook.com
+            </td>
+        </tr>
+        <tr>
+            <td>提醒：禁止发布任何违反国家法律、法规的言论与图片等内容；本站内容均来自个人观点与网络等信息，非本站认同之观点.</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="footer-img">
+        <ul>
+            <li><img src="img/footer/footer_1.jpg"></li>
+            <li><img src="img/footer/footer_2.jpg"></li>
+            <li><img src="img/footer/footer_3.jpg"></li>
+            <li><img src="img/footer/footer_4.jpg"></li>
+            <li><img src="img/footer/footer_5.jpg"></li>
+        </ul>
+    </div>
+</div>
+
+<!--<div class="load" id="load">
+    <div class="gif"></div>
+</div>-->
+
+
+<!--<script>
+    var myToolTipBoxClass = "my-tooltip-box";
+
+    //判断是否是IE浏览器
+    var isIE = navigator.userAgent.indexOf("MSIE") > -1;
+
+    /*优化代码-简化*/
+    var getElement = function (id) {
+        return document.getElementById(id);
+    };
+
+    /*优化代码-绑定事件*/
+    function addEvent(element, event, callbackFunction) {
+        if(element.addEventListener) {
+            element.addEventListener(event,callbackFunction,false);
+        }else if(element.attachEvent){
+            element.attachEvent('on' + event, callbackFunction);
+        }
+    };
+
+    var found_toltip = getElement("found_toltip");
+
+
+    /*
+    obj - ToolTip超链接元素
+    id - ToolTip提示框id
+    html - ToolTip提示框html
+    width - ToolTip提示框宽度（可选）
+    height - ToolTip提示框高度（可选）
+    */
+    function showToolTip(obj, id, html, width, height) {
+        if(getElement(id) == null) {
+            //创建ToolTip提示框 <div class="my-tooltip-box" id="xx">xxx</div>
+            var myToolTipBox;
+            myToolTipBox = document.createElement("div");
+            myToolTipBox.className = myToolTipBoxClass;
+            myToolTipBox.id = id;
+            myToolTipBox.innerHTML = html;
+            obj.appendChild(myToolTipBox);
+
+            myToolTipBox.style.width = width ? width+"px" : "auto";
+            myToolTipBox.style.height = height ? height+"px" : "auto";
+            if(!width && isIE) {
+                myToolTipBox.style.width = myToolTipBox.offsetWidth;
+            }
+
+            //处理提示框定位
+            myToolTipBox.style.position="absolute";
+            myToolTipBox.style.display="block";
+            var left = obj.offsetLeft;
+            var top = obj.offsetTop + 20;
+
+            //补充：left，不让提示框超出浏览器
+            if(left + myToolTipBox.offsetWidth > document.body.clientWidth) {
+
+                //控制左边超出
+                var demoLeft = getElement("found_toltip").offsetLeft;
+                left = document.body.clientWidth - myToolTipBox.offsetWidth - demoLeft;
+
+                //控制右边超出
+                if(left < 0)
+                    left = 0;
+            }
+
+            myToolTipBox.style.left = left + "px";
+            myToolTipBox.style.top = top + "px";
+
+            /*优化绑定事件*/
+            addEvent(obj,"mouseleave",function () {
+                setTimeout(function () {
+                    getElement(id).style.display = "none";
+                }, 300);
+            });
+
+        }else {
+            //显示ToolTip提示框
+            getElement(id).style.display = "block";
+        }
+
+    };
+
+    /*优化-事件冒泡*/
+    addEvent(found_toltip,"mouseover",function (e) {
+        var event = e || window.event;
+        var target = event.target || event.srcElement;
+
+        if(target.className == "my-tooltip") {
+            var _id;
+            var _html;
+            //var _width = 200;
+
+            switch (target.id) {
+                case "toltip-cf":
+                    _id = "cf";
+                    _html = "陈凡在中南小区附近遗失的宠物狗已招领";
+                    break;
+                default:
+                    return false;
+            }
+            showToolTip(target, _id, _html);
+        }
+    });
+</script>-->
+
+</body>
+</html>
