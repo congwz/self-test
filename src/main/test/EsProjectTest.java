@@ -1,6 +1,12 @@
 import com.viverselftest.config.Redis;
 import com.viverselftest.consts.ElasticSearchConstants;
 import com.viverselftest.po.elasticsearch.EsLFPO;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.cjk.CJKAnalyzer;
+import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
+import org.apache.lucene.analysis.custom.CustomAnalyzer;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeAction;
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeRequestBuilder;
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeResponse;
@@ -14,21 +20,16 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
+import org.elasticsearch.common.xcontent.XContentParser;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CachingConfigurerSupport;
-import org.springframework.context.annotation.Bean;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
+import org.wltea.analyzer.core.IKSegmenter;
+import org.wltea.analyzer.core.Lexeme;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -72,6 +73,7 @@ public class EsProjectTest {
         itemL1.setTime(sdf.format(new Date()));
         itemL1.setMoney("1000元");
         itemL1.setName("李先生");
+        itemL1.setImage("https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=1080100197,393118566&fm=85&s=4AE18A45435526750475C9970300F0C3");
         list.add(itemL1);
 
         EsLFPO itemL2 = new EsLFPO();
@@ -80,7 +82,7 @@ public class EsProjectTest {
         itemL2.setUrl("https://www.baidu.com/");
         itemL2.setContent("短尾猫是一只已绝育的杂色母猫名为艾草，五斤左右看起来很瘦，指甲还未修剪，胆子很小怕生。它的眼睛非常大琥珀色，肚子白色毛发, 背部为黄黑灰相间，尾巴是灰黑色，请各位爱心人士看到帮忙留意，或者有些抓猫者已抓走艾草，也恳请通知本人，必当重谢！");
         itemL2.setAddr("新湖明珠城小区8幢");
-        itemL2.setTime("2019-01-30");
+        itemL2.setTime("2019-03-18");
         itemL2.setMoney("$500");
         itemL2.setName("诸葛云玥");
         list.add(itemL2);
@@ -91,9 +93,10 @@ public class EsProjectTest {
         itemL3.setUrl("https://www.baidu.com/");
         itemL3.setContent("本人于下午3点左右在苏州观前街乘坐178公交车的时候，不小心遗失了华为mate7手机，手机里有工作和生活重要的联系人，对我来说十分重要，希望看到或者拾到的朋友可以与我联系，联系人：王女士，她的电话是13251305347，如能找到手机必有重谢，还请好心人帮忙关注下！本人于下午3点左右在苏州观前街乘坐178公交车的时候，不小心遗失了华为mate7手机，手机里有工作和生活重要的联系人，对我来说十分重要，希望看到或者拾到的朋友可以与我联系，联系人：王女士，她的电话是13251305347，如能找到手机必有重谢，还请好心人帮忙关注下！本人于下午3点左右在苏州观前街乘坐178公交车的时候，不小心遗失了华为mate7手机，手机里有工作和生活重要的联系人，对我来说十分重要，希望看到或者拾到的朋友可以与我联系，联系人：王女士，她的电话是13251305347，如能找到手机必有重谢，还请好心人帮忙关注下！");
         itemL3.setAddr("苏州观前街");
-        itemL3.setTime("2019-02-01");
+        itemL3.setTime("2019-03-21");
         itemL3.setMoney("800元");
         itemL3.setName("林岭");
+        itemL3.setImage("https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=3569171748,3856999465&fm=58");
         list.add(itemL3);
 
         EsLFPO itemL4 = new EsLFPO();
@@ -102,7 +105,7 @@ public class EsProjectTest {
         itemL4.setUrl("https://www.baidu.com/");
         itemL4.setContent("箱包黑色，把手处系着一块紫色飘巾，上面绣着\"悦\"字，使用粉+蓝夹带点黄色的丝线秀成的。由于在机场附近的老娘舅吃午饭，一不留神把放在旁边椅子上的箱包弄丢了，餐厅录像已经显示是一位身穿黑色衣服，下身是蓝色休闲牛仔裤的小伙子拿去了，希望这位年轻人看到这条发布消息，速与我联系，我在登机3号口的候车厅等待。");
         itemL4.setAddr("北京首都机场老娘舅餐厅");
-        itemL4.setTime("2019-01-28");
+        itemL4.setTime("2019-03-28");
         itemL4.setMoney("0");
         itemL4.setName("胡程晨");
         list.add(itemL4);
@@ -116,6 +119,7 @@ public class EsProjectTest {
         itemL5.setTime("2019-02-11");
         itemL5.setMoney("0");
         itemL5.setName("海女士");
+        itemL5.setImage("https://ss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1692815277.png");
         list.add(itemL5);
 
         EsLFPO itemL6 = new EsLFPO();
@@ -127,6 +131,7 @@ public class EsProjectTest {
         itemL6.setTime("2019-01-27");
         itemL6.setMoney("0");
         itemL6.setName("波涛");
+        itemL6.setImage("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=2157270659,3841020697&fm=58&bpow=1024&bpoh=683");
         list.add(itemL6);
 
         EsLFPO itemL7 = new EsLFPO();
@@ -168,7 +173,7 @@ public class EsProjectTest {
         itemL10.setUrl("https://www.baidu.com/");
         itemL10.setContent("大黄狗是我的一位好朋友送给我的礼物，我们相处的很开心，它个头大，但是眼睛很有神，非常机灵的。陪伴我的时间2年多了，我很珍惜它，晚上6点左右在西海路陪它一起出来溜达，在小摊附近走丢了，希望大家有看到的与我联系。");
         itemL10.setAddr("西海路小摊附近");
-        itemL10.setTime("2019-02-20");
+        itemL10.setTime("2019-01-20");
         itemL10.setMoney("50美金");
         itemL10.setName("黎恬");
         list.add(itemL10);
@@ -183,6 +188,7 @@ public class EsProjectTest {
         itemL21.setTime(sdf2.format(new Date()));
         itemL21.setMoney("0");
         itemL21.setName("郝女士");
+        itemL21.setImage("https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=3942663771,121606674&fm=85&s=E96692546221330D80AE6DA70300706A");
         list.add(itemL21);
 
         EsLFPO itemL22 = new EsLFPO();
@@ -191,9 +197,10 @@ public class EsProjectTest {
         itemL22.setUrl("https://www.baidu.com/");
         itemL22.setContent("我的iphone8是黑色款，没有手机壳包裹，使用了一年多，周六中午在金鸡湖商业景区游玩时遗失，急寻，希望好心人与我朋友联系，万分感谢啊！");
         itemL22.setAddr("金鸡湖商业区");
-        itemL22.setTime("2019-02-16");
+        itemL22.setTime("2019-03-26");
         itemL22.setMoney("2000元");
         itemL22.setName("明铭");
+        itemL22.setImage("https://ss0.baidu.com/73x1bjeh1BF3odCf/it/u=3443257879,4253851129&fm=85&s=469214C56BA64692DA98B2FE03005021");
         list.add(itemL22);
 
         EsLFPO itemL23 = new EsLFPO();
@@ -238,6 +245,7 @@ public class EsProjectTest {
         itemL26.setTime("2019-01-10");
         itemL26.setMoney("0");
         itemL26.setName("唐女士");
+        itemL26.setImage("https://ss0.baidu.com/73t1bjeh1BF3odCf/it/u=60819368,2490029766&fm=85&s=B1B0CB355841E641172085F50300D063");
         list.add(itemL26);
 
         EsLFPO itemL27 = new EsLFPO();
@@ -282,6 +290,7 @@ public class EsProjectTest {
         itemL20.setTime("2019-02-21");
         itemL20.setMoney("100美金");
         itemL20.setName("景儿");
+        itemL20.setImage("https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=1569462993,172008204&fm=5");
         list.add(itemL20);
 
         EsLFPO itemL31 = new EsLFPO();
@@ -293,6 +302,7 @@ public class EsProjectTest {
         itemL31.setTime("2019-01-18");
         itemL31.setMoney("0");
         itemL31.setName("小容");
+        itemL31.setImage("https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=3961416042,2825391643&fm=85&s=835E33D100783E3692A8D2230300A055");
         list.add(itemL31);
 
         EsLFPO itemL32 = new EsLFPO();
@@ -315,6 +325,7 @@ public class EsProjectTest {
         itemL33.setTime("2019-01-22");
         itemL33.setMoney("0");
         itemL33.setName("王安国");
+        itemL33.setImage("https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=2265637821,3312937915&fm=85&app=57&f=JPEG?w=121&h=75&s=A0A047B5DEB2B6D0402D459E03008043");
         list.add(itemL33);
 
         EsLFPO itemL34 = new EsLFPO();
@@ -337,6 +348,7 @@ public class EsProjectTest {
         itemL35.setTime("2019-01-27");
         itemL35.setMoney("0");
         itemL35.setName("朱先生");
+        itemL35.setImage("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=865536755,2742351179&fm=85&app=57&f=JPEG?w=121&h=75");
         list.add(itemL35);
 
         return list;
@@ -352,6 +364,7 @@ public class EsProjectTest {
         itemF1.setContent("感谢王先生的帮助，在他家别墅院子里找到我家的短耳猫，并归还本人。感谢王先生的帮助，在他家别墅院子里找到我家的短耳猫，并归还本人。感谢王先生的帮助，在他家别墅院子里找到我家的短耳猫，并归还本人。");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         itemF1.setTime(sdf.format(new Date()));
+        itemF1.setImage("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=2311275533,588620051&fm=85&app=57&f=JPEG?w=121&h=75&s=2183DC5DCE775A057AA0857C03008013");
         list.add(itemF1);
 
         EsLFPO itemF2 = new EsLFPO();
@@ -368,6 +381,7 @@ public class EsProjectTest {
         itemF3.setUrl("https://mail.qq.com/cgi-bin/loginpage");
         itemF3.setContent("公园里遗失的一部安卓手机已找回，请失主前来认领。公园里遗失的一部安卓手机已找回，请失主前来认领公园里遗失的一部安卓手机已找回，请失主前来认领公园里遗失的一部安卓手机已找回，请失主前来认领公园里遗失的一部安卓手机已找回，请失主前来认领公园里遗失的一部安卓手机已找回，请失主前来认领公园里遗失的一部安卓手机已找回，请失主前来认领公园里遗失的一部安卓手机已找回，请失主前来认领公园里遗失的一部安卓手机已找回，请失主前来认领公园里遗失的一部安卓手机已找回，请失主前来认领公园里遗失的一部安卓手机已找回，请失主前来认领公园里遗失的一部安卓手机已找回，请失主前来认领公园里遗失的一部安卓手机已找回，请失主前来认领公园里遗失的一部安卓手机已找回，请失主前来认领公园里遗失的一部安卓手机已找回，请失主前来认领公园里遗失的一部安卓手机已找回，请失主前来认领公园里遗失的一部安卓手机已找回，请失主前来认领公园里遗失的一部安卓手机已找回，请失主前来认领公园里遗失的一部安卓手机已找回，请失主前来认领公园里遗失的一部安卓手机已找回，请失主前来认领公园里遗失的一部安卓手机已找回，请失主前来认领公园里遗失的一部安卓手机已找回，请失主前来认领公园里遗失的一部安卓手机已找回，请失主前来认领");
         itemF3.setTime("2019-02-01");
+        itemF3.setImage("https://ss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1692815277.png");
         list.add(itemF3);
 
         EsLFPO itemF4 = new EsLFPO();
@@ -384,14 +398,16 @@ public class EsProjectTest {
         itemF5.setUrl("https://mail.qq.com/cgi-bin/loginpage");
         itemF5.setContent("今日上午陆先生将一只体型微胖，指甲未修剪得家猫送至招领办，请相关人士前来认领。今日上午陆先生将一只体型微胖，指甲未修剪得家猫送至招领办，请相关人士前来认领。");
         itemF5.setTime("2019-02-01");
+        itemF5.setImage("https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=1202510011,161257513&fm=85&app=57&f=JPEG?w=121&h=75&s=7123905710737A2D54BF1CF403005039");
         list.add(itemF5);
 
         EsLFPO itemF6 = new EsLFPO();
         itemF6.setId("F6");
         itemF6.setTitle("招领狗：哈士奇");
         itemF6.setUrl("https://mail.qq.com/cgi-bin/loginpage");
-        itemF6.setContent("哈士奇雪橇三傻之一,也是颜值很高的狗狗,饲养哈士奇能带来很多的欢乐,所以现在饲养二哈的人越来越多。哈士奇雪橇三傻之一,也是颜值很高的狗狗,饲养哈士奇能带来很多的欢乐,所以现在饲养二哈的人越来越多。哈士奇雪橇三傻之一,也是颜值很高的狗狗,饲养哈士奇能带来很多的欢乐,所以现在饲养二哈的人越来越多。哈士奇雪橇三傻之一,也是颜值很高的狗狗,饲养哈士奇能带来很多的欢乐,所以现在饲养二哈的人越来越多。");
+        itemF6.setContent("哈士奇雪橇三傻之一，也是颜值很高的狗狗,饲养哈士奇能带来很多的欢乐，所以现在饲养二哈的人越来越多。哈士奇雪橇三傻之一，也是颜值很高的狗狗,饲养哈士奇能带来很多的欢乐，所以现在饲养二哈的人越来越多。哈士奇雪橇三傻之一，也是颜值很高的狗狗,饲养哈士奇能带来很多的欢乐，所以现在饲养二哈的人越来越多。哈士奇雪橇三傻之一，也是颜值很高的狗狗，饲养哈士奇能带来很多的欢乐，所以现在饲养二哈的人越来越多。");
         itemF6.setTime("2019-02-12");
+        itemF6.setImage("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=865536755,2742351179&fm=85&app=57&f=JPEG?w=121&h=75");
         list.add(itemF6);
 
         EsLFPO itemF7 = new EsLFPO();
@@ -404,10 +420,11 @@ public class EsProjectTest {
 
         EsLFPO itemF8 = new EsLFPO();
         itemF8.setId("F8");
-        itemF8.setTitle("深空灰色iPhone8Plus");
+        itemF8.setTitle("土豪金iPhone8Plus");
         itemF8.setUrl("https://mail.qq.com/cgi-bin/loginpage");
         itemF8.setContent("支持无线充电。还有一个特点是其图形传感器加入了对AR技术的支持iPhone 8 Plus 可防溅、抗水、防尘，在受控实验室条件下经测试，其效果在 IEC 60529 标准下达到 IP67 级别 (在最深 1 米的水下停留时间最长可达 30 分钟)。防溅、抗水、防尘功能并非永久有效，防护性能可能会因日常磨损而下降。请勿为潮湿状态下的 iPhone 充电；请参阅使用手册了解清洁和干燥说明。由于浸入液体而导致的损坏不在保修范围之内。支持无线充电。还有一个特点是其图形传感器加入了对AR技术的支持iPhone 8 Plus 可防溅、抗水、防尘，在受控实验室条件下经测试，其效果在 IEC 60529 标准下达到 IP67 级别 (在最深 1 米的水下停留时间最长可达 30 分钟)。防溅、抗水、防尘功能并非永久有效，防护性能可能会因日常磨损而下降。请勿为潮湿状态下的 iPhone 充电；请参阅使用手册了解清洁和干燥说明。由于浸入液体而导致的损坏不在保修范围之内");
         itemF8.setTime("2019-02-28");
+        itemF8.setImage("https://ss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1740643364.jpg");
         list.add(itemF8);
 
         EsLFPO itemF9 = new EsLFPO();
@@ -424,12 +441,386 @@ public class EsProjectTest {
         itemF10.setUrl("https://mail.qq.com/cgi-bin/loginpage");
         itemF10.setContent("猫的毛发短，身形中等，看起来很机灵，请相关失物前来认领。猫的毛发短，身形中等，看起来很机灵，请相关失物前来认领。猫的毛发短，身形中等，看起来很机灵，请相关失物前来认领。猫的毛发短，身形中等，看起来很机灵，请相关失物前来认领。猫的毛发短，身形中等，看起来很机灵，请相关失物前来认领。猫的毛发短，身形中等，看起来很机灵，请相关失物前来认领。猫的毛发短，身形中等，看起来很机灵，请相关失物前来认领。猫的毛发短，身形中等，看起来很机灵，请相关失物前来认领。猫的毛发短，身形中等，看起来很机灵，请相关失物前来认领。猫的毛发短，身形中等，看起来很机灵，请相关失物前来认领。猫的毛发短，身形中等，看起来很机灵，请相关失物前来认领。猫的毛发短，身形中等，看起来很机灵，请相关失物前来认领。猫的毛发短，身形中等，看起来很机灵，请相关失物前来认领。猫的毛发短，身形中等，看起来很机灵，请相关失物前来认领。猫的毛发短，身形中等，看起来很机灵，请相关失物前来认领。猫的毛发短，身形中等，看起来很机灵，请相关失物前来认领。猫的毛发短，身形中等，看起来很机灵，请相关失物前来认领。猫的毛发短，身形中等，看起来很机灵，请相关失物前来认领。猫的毛发短，身形中等，看起来很机灵，请相关失物前来认领。猫的毛发短，身形中等，看起来很机灵，请相关失物前来认领。猫的毛发短，身形中等，看起来很机灵，请相关失物前来认领。猫的毛发短，身形中等，看起来很机灵，请相关失物前来认领。猫的毛发短，身形中等，看起来很机灵，请相关失物前来认领。");
         itemF10.setTime("2019-01-26");
+        itemF10.setImage("https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=1258324164,3366560962&fm=85&app=52&f=JPEG?w=121&h=75&s=A2905CCD961363C6D10160730300C05A");
         list.add(itemF10);
 
+        EsLFPO itemFF1 = new EsLFPO();
+        itemFF1.setId("FF1");
+        itemFF1.setTitle("好心人送来一只小猫");
+        itemFF1.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFF1.setContent("猫，属于猫科动物，分家猫、野猫，是全世界家庭中较为广泛的宠物。家猫的祖先据推测是起源于古埃及的沙漠猫，波斯的波斯猫，已经被人类驯化了3500年（1560年，嘉靖皇帝朱厚熜的猫死了。皇城里出现了几丝不易嗅到的紧张气息，只有太监们敏感地察觉到天要变了。捧着爱猫“霜眉”的尸体，朱厚熜强忍眼泪，宣布要用道教礼仪设坛祭猫");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+        itemFF1.setTime(sdf2.format(new Date()));
+        itemFF1.setImage("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=2039148305,2538599625&fm=58&bpow=800&bpoh=500");
+        list.add(itemFF1);
+
+        EsLFPO itemFF2 = new EsLFPO();
+        itemFF2.setId("FF2");
+        itemFF2.setTitle("招领交易猫");
+        itemFF2.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFF2.setContent("交易猫是国内专业的手机游戏交易平台,安全可靠的手游交易网站,提供手游账号交易、买号卖号、苹果代充值、游戏充值、首充号、装备道具、游戏币交易的手机网游交易平台!");
+        itemFF2.setTime("2019-02-25");
+        itemFF2.setImage("https://gss0.bdstatic.com/-4o3dSag_xI4khGkpoWK1HF6hhy/baike/whfpf%3D180%2C140%2C50/sign=0cfca997f6f2b211e47bd60eacbd5400/1c950a7b02087bf41615980dffd3572c10dfcf5d.jpg");
+        list.add(itemFF2);
+
+        EsLFPO itemFF3 = new EsLFPO();
+        itemFF3.setId("FF3");
+        itemFF3.setTitle("宠物猫");
+        itemFF3.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFF3.setContent("上海宠物猫价格频道为上海网民提供优质上海宠物猫多少钱一只、宠物猫转让信息，这里有大量的宠物猫图片信息供您。上海宠物猫价格频道为上海网民提供优质上海宠物猫多少钱一只、宠物猫转让信息，这里有大量的宠物猫图片信息供您。上海宠物猫价格频道为上海网民提供优质上海宠物猫多少钱一只、宠物猫转让信息，这里有大量的宠物猫图片信息供您。上海宠物猫价格频道为上海网民提供优质上海宠物猫多少钱一只、宠物猫转让信息，这里有大量的宠物猫图片信息供您。上海宠物猫价格频道为上海网民提供优质上海宠物猫多少钱一只、宠物猫转让信息，这里有大量的宠物猫图片信息供您。上海宠物猫价格频道为上海网民提供优质上海宠物猫多少钱一只、宠物猫转让信息，这里有大量的宠物猫图片信息供您。上海宠物猫价格频道为上海网民提供优质上海宠物猫多少钱一只、宠物猫转让信息，这里有大量的宠物猫图片信息供您。上海宠物猫价格频道为上海网民提供优质上海宠物猫多少钱一只、宠物猫转让信息，这里有大量的宠物猫图片信息供您。上海宠物猫价格频道为上海网民提供优质上海宠物猫多少钱一只、宠物猫转让信息，这里有大量的宠物猫图片信息供您。上海宠物猫价格频道为上海网民提供优质上海宠物猫多少钱一只、宠物猫转让信息，这里有大量的宠物猫图片信息供您。上海宠物猫价格频道为上海网民提供优质上海宠物猫多少钱一只、宠物猫转让信息，这里有大量的宠物猫图片信息供您。");
+        itemFF3.setTime("2019-03-05");
+        itemFF3.setImage("https://pic4.58cdn.com.cn/p1/big/n_v287eaf81325a642128b095bf46851fc64.jpg?w=338&h=253");
+        list.add(itemFF3);
+
+        EsLFPO itemFF4 = new EsLFPO();
+        itemFF4.setId("FF4");
+        itemFF4.setTitle("幸运土猫");
+        itemFF4.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFF4.setContent("幸运土猫“喵公馆”，最值得期待的喵星人寄养中心！");
+        itemFF4.setTime("2019-03-11");
+        itemFF4.setImage("");
+        list.add(itemFF4);
+
+        EsLFPO itemFF5 = new EsLFPO();
+        itemFF5.setId("FF5");
+        itemFF5.setTitle("招领爱猫happy");
+        itemFF5.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFF5.setContent("体型: 全部小型猫中型猫大型猫 毛长: 全部无毛猫短毛猫长毛猫!体型: 全部小型猫中型猫大型猫 毛长: 全部无毛猫短毛猫长毛猫!体型: 全部小型猫中型猫大型猫 毛长: 全部无毛猫短毛猫长毛猫!体型: 全部小型猫中型猫大型猫 毛长: 全部无毛猫短毛猫长毛猫!");
+        itemFF5.setTime("2019-03-11");
+        itemFF5.setImage("http://img.boqiicdn.com/Data/BK/P/img81471406191314.jpg");
+        list.add(itemFF5);
+
+        EsLFPO itemFF6 = new EsLFPO();
+        itemFF6.setId("FF6");
+        itemFF6.setTitle("招领沙特尔猫");
+        itemFF6.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFF6.setContent("沙特尔猫又叫夏特尔蓝猫，英文名Chartreux，原产法国，历史起源于14世纪。与英国短毛蓝猫、俄罗斯蓝猫(详情介绍)共称世界三大蓝猫。沙特尔猫的历史很悠久，在1558年的刊物上已有所记载，据信这个古老的法国品种是格勒诺布尔附近的大沙特。");
+        itemFF6.setTime("2019-03-03");
+        itemFF6.setImage("http://img.boqiicdn.com/Data/BK/P/img13171406105650.jpg");
+        list.add(itemFF6);
+
+        EsLFPO itemFF7 = new EsLFPO();
+        itemFF7.setId("FF7");
+        itemFF7.setTitle("主人急寻的塞尔凯克卷毛猫找到啦");
+        itemFF7.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFF7.setContent("1987年，怀俄明州的一个收容所一只花斑猫生下一窝小猫，其中一只猫是卷毛种，那只卷毛小猫在14个月大时，被繁殖家Jeri Newman发现，喜爱研究遗传基因的Jeri Newman将猫跟自己饲养的波斯猫异种繁殖，结果生下6只小猫。其中3只和母亲一样长着卷曲的被毛。第一只拥有卷毛基因的猫经十多年努力配种改良，终于在2000年被CFA确认，之后世界各地相继引入繁殖。1987年，怀俄明州的一个收容所一只花斑猫生下一窝小猫，其中一只猫是卷毛种，那只卷毛小猫在14个月大时，被繁殖家Jeri Newman发现，喜爱研究遗传基因的Jeri Newman将猫跟自己饲养的波斯猫异种繁殖，结果生下6只小猫。其中3只和母亲一样长着卷曲的被毛。第一只拥有卷毛基因的猫经十多年努力配种改良，终于在2000年被CFA确认，之后世界各地相继引入繁殖。1987年，怀俄明州的一个收容所一只花斑猫生下一窝小猫，其中一只猫是卷毛种，那只卷毛小猫在14个月大时，被繁殖家Jeri Newman发现，喜爱研究遗传基因的Jeri Newman将猫跟自己饲养的波斯猫异种繁殖，结果生下6只小猫。其中3只和母亲一样长着卷曲的被毛。第一只拥有卷毛基因的猫经十多年努力配种改良，终于在2000年被CFA确认，之后世界各地相继引入繁殖。1987年，怀俄明州的一个收容所一只花斑猫生下一窝小猫，其中一只猫是卷毛种，那只卷毛小猫在14个月大时，被繁殖家Jeri Newman发现，喜爱研究遗传基因的Jeri Newman将猫跟自己饲养的波斯猫异种繁殖，结果生下6只小猫。其中3只和母亲一样长着卷曲的被毛。第一只拥有卷毛基因的猫经十多年努力配种改良，终于在2000年被CFA确认，之后世界各地相继引入繁殖。1987年，怀俄明州的一个收容所一只花斑猫生下一窝小猫，其中一只猫是卷毛种，那只卷毛小猫在14个月大时，被繁殖家Jeri Newman发现，喜爱研究遗传基因的Jeri Newman将猫跟自己饲养的波斯猫异种繁殖，结果生下6只小猫。其中3只和母亲一样长着卷曲的被毛。");
+        itemFF7.setTime("2019-03-03");
+        itemFF7.setImage("http://img.boqiicdn.com/Data/BK/P/img72201406106623.jpg");
+        list.add(itemFF7);
+
+        EsLFPO itemFF8 = new EsLFPO();
+        itemFF8.setId("FF8");
+        itemFF8.setTitle("招领小区东方大道附近遗失的日本短尾猫");
+        itemFF8.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFF8.setContent("日本短尾猫是日本土生土长的猫种，在日本饲养的历史可追溯到很多世纪以前。传入美国后经过改良培育而成。据说有一个住在日本的美国女性爱猫者，发现日本有一种猫，尾巴像兔尾一样短，很是可爱。在二次世界大站结束后，她带了几只猫回国。这几只猫就是现在的日本短尾猫的祖先。现在日本短尾猫已跻身于世界著名观赏猫的行列，但在英国尚未得到公认。日本短尾猫坐着的时候往往要抬起一只前爪，据说这种姿势代表吉祥如意;玳瑁色-白色花猫则被认为大吉大利。三色猫常出现在一些国家的文艺作品和绘画中。日本短尾猫也叫花猫或短尾花猫，这种猫历史悠久，有人认为它是1000多年前由中国或朝鲜传入日本的。日本人认为花猫是幸运的象征，因此有很多家庭饲养。 1968年由日本传到美国，但欧洲饲养的不多。");
+        itemFF8.setTime("2019-03-01");
+        itemFF8.setImage("http://img.boqiicdn.com/Data/BK/P/img70661405933355.jpg");
+        list.add(itemFF8);
+
+        EsLFPO itemFF9 = new EsLFPO();
+        itemFF9.setId("FF9");
+        itemFF9.setTitle("猫：短毛");
+        itemFF9.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFF9.setContent("英国短毛猫有悠久的历史，但直到20世纪初才引起人们的宠爱。该猫体形圆胖，外型 由中型至大型。其骨架及肌肉很发达，短而肥的颈与及阔而平的肩膊相配合。头部圆而阔， 体粗短发达，被毛短而密，头大脸圆，大而圆的眼睛根据被毛不同而呈现各种颜色。最大的特征是支耳的距离很接近身。该猫温柔平静，对人友善，很容易饲养。");
+        itemFF9.setTime("2019-03-03");
+        itemFF9.setImage("http://img.boqiicdn.com/Data/BK/P/img70661405933355.jpg");
+        list.add(itemFF9);
+
+        EsLFPO itemFF10 = new EsLFPO();
+        itemFF10.setId("FF10");
+        itemFF10.setTitle("红色眼睛的猫儿");
+        itemFF10.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFF10.setContent("关于卡尔特猫这个品种历史悠久,品种的起源说法各种各样,据说在古时候卡尔特的短羊毛状的毛皮曾经被当成水濑毛皮来卖！现代来说,卡尔特猫起源于法国,别名传教士蓝猫,在法国生存了已有几个世纪之久。\n" +
+                "\n" +
+                "       传说CARTHUSIAN教士把卡尔特猫从南非带回，并养育了这些猫。那么这个品种的起源是什么呢？有人认为它的名字表现了它浓密，羊毛状的，类似一种叫CHARTREUX堆的西班牙羊毛纤维；还有人，如FIZNIGER，假定它是曼纽猫和埃及猫的杂交后代。事实上，卡尔特猫祖先可能起源于伊朗，叙利亚和土耳其山区，那里恶劣的环境需要它有厚厚的被毛。在十字军东征时期有一些卡尔特猫传入了法国。");
+        itemFF10.setTime("2019-03-03");
+        itemFF10.setImage("http://img.boqiicdn.com/Data/BK/P/img49891406109364.jpg");
+        list.add(itemFF10);
+
+        EsLFPO itemFF11 = new EsLFPO();
+        itemFF11.setId("FF11");
+        itemFF11.setTitle("米兰苑小区里的宠物猫");
+        itemFF11.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFF11.setContent("大家喜欢叫它加菲猫，憨憨的样子极其可爱。加菲猫(Garfield)是由吉姆·戴维斯(Jim Davis)所创，第一次出现在美国报纸上是在1978年6月19日。它是一只爱说风凉话、好吃、爱睡觉，以及爱捉弄人的大肥猫。无论成人还是孩子都被它的魅力所倾倒。   ");
+        itemFF11.setTime("2019-01-15");
+        itemFF11.setImage("http://img.boqiicdn.com/Data/BK/P/imagick13791542249182.jpg");
+        list.add(itemFF11);
+
+        EsLFPO itemFF12 = new EsLFPO();
+        itemFF12.setId("FF12");
+        itemFF12.setTitle("两只全身灰白的猫");
+        itemFF12.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFF12.setContent("波米拉猫，别称博美拉猫，拉丁学名为Burmilla。这个品种的猫咪在1981年诞生于英国，并在两年后成功参展，参展后的波米拉猫立刻引起人们广泛地关注。其实，波米拉猫的诞生源于一个美丽的结合——淡紫色缅甸猫和银色金吉拉长毛猫“非婚生子”，诞下的孩子便是最初的波米拉猫。最初的波米拉猫是英国米兰达·冯·克奇伯格男爵夫人培育的，而为了让波米拉猫拥有更好的品质，查尔斯和特瑞慈·克拉克夫妇则将另外一种斑纹优美的猫咪与最初的波米拉猫结合，最终演变成现在的波米拉猫。波米拉猫的祖先是金吉拉猫和缅甸猫，所以它们兼具这两种猫咪的优点，比如它们既有金吉拉猫的美貌，也有缅甸猫的友善，因此很多人在跟波米拉猫接触一段时间后都会对它们爱不释手。 环顾四周，你可能会发现并没有人在饲养这种猫咪，这是因为虽然波米拉猫在国外受到不少猫友的注目，但在国内还没有形成流行开的气候，所以如果你对这种猫咪有兴趣，那么你肯定需要花一番功夫才能亲眼看到一只波米拉猫。");
+        itemFF12.setTime("2019-02-27");
+        itemFF12.setImage("http://img.boqiicdn.com/Data/BK/P/img43941405671164.jpg");
+        list.add(itemFF12);
+
+        EsLFPO itemFF13 = new EsLFPO();
+        itemFF13.setId("FF13");
+        itemFF13.setTitle("家猫已找回");
+        itemFF13.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFF13.setContent("并不是来自东方的猫就会被称为东方猫，东方猫也是一个猫种，它们是繁殖学家在繁育另外一种猫咪时意外获得的产物。当时，专家们想繁育纯白色的暹罗猫，于是就用暹罗猫跟纯白猫咪配种，现在被我们熟知的东方猫就这样诞生了。跟其他猫咪一样，虽然它们在1962年就诞生，但真正被认定为是一种新品种的猫则是在1972年。");
+        itemFF13.setTime("2019-03-05");
+        itemFF13.setImage("http://img.boqiicdn.com/Data/BK/P/img14161406022511.jpg");
+        list.add(itemFF13);
+
+        EsLFPO itemFF14 = new EsLFPO();
+        itemFF14.setId("FF14");
+        itemFF14.setTitle("黑猫");
+        itemFF14.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFF14.setContent("就外观来看，孟买猫宛如一只小型黑豹，但其性格却与外表相反。孟买猫个性温驯柔和，稳重好静，然而它不怕生，感情丰富，很喜欢和人亲热，被人搂抱时喉咙会不停的发出满足的呼噜声。所以这种漂亮的黑色小猫深受人们喜爱，是人类的好伙伴。孟买猫非常好交际，易于和周围环境融为一体，但和其它的猫不一定能相安无事。孟买猫有爱心，特别温柔，爱依偎在主人身边，尽管它对感情是有所克制的。孟买猫喜欢与人作伴，所以不应长时间地冷落它。");
+        itemFF14.setTime("2019-03-16");
+        itemFF14.setImage("http://img.boqiicdn.com/Data/BK/P/20090529141017.jpg");
+        list.add(itemFF14);
+
+        EsLFPO itemFF15 = new EsLFPO();
+        itemFF15.setId("FF15");
+        itemFF15.setTitle("陆先生遗失的加菲猫");
+        itemFF15.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFF15.setContent("陆先生遗失的加菲猫已找回，请到招领办认领。");
+        itemFF15.setTime("2019-03-11");
+        itemFF15.setImage("http://img.boqiicdn.com/Data/BK/P/imagick11101537857806.jpg");
+        list.add(itemFF15);
+
+        EsLFPO itemFF16 = new EsLFPO();
+        itemFF16.setId("FF16");
+        itemFF16.setTitle("长毛小猫");
+        itemFF16.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFF16.setContent("挪威森林猫（Norwegian Forest Cat），以白话直译的说法，就是在挪威森林里面栖息的，生存的猫，这是斯堪地半岛特有的品种，其起源不明，常常以像妖精的猫出现在北欧的神话之中。挪威森林猫外观与缅因猫相似，与西伯利亚森林猫同列。森林猫生长的环境非常寒冷和恶劣，因此它长有比其它猫更厚密的被毛和强壮的体格。挪威森林猫体大肢壮，奔跑速度极快，不怕日晒雨淋，行走时颈毛和尾毛飘逸，非常美丽。但是，生长在挪威森林内地的猫，数目已逐年减少，一时有绝迹的危机。因而，在进入一九七零年代初期，努力保存、繁殖，就显得格外重要。挪威森林猫（Norwegian Forest Cat），以白话直译的说法，就是在挪威森林里面栖息的，生存的猫，这是斯堪地半岛特有的品种，其起源不明，常常以像妖精的猫出现在北欧的神话之中。挪威森林猫外观与缅因猫相似，与西伯利亚森林猫同列。森林猫生长的环境非常寒冷和恶劣，因此它长有比其它猫更厚密的被毛和强壮的体格。挪威森林猫体大肢壮，奔跑速度极快，不怕日晒雨淋，行走时颈毛和尾毛飘逸，非常美丽。但是，生长在挪威森林内地的猫，数目已逐年减少，一时有绝迹的危机。因而，在进入一九七零年代初期，努力保存、繁殖，就显得格外重要。挪威森林猫（Norwegian Forest Cat），以白话直译的说法，就是在挪威森林里面栖息的，生存的猫，这是斯堪地半岛特有的品种，其起源不明，常常以像妖精的猫出现在北欧的神话之中。挪威森林猫外观与缅因猫相似，与西伯利亚森林猫同列。森林猫生长的环境非常寒冷和恶劣，因此它长有比其它猫更厚密的被毛和强壮的体格。挪威森林猫体大肢壮，奔跑速度极快，不怕日晒雨淋，行走时颈毛和尾毛飘逸，非常美丽。但是，生长在挪威森林内地的猫，数目已逐年减少，一时有绝迹的危机。因而，在进入一九七零年代初期，努力保存、繁殖，就显得格外重要。");
+        itemFF16.setTime("2019-03-13");
+        itemFF16.setImage("http://img.boqiicdn.com/Data/BK/P/imagick76571533894282.png");
+        list.add(itemFF16);
+
+        EsLFPO itemFF17 = new EsLFPO();
+        itemFF17.setId("FF17");
+        itemFF17.setTitle("外形有些凶悍，个头偏大的猫");
+        itemFF17.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFF17.setContent("阿比西尼亚猫又称兔猫、埃塞俄比亚猫、阿比等，英文名为Abyssinian，现分布于全球各地。人们通常会通过猫咪的名字来判断猫咪的来源，但阿比西尼亚猫的起源却跟阿比西尼亚似乎有点距离。阿比西尼亚是埃塞俄比亚的旧称，但很多人认为阿比西尼亚猫来自古埃及。");
+        itemFF17.setTime("2019-01-13");
+        itemFF17.setImage("http://img.boqiicdn.com/Data/BK/P/img33571405663401.jpg");
+        list.add(itemFF17);
+
+        EsLFPO itemFF18 = new EsLFPO();
+        itemFF18.setId("FF18");
+        itemFF18.setTitle("招领卷毛大猫");
+        itemFF18.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFF18.setContent("德文卷毛猫，又叫德文帝王猫，英文名为Devon Rex，最初被人们发现于英国德文郡。在德文卷毛猫出现前，英国就在柯尼斯郡发现了柯尼斯猫，柯尼斯猫也是卷毛猫，因此人们一度以为它们是近亲。不过后来的试验证明，它们并无血缘关系，因此人们便用德文卷毛猫来命名这种新的卷毛猫。德文卷毛猫，又叫德文帝王猫，英文名为Devon Rex，最初被人们发现于英国德文郡。在德文卷毛猫出现前，英国就在柯尼斯郡发现了柯尼斯猫，柯尼斯猫也是卷毛猫，因此人们一度以为它们是近亲。不过后来的试验证明，它们并无血缘关系，因此人们便用德文卷毛猫来命名这种新的卷毛猫。");
+        itemFF18.setTime("2019-03-09");
+        itemFF18.setImage("http://img.boqiicdn.com/Data/BK/P/img81481405673729.jpg");
+        list.add(itemFF18);
+
+        EsLFPO itemFF19 = new EsLFPO();
+        itemFF19.setId("FF19");
+        itemFF19.setTitle("太湖邻岸的家猫");
+        itemFF19.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFF19.setContent("家猫会很好地控制力度,不会把主人咬伤,但可以起到良好的警告作用。如何阻止这一切发生? 不要“越界”抚摸。");
+        itemFF19.setTime("2019-03-11");
+        itemFF19.setImage("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=1828695626,1771733300&fm=85&app=57&f=JPEG?w=121&h=75&s=1080D95D0C2076175DA0047C0300C062");
+        list.add(itemFF19);
+
+        EsLFPO itemFF20 = new EsLFPO();
+        itemFF20.setId("FF20");
+        itemFF20.setTitle("一只可爱的小猫咪");
+        itemFF20.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFF20.setContent("特别喜欢把自己躲起来的动物，当家猫自己躲起来的时候，你作为它的主人千万不要强行把家猫拖拽出来。特别喜欢把自己躲起来的动物，当家猫自己躲起来的时候，你作为它的主人千万不要强行把家猫拖拽出来。特别喜欢把自己躲起来的动物，当家猫自己躲起来的时候，你作为它的主人千万不要强行把家猫拖拽出来。特别喜欢把自己躲起来的动物，当家猫自己躲起来的时候，你作为它的主人千万不要强行把家猫拖拽出来。特别喜欢把自己躲起来的动物，当家猫自己躲起来的时候,你作为它的主人千万不要强行把家猫拖拽出来。");
+        itemFF20.setTime("2019-03-19");
+        itemFF20.setImage("https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=4204561101,372450854&fm=85&app=57&f=JPEG?w=121&h=75&s=01F05B955BC64743C455F8F60300C030");
+        list.add(itemFF20);
+
+        EsLFPO itemFFF1 = new EsLFPO();
+        itemFFF1.setId("FFF1");
+        itemFFF1.setTitle("李刚泉先生找到luncy猫");
+        itemFFF1.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFFF1.setContent("孟买猫 埃及猫 土耳其梵猫 短腿猫 雪鞋猫 缅甸猫 缅因猫 伯曼猫 玳瑁猫 安哥拉猫 山东狮子猫 布偶猫 金吉拉 西伯利亚猫 马恩岛猫");
+        SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd");
+        itemFFF1.setTime(sdf3.format(new Date()));
+        itemFF1.setImage("https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=1102051843,416264147&fm=85&app=57&f=JPEG?w=121&h=75&s=F158A9775F224E1354CDA5CE0100E0B1");
+        list.add(itemFFF1);
+
+        EsLFPO itemFFF2 = new EsLFPO();
+        itemFFF2.setId("FFF2");
+        itemFFF2.setTitle("郝女士在古街闹区发现宠物猫Luncy");
+        itemFFF2.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFFF2.setContent("郝女士在古街闹区发现宠物猫Luncy。");
+        itemFFF2.setTime("2019-02-25");
+        itemFFF2.setImage("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=4243275056,2400637208&fm=58");
+        list.add(itemFFF2);
+
+        EsLFPO itemFFF3 = new EsLFPO();
+        itemFFF3.setId("FFF3");
+        itemFFF3.setTitle("虎头脸猫");
+        itemFFF3.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFFF3.setContent("虎头脸猫：体型，全部小型猫中型猫大型猫。毛长，花纹。");
+        itemFFF3.setTime("2019-03-05");
+        itemFFF3.setImage("https://ss0.baidu.com/73t1bjeh1BF3odCf/it/u=1220334305,3828257907&fm=85&s=41AB9355065153D65880B0DC030000313");
+        list.add(itemFFF3);
+
+        EsLFPO itemFFF4 = new EsLFPO();
+        itemFFF4.setId("FFF4");
+        itemFFF4.setTitle("酣睡小萌猫");
+        itemFFF4.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFFF4.setContent("目前我国最普遍的猫咪,而且也是绝大多数人都喜欢饲养的,猫咪的性格虽然不那么粘人。");
+        itemFFF4.setTime("2019-03-11");
+        itemFFF4.setImage("https://ss0.baidu.com/73x1bjeh1BF3odCf/it/u=1736646433,2340119276&fm=85&s=7BA78D4316211117DC09118C0300E091");
+        list.add(itemFFF4);
+
+        EsLFPO itemFFF5 = new EsLFPO();
+        itemFFF5.setId("FFF5");
+        itemFFF5.setTitle("招领红小胖猫");
+        itemFFF5.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFFF5.setContent("红小胖snoopy是一只红色梵纹异国短毛猫，最大的爱好就是吃吃睡睡，出名起因是该猫的主人给Snoopy摆弄出了各种造型，发到网上后让不少网友一下子就迷上了这只萌猫。这只名叫“Snoopy”的萌猫在微博上抢尽了风头。“2011年5月，偶在北京出生了。偶有一个哥哥一个妹妹。15天大的我和兄弟姐妹，还有偶滴世界冠军爸爸的合影。”2011年11月，“红小胖Snoopy”正式在新浪开设了自己的微博。每天在微博上晒各种萌照便成了这只加菲猫的主要生活。当然，作为一只萌猫，“猫生”的丰富活动远远不止这些。爱睡小胖登上杂志小胖登上杂志懒觉，爱舔毛，所有猫的爱好在这只Snoopy身上都能找到。");
+        itemFFF5.setTime("2019-03-11");
+        itemFFF5.setImage("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=2627548196,3563163525&fm=58&bpow=429&bpoh=496");
+        list.add(itemFFF5);
+
+        EsLFPO itemFFF6 = new EsLFPO();
+        itemFFF6.setId("FFF6");
+        itemFFF6.setTitle("丑猫儿");
+        itemFFF6.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFFF6.setContent("丑猫是出生于美国斯坦森埃克塞特动物医院的一只猫，全身光秃秃，看起来像胶皮，只有胸前长着一些粗糙的毛，而且尾巴跟老鼠尾巴一样，脸上皱巴巴的，因此得名“丑猫”。北京时间2009年3月6日消息，美国斯坦森埃克塞特动物医院的一只猫咪长的奇丑无比，号称最丑的猫。“丑猫”人气越来越旺。");
+        itemFFF6.setTime("2019-02-03");
+        itemFFF6.setImage("https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=1071731415,719947858&fm=58&bpow=504&bpoh=400");
+        list.add(itemFFF6);
+
+        EsLFPO itemFFF7 = new EsLFPO();
+        itemFFF7.setId("FFF7");
+        itemFFF7.setTitle("瞪着圆溜溜的大眼睛的小胖猫");
+        itemFFF7.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFFF7.setContent("可爱,神秘,高冷这些词好像都是用来形容它们的。可爱,神秘,高冷这些词好像都是用来形容它们的,可爱,神秘,高冷这些词好像都是用来形容它们的,可爱,神秘,高冷这些词好像都是用来形容它们的,可爱,神秘,高冷这些词好像都是用来形容它们的,可爱,神秘,高冷这些词好像都是用来形容它们的。");
+        itemFFF7.setTime("2019-03-03");
+        itemFFF7.setImage("https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=506520105,3710101440&fm=85&app=57&f=JPEG?w=121&h=75&s=CAAAA345267347982DA0A8C80300F022");
+        list.add(itemFFF7);
+
+        EsLFPO itemFFF8 = new EsLFPO();
+        itemFFF8.setId("FFF8");
+        itemFFF8.setTitle("无锡佛山景区内遗失的金吉拉猫");
+        itemFFF8.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFFF8.setContent("金吉拉猫原意是一种绒鼠的名称，祖先是安哥拉猫与波斯猫。金吉拉是最早纯人工育种，经过多年精心繁育而成的一个特色猫种。原产国在英国。特征是毛尖颜色不如银色渐层猫的清楚，属颜色较浅的猫。毛型厚长、柔滑。个性温顺。由波斯猫经过人为刻意培育而成，养猫界俗称“人造猫”。金吉拉猫于1894年首次被作为一个独立的品种出现在英国水晶宫猫展上。它们是猫中贵族，其性情温文尔雅，聪明敏捷，善解人意，少动好静，叫声尖细柔美，爱撒娇，举止风度翩翩，天生一副娇生惯养之态，给人一种华丽高贵的感觉。历来深受世界各地爱猫人士的宠爱，是长毛猫的代表。金吉拉四肢较短，体态比波斯猫稍娇小但显得更灵巧。");
+        itemFFF8.setTime("2019-03-01");
+        itemFFF8.setImage("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=3358496960,2854457931&fm=58&bpow=607&bpoh=516");
+        list.add(itemFFF8);
+
+        EsLFPO itemFFF9 = new EsLFPO();
+        itemFFF9.setId("FFF9");
+        itemFFF9.setTitle("招领美国美国短毛猫");
+        itemFFF9.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFFF9.setContent("招领一只美国短毛猫");
+        itemFFF9.setTime("2019-03-22");
+        itemFFF9.setImage("");
+        list.add(itemFFF9);
+
+        EsLFPO itemFFF10 = new EsLFPO();
+        itemFFF10.setId("FFF10");
+        itemFFF10.setTitle("唐女士找到一只喜马拉雅猫");
+        itemFFF10.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFFF10.setContent("喜马拉雅猫，这个名字是由于它和叫这个名字的兔子的长相十分相似的缘故，而和喜马拉雅山无关。喜马拉雅猫融合了波斯猫的轻柔、妩媚和反应灵敏，暹罗猫的聪明和温雅。它有波斯猫的体态和长毛，暹罗猫的毛色和眼睛");
+        itemFFF10.setTime("2019-03-03");
+        itemFFF10.setImage("");
+        list.add(itemFFF10);
+
+        EsLFPO itemFFF11 = new EsLFPO();
+        itemFFF11.setId("FFF11");
+        itemFFF11.setTitle("景茹在上海静安区找到萌宠小猫一只");
+        itemFFF11.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFFF11.setContent("在养之前了解一个品种总是很好的,以确保它们适合你的家。如果你想了解更多。");
+        itemFFF11.setTime("2019-01-15");
+        itemFFF11.setImage("https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=4122939090,3059265797&fm=85&app=57&f=JPEG?w=121&h=75&s=092BD9154CE2720330B89CE403004061");
+        list.add(itemFFF11);
+
+        EsLFPO itemFFF12 = new EsLFPO();
+        itemFFF12.setId("FFF12");
+        itemFFF12.setTitle("温顺安静的猫中小公主-蓝猫");
+        itemFFF12.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFFF12.setContent("俄罗斯蓝猫（Russian Blue），历史上曾被称做阿契安吉蓝猫，曾有过三种不同的名字。最初是阿契安吉蓝猫，直到20世纪40年代才有现在的名字，另外有段时间它则叫做马耳他猫。证据显示，这种猫确实原产于俄罗斯，因为已在俄罗斯寒带地区发现了同种的猫。俄罗斯蓝猫体型细长，大而直立的尖耳朵，脚掌小而圆，走路像是用脚尖在走。身上披着银蓝色光泽的短被毛，配上修长苗条的体型和轻盈的步态，尽显一派猫中的贵族风度。祖先起源于寒冷的西伯利亚地带，很多地方称它为“冬天的精灵”。俄罗斯蓝猫的衍变历史较为悠久，它们的祖先“阿契安吉蓝猫”早在17世纪就从俄罗斯的港口被带往英国。二次大战以后，俄罗斯蓝猫的数量急剧减少，为了把其种群数量恢复，培育者用暹罗猫与其进行杂交，使得俄罗斯蓝猫的外形带有一些东方情调。最初一直到二战之后在英格兰与斯堪地那维亚地区之外才有其他地区开始培育俄国蓝猫；由于二战期间交通中断，造成纯种蓝猫血缘狭窄化， 所以有一些培育者开始进行俄国蓝猫与暹罗猫的混种交配。尽管这个混种猫在二战前已经存在于美国，不过也要到战后由培育者培育成今天在美国境内所谓的“现代俄国蓝猫”。尽管培育者已经在两次大战中以及战争期间以有限的基础上利用俄国蓝猫培育出新的猫种，例如哈瓦那棕猫(毛色接近哈瓦那雪茄，具有暹逻猫的血统) 或者是增加新的猫系，例如尼伯龙猫(其名源自于德文 “有如雾霜般迷蒙的生物”，可想见其外型优美程度)，俄国蓝猫的血统依旧维持在灰蓝色相间短毛的猫种上。");
+        itemFFF12.setTime("2019-02-20");
+        itemFFF12.setImage("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=4176102836,485168200&fm=179&app=42&f=JPEG?w=121&h=140");
+        list.add(itemFFF12);
+
+        EsLFPO itemFFF13 = new EsLFPO();
+        itemFFF13.setId("FFF13");
+        itemFFF13.setTitle("瘦小暹罗猫");
+        itemFFF13.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFFF13.setContent("暹（xiān）罗猫是世界著名的短毛猫，也是短毛猫的代表品种。种族原产于暹罗（今泰国），故名暹罗猫。在200多年前，这种珍贵的猫仅在泰国的皇宫和大寺院中饲养，是足不出户的贵族。暹罗猫能够较好适应主人当地的气候，且性格刚烈好动，机智灵活，好奇心特强，善解人意。头细长呈楔形。头盖平坦，从侧面看，头顶部至鼻尖成直线。脸形尖而呈V字形，口吻尖突呈锐角,从吻端至耳尖形成V字形。鼻梁高而直，从鼻端到耳尖恰为等边三角形。两颊瘦削，齿为剪式咬合。耳朵大，基部宽，耳端尖、直立。眼睛大小适中，杏仁形，为蓝色，或深或浅。从内眼角至眼梢的延长线，与耳尖构成V字形。眼微凸。尾长而细，尾端尖略卷曲。长度与后肢相等。柔韧性好，肌肉发达，身材苗条，长得棱角分明，腿细而长。掌很小，呈椭圆形。尾巴长而美丽，尾端尖。");
+        itemFFF13.setTime("2019-03-11");
+        itemFFF13.setImage("");
+        list.add(itemFFF13);
+
+        EsLFPO itemFFF14 = new EsLFPO();
+        itemFFF14.setId("FFF14");
+        itemFFF14.setTitle("感谢王小姐找到的雪鞋猫");
+        itemFFF14.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFFF14.setContent("它既有暹罗猫那样细长而柔软的身躯，又具有美国短毛猫健壮的体魄。有些雄猫甚至超过5公斤。刚出生的雪鞋猫全身洁白，须等两年后才出现班纹。本来以暹逻猫的毛色为主，但目前亦已培育出各种毛色的猫种来。雪鞋猫头部稍宽，呈楔子彡；高颊骨，双目的前端较尖削；一对大大的杏仁眼，呈深而鲜艳的蓝色。鼻梁挺直，很奇特的是，只有一个鼻孔，这个特征是独一无二的。雪鞋猫的体毛较短，脊背部分毛的颜色较多，有深有浅。嘴巴和胸腹是白色的，象是戴了口罩和围着围裙的厨师。四肢也是白色的，如同穿了雪鞋一般，其名称也由此而来。毛色：暗褐色，蓝色，巧克力色和淡紫色。肢端颜色应当和身体颜色有鲜明的反差，而身体颜色应较肢端颜色淡。眼睛颜色应该是蓝色的。前额有倒置V形斑纹，爪上有白色斑纹。理想状态的手套应为四只均匀。鼻头应为白色，没有任何着色，且颜色鲜明，或为多色。白色区重叠于传统暹罗猫图案之上，带有这种斑纹颜色的品种正越来越受到培育。前腿上\"白靴\"必须达到脚踝，并在后腿上正好延伸至后腿的跗关了下年龄较大些的猫往往颜色深一点，但关键是重点色和体色要形成对比。海豹色和白重点色猫。极其活泼，个性很强，是优秀的猎手。贪玩，是孩子的、佳伴。温柔，对主人很有感情。比暹罗猫更少一点专横。活泼聪明，感情丰富，不怕生人；温顺友好，渴求主人的宠爱，喜欢与主人玩耍；叫声甜蜜，举止得当；爱干净。波曼猫的性格开朗头脑聪慧，它有非常充实的感情，对人温顺态度友好，不怕陌生人；喜欢被主人宠爱，爱和主人嬉戏玩耍；有甜蜜的叫声，行为举止非常大方得体；波曼猫爱干净，愉快的生活在舒适的家中，在天气好时喜欢到花园庭院等地方散步。");
+        itemFFF14.setTime("2019-03-15");
+        itemFFF14.setImage("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=81184367,201167788&fm=58&bpow=422&bpoh=515");
+        list.add(itemFFF14);
+
+        EsLFPO itemFFF15 = new EsLFPO();
+        itemFFF15.setId("FFF15");
+        itemFFF15.setTitle("最古老的品种猫之一：安哥拉猫");
+        itemFFF15.setUrl("https://mail.qq.com/cgi-bin/loginpage");
+        itemFFF15.setContent("16世纪传入欧洲，进入意大利和法国，而后传入英国，主要分布在法国和英国，是当时最受欢迎的长毛品种。19世纪中叶，由于波斯猫的出现，安哥拉猫的地位逐渐降低。目前，安哥拉猫主要分布在土耳其，其他地方数量已很少 。 全身有丝般的长毛，有褐、红、黑、白四种毛色，通常认为白色的安哥拉猫最纯正。 该品种猫动作敏捷，性格特立独行，不喜欢人抚、抱。安哥拉猫会生仔，一窝有4仔，小猫出生后就能睁眼，而且顽皮可爱。该猫最逗人之处是特别喜欢水，能在小溪或浴池中畅游且憩态可掬。");
+        itemFFF15.setTime("2019-03-20");
+        itemFFF15.setImage("https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=2088123721,2503287690&fm=58&bpow=360&bpoh=500");
+        list.add(itemFFF15);
 
         return list;
     }
 
+
+    @Test
+    public void testAnalyzer() throws IOException {
+        String str = "寻找mate7手机一部";
+        //String str = "遗失家猫";
+
+        /*
+        //Analyzer anlyzer = new WhitespaceAnalyzer();  //空格分词
+
+        Analyzer anlyzer = new CJKAnalyzer();  //两两分词
+
+        StringReader stringReader = new StringReader(str);
+        //TokenStream tokenStream = anlyzer.tokenStream("",stringReader);
+        TokenStream tokenStream = anlyzer.tokenStream("title",str);
+        tokenStream.reset();
+        CharTermAttribute term = tokenStream.getAttribute(CharTermAttribute.class);
+        while(tokenStream.incrementToken()){
+            System.out.println(term.toString());
+        }
+        stringReader.close();
+        tokenStream.close();
+        */
+
+
+        /*List<String> ss = new ArrayList<>();
+        IKSegmenter ik = new IKSegmenter(new StringReader(str), false);
+        try {
+            Lexeme word = null;
+            while((word=ik.next())!=null) {
+                //result.append(word.getLexemeText()).append("@-@");
+                ss.add(word.getLexemeText().toUpperCase());
+            }
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        System.out.println(ss.toString());*/
+
+        AnalyzeRequestBuilder ikRequest = new AnalyzeRequestBuilder(client, AnalyzeAction.INSTANCE, ElasticSearchConstants.ES_DB, str);
+        ikRequest.setTokenizer("ik_max_word");
+        List<AnalyzeResponse.AnalyzeToken> ikTokenList = ikRequest.execute().actionGet().getTokens();
+        //循环赋值
+        List<String> ikList = new ArrayList<>();
+        ikTokenList.forEach(ikToken -> {
+            ikList.add(ikToken.getTerm());
+            if (ikToken.getTerm().length() > 1) { //过滤串
+                System.out.println(ikToken.getTerm());
+            }
+        });
+        System.out.println("all ik phrase: " + ikList.toString());
+
+
+
+
+    }
 
 
     /**
@@ -485,7 +876,7 @@ public class EsProjectTest {
                 .endObject()
                 .startObject("content")
                 .field("type", "text")
-                .field("analyzer", "ik_max_word")
+                .field("analyzer", "ik_max_word") //索引时使用 ik_max_word
                 .endObject()
                 .startObject("addr")
                 .field("type", "text")
@@ -500,6 +891,9 @@ public class EsProjectTest {
                 .startObject("name")
                 .field("type", "text")
                 .field("analyzer", "ik_max_word")
+                .endObject()
+                .startObject("image")
+                .field("type", "keyword")
                 .endObject()
                 .startObject("suggest")  //搜索建议
                 .field("type", "completion")
@@ -566,6 +960,7 @@ public class EsProjectTest {
                                         .field("time", item.getTime())
                                         .field("money", item.getMoney())
                                         .field("name", item.getName())
+                                        .field("image", item.getImage())
                                         .startObject("suggest")  //搜索建议
                                         .field("input", ikAnalyse(item.getTitle()))  //数组
                                         .field("weight", 10)
@@ -642,6 +1037,7 @@ public class EsProjectTest {
                                         .field("url", item.getUrl())
                                         .field("content", item.getContent())
                                         .field("time", item.getTime())
+                                        .field("image", item.getImage())
                                         .startObject("suggest")  //搜索建议
                                         .field("input", ikAnalyse(item.getTitle()))  //数组
                                         .field("weight", 8)

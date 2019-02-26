@@ -1,6 +1,7 @@
 package com.viverselftest.api;
 
 import com.viverselftest.dto.PageDTO;
+import com.viverselftest.po.elasticsearch.EsLFPO;
 import com.viverselftest.po.elasticsearch.EsSuggestPO;
 import com.viverselftest.service.ElasticSearchService;
 import io.swagger.annotations.Api;
@@ -80,10 +81,23 @@ public class ElasticSearchApi {
         elasticSearchService.addHot(search);
     }
 
+    /**
+     * 删除热门搜索记录
+     */
     @ApiOperation(value = "清空热门搜索记录")
     @GetMapping("/delete-hot-key")
     public void deleteHotKey() {
         elasticSearchService.deleteHotKey();
+    }
+
+    /**
+     * 根据时间顺序查询最新消息公告
+     * @return
+     */
+    @ApiOperation(value = "获取最新消息公告")
+    @GetMapping("/get-lasted-new")
+    public List<EsLFPO> getLastedNew() {
+        return elasticSearchService.getLastedNew();
     }
 
 

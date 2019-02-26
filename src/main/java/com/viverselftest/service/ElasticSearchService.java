@@ -1,6 +1,7 @@
 package com.viverselftest.service;
 
 import com.viverselftest.dto.PageDTO;
+import com.viverselftest.po.elasticsearch.EsLFPO;
 import com.viverselftest.po.elasticsearch.EsSuggestPO;
 
 import java.util.List;
@@ -38,5 +39,14 @@ public interface ElasticSearchService {
      */
     void addHot(String search);
 
+    /**
+     * 删除热门搜索记录
+     */
     void deleteHotKey();
+
+    /**
+     * 根据时间顺序查询最新消息公告
+     * @return
+     */
+    List<EsLFPO> getLastedNew();
 }

@@ -34,6 +34,9 @@ public class EsLFPO {
     //姓名
     private String name;
 
+    //图片url
+    private String image;
+
 
 
 
