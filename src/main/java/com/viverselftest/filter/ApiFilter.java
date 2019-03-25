@@ -9,11 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +22,9 @@ import java.util.Map;
 //@Configuration
 //public class ApiFilter extends WebMvcConfigurerAdapter {
 public class ApiFilter {
+
+    //@Autowired
+    //private ObjectMapper objectMapper;
 
     @Autowired
     private ErrorMsgUtils errorMsgUtils;
@@ -70,4 +71,9 @@ public class ApiFilter {
         }).addPathPatterns("/api/**");
 
     }
+
+    /*@Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+    }*/
 }

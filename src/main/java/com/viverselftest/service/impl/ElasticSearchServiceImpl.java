@@ -1,32 +1,16 @@
 package com.viverselftest.service.impl;
 
-import cn.afterturn.easypoi.excel.ExcelExportUtil;
-import cn.afterturn.easypoi.excel.entity.ExportParams;
 import com.alibaba.fastjson.JSONObject;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.viverselftest.consts.ElasticSearchConstants;
 import com.viverselftest.dto.PageDTO;
-import com.viverselftest.po.ExcelExportBigDataPO;
-import com.viverselftest.po.ExportTaskPO;
 import com.viverselftest.po.elasticsearch.EsLFPO;
 import com.viverselftest.po.elasticsearch.EsSuggestPO;
 import com.viverselftest.service.ElasticSearchService;
-import com.viverselftest.util.ElasticSearchUtils;
-import com.viverselftest.util.QueryUtils;
-import com.viverselftest.util.StrUtils;
 import lombok.extern.slf4j.Slf4j;
-import oracle.jdbc.driver.DatabaseError;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.elasticsearch.action.admin.indices.analyze.AnalyzeAction;
-import org.elasticsearch.action.admin.indices.analyze.AnalyzeRequestBuilder;
-import org.elasticsearch.action.admin.indices.analyze.AnalyzeResponse;
-import org.elasticsearch.action.fieldstats.FieldStats;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.text.Text;
-import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -46,13 +30,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Tuple;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Created by Congwz on 2019/1/31.
@@ -64,8 +42,12 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
     @Autowired
     private JedisPool jedisPool;
 
+    //@Autowired
+    //private ElasticSearchUtils esUtils;
+
+
     @Autowired
-    private ElasticSearchUtils esUtils;
+    private TransportClient esClient;
 
     /**
      * 获取搜索建议
@@ -77,10 +59,11 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
     @Override
     public List<EsSuggestPO> getSuggest(String search, String tag) throws Exception {
         long star_time = new Date().getTime();
-        TransportClient client = esUtils.getClient();
+        //TransportClient client = esUtils.getClient();
         List<EsSuggestPO> resList = new ArrayList<>();
         //搜索建议-后台查询
-        resList = getTitleBySuggest(search, tag, client);
+        //resList = getTitleBySuggest(search, tag, client);
+        resList = getTitleBySuggest(search, tag, esClient);
 
         //搜索建议-前端查询
         /*QueryBuilder builder = QueryBuilders.typeQuery("L".equals(tag) ? ElasticSearchConstants.ES_TABLE_LOST : ElasticSearchConstants.ES_TABLE_FIND);
@@ -216,14 +199,15 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
         PageDTO pd = new PageDTO();
         int total = 0;
         long star_time = System.currentTimeMillis();
-        TransportClient client = null;
+        //TransportClient client = null;
         try {
-            client = esUtils.getClient();
+            //client = esUtils.getClient();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        list = getDataByMultiQuerySelf(currentPage, pageSize, search, tag, client);
+        //list = getDataByMultiQuerySelf(currentPage, pageSize, search, tag, client);
+        list = getDataByMultiQuerySelf(currentPage, pageSize, search, tag, esClient);
         if(!CollectionUtils.isEmpty(list)) {
             total = list.get(0).getTotal();
         }
@@ -579,7 +563,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
     }
 
     /**
-     * 获取热门搜索
+     * 获取热门搜索  SortedSet（有序集合）
      * @return
      */
     @Override
@@ -629,14 +613,15 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
     @Override
     public List<EsLFPO> getLastedNew() {
         List<EsLFPO> resList = new ArrayList<>();
-        TransportClient client = null;
+        //TransportClient client = null;
         try {
-            client = esUtils.getClient();
+            //client = esUtils.getClient();
         } catch (Exception e) {
             e.printStackTrace();
         }
         QueryBuilder qb = QueryBuilders.matchAllQuery();
-        SearchResponse response = client.prepareSearch(ElasticSearchConstants.ES_DB)
+        //SearchResponse response = client.prepareSearch(ElasticSearchConstants.ES_DB)
+        SearchResponse response = esClient.prepareSearch(ElasticSearchConstants.ES_DB)
                 .setQuery(qb)
                 .addSort("time", SortOrder.DESC)
                 .setSize(15) //默认是一次查询10条数据，设置size,一次查询15个
