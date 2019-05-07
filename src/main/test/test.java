@@ -1,10 +1,8 @@
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.junit.Test;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Congwz on 2019/2/15.
@@ -63,25 +61,258 @@ public class test {
          * */
 
 
+//
+//        //对接接口，获取对象数据【方法2--->推荐】
+//        String passportUrl = "http://passport-api.hc.com";
+//        //获取邮箱密码
+//        String url = passportUrl + "/api/organizational/getUserEmailInfo?token=test_token&work_code=" + "01000207";
+//        Map<String, Object> retMap = new RestTemplate().getForObject(url, Map.class);
+//
+//        String password = "";
+//        if ("1".equals(retMap.get("success"))) {
+//            LinkedHashMap map = (LinkedHashMap) retMap.get("data");
+//            System.out.println(map.toString());
+//            password = (String) map.get("email_password");
+//            System.out.println("password: " + password);
+//        } else {
+//            System.out.println(retMap.get("errorMessage"));
+//        }
+//        System.out.println(new Date() + " send email success.");
+//
 
-        //对接接口，获取对象数据【方法2--->推荐】
-        String passportUrl = "http://passport-api.hc.com";
-        //获取邮箱密码
-        String url = passportUrl + "/api/organizational/getUserEmailInfo?token=test_token&work_code=" + "01000207";
-        Map<String, Object> retMap = new RestTemplate().getForObject(url, Map.class);
+        /**
+         * //BigDecimal的四舍五入后一位是5的时候不进位的bug
+         BigDecimal bgse = new BigDecimal(new Double(0.8256).toString()).setScale(2,BigDecimal.ROUND_HALF_UP);
+         System.out.println(bgse);  // 0.83
+         * */
 
-        String password = "";
-        if ("1".equals(retMap.get("success"))) {
-            LinkedHashMap map = (LinkedHashMap) retMap.get("data");
-            System.out.println(map.toString());
-            password = (String) map.get("email_password");
-            System.out.println("password: " + password);
-        } else {
-            System.out.println(retMap.get("errorMessage"));
+//        String a = "制造商部件号：";
+//        String a2 = "制造商部件号:";
+//        System.out.println(a.length()); //7
+//        System.out.println(a2.length()); //7
+//        String b = "VFAG16-130-F8-P12-M6-FC4";
+//        String b2 = "VF16-";
+//        System.out.println(b.length());  //24
+//        String b11 = "";
+//        String b12 = "";
+//        if(b.length() >= 20) {
+//            b11 = b.substring(0,20);
+//            b12 = b.substring(20,b.length());
+//        }
+//        System.out.println("b11: " + b11);
+//        System.out.println("b12: " + b12);
+//
+//        System.out.println(b2.length()); //5
+//
+//        String c = "米思米（中国）精密机械贸易";
+//        String c2 = "米（中国)";
+//        System.out.println(c.length());  //13
+//        System.out.println(c2.length());  //5
+
+        /**
+         * //获取跟目录
+         String rootPath = "";
+         try {
+         String tempPath = ResourceUtils.getURL("classpath:") == null
+         ?"":ResourceUtils.getURL("classpath:").getPath();
+         if (!StringUtil.isEmpty(tempPath)) {
+         File path = new File(tempPath);
+         if (!path.exists()) {
+         path = new File("");
+         }
+         rootPath = path.getAbsolutePath();
+         System.out.println("project root path:" + rootPath);
+         }
+         } catch (FileNotFoundException e) {
+         e.printStackTrace();
+         }
+         * */
+
+
+//
+//        //String filePath = "https://hcsscm.oss-cn-shanghai.aliyuncs.com/harmontronics-erp/20100326/字段.xls";
+//        String filePath = "harmontronics-erp/01000008/订阅号二维码.jpg";
+//        String hz = filePath.substring(filePath.lastIndexOf("/") + 1);
+//
+//        System.out.println("后缀名：" + hz);
+//        InputStream in = null;
+//        if (filePath.startsWith("https://hcsscm.oss-cn-shanghai.aliyuncs.com/")) {
+//            filePath = filePath.substring(filePath.indexOf("https://hcsscm.oss-cn-shanghai.aliyuncs.com/") + "https://hcsscm.oss-cn-shanghai.aliyuncs.com/".length());
+//        }
+//
+//        OSSClient client = new OSSClient("oss-cn-shanghai.aliyuncs.com", "LTAI7tPuY6wE9XSD", "s6qyZBm1754hnvHfoLMuzcUxGGWqvU");
+//        InputStream inlast;
+//        if(client == null) {
+//            System.out.println("阿里云客户端获取失败");
+//        }else {
+//            try{
+//                OSSObject ossObject = client.getObject("hcsscm", filePath);
+//                in = ossObject.getObjectContent();
+//                ByteArrayOutputStream bous = null;
+//                try {
+//                    bous = new ByteArrayOutputStream();
+//                    byte[] buffer = new byte[1024];
+//                    int len;
+//                    while ((len = in.read(buffer)) > -1) {
+//                        bous.write(buffer, 0, len);
+//                    }
+//                    bous.flush();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                inlast = new ByteArrayInputStream(bous.toByteArray());
+//            } catch (OSSException oe) {
+//                System.out.println("从OSS文件中得到内容出错:"+oe.getMessage());
+//                throw new RuntimeException("没有得到文件内容");
+//            } catch (ClientException ce) {
+//                System.out.println("从OSS文件中得到内容出错:"+ce.getMessage());
+//                throw new RuntimeException("没有得到文件内容");
+//            } finally{
+//                try {
+//                    in.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                client.shutdown();
+//            }
+//
+//
+//            OutputStream out = null;
+//        /*File file = new File("C:\\self\\sz.xls");
+//        if (!file.exists()) {
+//            if (!file.getParentFile().exists()) {
+//                file.getParentFile().mkdirs();
+//            }
+//        }*/
+//            try {
+//                out = new BufferedOutputStream(new FileOutputStream("C:\\self\\" + hz));
+//                byte[] buffer = new byte[1024];
+//                while (inlast.read(buffer) != -1) {
+//                    out.write(buffer);
+//                }
+//                System.out.println("oss写本地完成啦！");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } finally {
+//                try {
+//                    out.flush();
+//                    out.close();
+//                    out = null;
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//
+
+
+        /**
+         * //list里null属性的对象h和不是null的属性
+         List<EsSuggestPO> list = new ArrayList<>();
+         EsSuggestPO item1 = new EsSuggestPO();
+         item1.setId("1");
+         item1.setResult("lalalalal");
+         list.add(item1);
+
+         EsSuggestPO item2 = new EsSuggestPO();
+         item2.setId("3");
+         list.add(item2);
+
+         EsSuggestPO item3 = new EsSuggestPO();
+         item3.setId("2");
+         item3.setResult("");
+         list.add(item3);
+
+         List<EsSuggestPO> listExistResult = list.stream().filter(item -> item.getResult() != null).collect(Collectors.toList());
+
+         List<EsSuggestPO> listNullResult = list.stream()
+         .filter(item -> item.getResult() == null)
+         .map(item -> {
+         item.setResult("");
+         return item;
+         })
+         .collect(Collectors.toList());
+
+
+         System.out.println("original list:" + list.toString());
+         System.out.println("exist result list:" + listExistResult.toString());
+         System.out.println("exi result is null list:" + listNullResult.toString());
+
+         * */
+
+        TestDTO[] detail = new TestDTO[3];
+        for (int i = 0; i < 3; i++) {
+            detail[i] = new TestDTO();
+            detail[i].setPicking_no("I100214-19001294");
+            switch (i) {
+                case 0:
+                    detail[i].setWarehousing_pick("3K01022             ");
+                    break;
+                case 1:
+                    detail[i].setWarehousing_pick("3K01011             ");
+                    break;
+                case 2:
+                    //detail[i].setWarehousing_pick("3D06013             ");   //null【最小】
+                    break;
+                default:
+                    System.out.println("unexpected error!");
+                    break;
+            }
         }
-        System.out.println(new Date() + " send email success.");
+
+        List<TestDTO> tempList = new ArrayList<TestDTO>(Arrays.asList(detail));
+        System.out.println("temp list: " + tempList.toString());
+
+        /**
+         * 这样调用  遇到null的值会抛出异常
+         * */
+        //Collections.sort(tempList, Comparator.comparing(TestDTO::getWarehousing_pick));
+
+
+        /**
+         * 这样调用，更好【推荐】--------->（null重新赋值为"",且使用trim去除前后空格）
+         * */
+        Collections.sort(tempList, Comparator.comparing(TestDTO::trimNull));
+        /*
+        打印信息如下：
+        temp list: [TestDTO(picking_no=I100214-19001294, warehousing_pick=3K01022             ), TestDTO(picking_no=I100214-19001294, warehousing_pick=3K01011             ), TestDTO(picking_no=I100214-19001294, warehousing_pick=null)]
+        after sort: [TestDTO(picking_no=I100214-19001294, warehousing_pick=), TestDTO(picking_no=I100214-19001294, warehousing_pick=3K01011), TestDTO(picking_no=I100214-19001294, warehousing_pick=3K01022)]
+
+        * */
+
+
+        /**
+         * 这样调用  遇到null的值会重新赋值为""，从而避免异常
+         * */
+        //Collections.sort(tempList, Comparator.comparing(i -> i.getWarehousing_pick() == null ? "": i.getWarehousing_pick()));
+        //Collections.sort(tempList, Comparator.comparing(i -> i.getWarehousing_pick() == null ? "": i.getWarehousing_pick().trim()));
+
+        System.out.println("after sort: " + tempList.toString());
+
+        for (TestDTO dto : tempList) {
+
+            //System.out.println(ToStringBuilder.reflectionToString(dto, JsonOutUtils.ToStringStyle.JSON_STYLE));
+            System.out.println(org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString(dto, ToStringStyle.JSON_STYLE));
+        }
+
+        /*detail = tempList.toArray(new TestDTO[tempList.size()]);
+        for (TestDTO dto : detail) {
+            System.out.println(dto.getPicking_no());
+            System.out.println(dto.getWarehousing_pick());
+
+        }*/
+
+
+
+
+
+
+
+
 
     }
+
 
 
     /********************************文件传输基础——Java IO流**********************************/
@@ -300,21 +531,20 @@ public class test {
      * 抽象类：InputStream、OutputStream
      * InputStream  抽象了应用程序读取数据的方式
      * OutputStream 抽象了应用程序写出数据的方式
-     *
+     * <p>
      * 达到文件结尾称为EOF即end 或者 读到-1就是读到结尾
-     *
+     * <p>
      * 输入流的基本方法：【读】
-     *    int b = in.read();读取一个字节，无符号填充到int低八位。-1是EOF
-     *    in.read(byte[] buf)  读取数据填充到字节数组buf
-     *    in.read(byte[] buf,int start,int size) 读取数据到字节数组buf,从buf的start位置开始，存放size长度的数据
-     *
+     * int b = in.read();读取一个字节，无符号填充到int低八位。-1是EOF
+     * in.read(byte[] buf)  读取数据填充到字节数组buf
+     * in.read(byte[] buf,int start,int size) 读取数据到字节数组buf,从buf的start位置开始，存放size长度的数据
+     * <p>
      * 输出流的基本方法：【写】
      * out.write(int b) 写出一个byte到流，写的是b的低8位（一个int是32位）
      * out.write(byte[] buf) 将缓冲区buf的字节数组都写入到流
      * out.write(byte[] buf, int start, int size) 字节数组buf从start位置开始，写size长度的字节到流
-     *
+     * <p>
      * 子类FileInputStream（继承了InputStream） 具体实现了从文件中读取数据
-     *
      **/
     @Test
     public void IOZiJieInStreamTest() throws IOException {
@@ -372,14 +602,14 @@ public class test {
 
         //把文件作为字节流，进行读操作  【方式3 ----> 推荐（适用于字节数组不够大，一次性读不完文件）】
         FileInputStream in = new FileInputStream(fileName);
-        byte[] buf = new byte[6*1024];
+        byte[] buf = new byte[6 * 1024];
         int bytes = 0;
-        int j =1;
-        while ( (bytes = in.read(buf,0,buf.length)) != -1 ) {
-            for(int i = 0; i<bytes; i++) {
+        int j = 1;
+        while ((bytes = in.read(buf, 0, buf.length)) != -1) {
+            for (int i = 0; i < bytes; i++) {
                 //& 0xff的作用：byte类型是8位，int类型是32位，为了避免数据转换错误，通过&0xff将高24位清0
                 System.out.print(Integer.toHexString(buf[i] & 0xff) + "  ");
-                if(j++ %10 == 0) {
+                if (j++ % 10 == 0) {
                     System.out.println();
                 }
             }
@@ -391,6 +621,7 @@ public class test {
 
     /**
      * 子类FileOutputStream（继承了OutputStream） 具体实现了向文件中写byte数据的方法
+     *
      * @throws IOException
      */
     @Test
@@ -426,21 +657,21 @@ public class test {
         out.close();
 
 
-
     }
 
     /**
      * 文件复制操作例子
+     *
      * @throws IOException
      */
     @Test
-    public void IOZiJieInAndOutStreamDemo () throws IOException {
+    public void IOZiJieInAndOutStreamDemo() throws IOException {
         //源文件
         File srcFile = new File("C:\\self\\vueProjectStudy\\Travel\\static\\note");
-        if(!srcFile.exists()) {
-            throw new IllegalArgumentException("文件："  + srcFile + "不存在");
+        if (!srcFile.exists()) {
+            throw new IllegalArgumentException("文件：" + srcFile + "不存在");
         }
-        if(!srcFile.isFile()) {
+        if (!srcFile.isFile()) {
             throw new IllegalArgumentException(srcFile + "不是文件");
         }
         //目标文件
@@ -448,7 +679,7 @@ public class test {
 
         FileInputStream in = new FileInputStream(srcFile);  //读文件
         FileOutputStream out = new FileOutputStream(desFile); //写文件
-        byte[] buf = new byte[8*1024];
+        byte[] buf = new byte[8 * 1024];
         int b;
         //【不带缓冲，批量读取写出  -------> 读取写出速度最快，推荐哦！】
         /*while ((b = in.read(buf,0,buf.length)) != -1) {
@@ -484,17 +715,17 @@ public class test {
     /**
      * 带缓冲的字节流,实现文件的复制
      * BufferedInputStream
-     *
+     * <p>
      * BufferedOutputStream
-     * */
+     */
     @Test
-    public void IOZiJieInAndOutBuffStreamDemo () throws IOException {
+    public void IOZiJieInAndOutBuffStreamDemo() throws IOException {
         //源文件
         File srcFile = new File("C:\\self\\vueProjectStudy\\Travel\\static\\note");
-        if(!srcFile.exists()) {
-            throw new IllegalArgumentException("文件："  + srcFile + "不存在");
+        if (!srcFile.exists()) {
+            throw new IllegalArgumentException("文件：" + srcFile + "不存在");
         }
-        if(!srcFile.isFile()) {
+        if (!srcFile.isFile()) {
             throw new IllegalArgumentException(srcFile + "不是文件");
         }
         //目标文件
@@ -517,21 +748,19 @@ public class test {
     }
 
 
-
-
     /**
      * 3.2、字符流  ---> 操作的是文本文件
-     *
+     * <p>
      * 文本
-     *   java中的文本（char）是16位无符号整数，是字符的unicode编码，是一种双字节编码
+     * java中的文本（char）是16位无符号整数，是字符的unicode编码，是一种双字节编码
      * 文本文件
-     *   文件是byte byte byte ...的数据序列
-     *   文本文件是文本（char）序列按照某种编码方案（utf-8,utf-16be,gbk,...）序列化为byte的存储结果
-     *
+     * 文件是byte byte byte ...的数据序列
+     * 文本文件是文本（char）序列按照某种编码方案（utf-8,utf-16be,gbk,...）序列化为byte的存储结果
+     * <p>
      * 字符流（Reader、Writer）
      * 字符的处理：一次处理一个字符
      * 字符的底层仍然是基本的字节序列
-     *
+     * <p>
      * InputStreamReader 完成byte流解析为char流，按照编码解析
      * OutputStreamWriter 提供char流到byte流，按照编码处理
      */
@@ -571,18 +800,18 @@ public class test {
 
 
         /*******************Writer************************/
-        InputStreamReader isr = new InputStreamReader(new FileInputStream("C:\\self\\vueProjectStudy\\Travel\\static\\note"),"utf-8");  //默认使用项目的编码
+        InputStreamReader isr = new InputStreamReader(new FileInputStream("C:\\self\\vueProjectStudy\\Travel\\static\\note"), "utf-8");  //默认使用项目的编码
 
         FileOutputStream out = new FileOutputStream("C:\\self\\oswWriter.txt");
         //默认是项目的编码，其实还是要根据文件的编码格式来指明
         //OutputStreamWriter osw = new OutputStreamWriter(out);
-        OutputStreamWriter osw = new OutputStreamWriter(out,"utf-8");
-        char[] buf2 = new char[8*1024];
+        OutputStreamWriter osw = new OutputStreamWriter(out, "utf-8");
+        char[] buf2 = new char[8 * 1024];
         int c2;
         //批量读取，放入buf这个字符数组，从第0个位置开始放，最多放buf.length个
         //返回的是读到的字符个数
-        while ((c2 = isr.read(buf2,0,buf2.length)) != -1) {
-            osw.write(buf2,0,c2);
+        while ((c2 = isr.read(buf2, 0, buf2.length)) != -1) {
+            osw.write(buf2, 0, c2);
             osw.flush();
         }
 
@@ -619,7 +848,6 @@ public class test {
      * */
 
 
-
     /**
      * 对象的序列化、反序列
      *
@@ -647,11 +875,6 @@ public class test {
      *      2. 序列化的时候，递归调用父类的构造函数
      *      3. 对子类对象实现反序列化的时候，如果其父类没有实现序列化接口，那么其父类的构造函数会被调用
      * */
-
-
-
-
-
 
 
 }
