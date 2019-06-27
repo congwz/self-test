@@ -1,5 +1,5 @@
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.junit.Test;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
 import java.util.*;
@@ -288,13 +288,13 @@ public class test {
         //Collections.sort(tempList, Comparator.comparing(i -> i.getWarehousing_pick() == null ? "": i.getWarehousing_pick()));
         //Collections.sort(tempList, Comparator.comparing(i -> i.getWarehousing_pick() == null ? "": i.getWarehousing_pick().trim()));
 
-        System.out.println("after sort: " + tempList.toString());
-
-        for (TestDTO dto : tempList) {
-
-            //System.out.println(ToStringBuilder.reflectionToString(dto, JsonOutUtils.ToStringStyle.JSON_STYLE));
-            System.out.println(org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString(dto, ToStringStyle.JSON_STYLE));
-        }
+//        System.out.println("after sort: " + tempList.toString());
+//
+//        for (TestDTO dto : tempList) {
+//
+//            //System.out.println(ToStringBuilder.reflectionToString(dto, JsonOutUtils.ToStringStyle.JSON_STYLE));
+//            System.out.println(org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString(dto, ToStringStyle.JSON_STYLE));
+//        }
 
         /*detail = tempList.toArray(new TestDTO[tempList.size()]);
         for (TestDTO dto : detail) {
@@ -304,10 +304,33 @@ public class test {
         }*/
 
 
+        /**
+         * 字符串截取和拼接
+         * */
+//        String purchase_no = "OP00010-19001307";
+//        System.out.println(purchase_no.length()); //16
+//        String split_dhlx = purchase_no.substring(0, 2);
+//        String split_gs = purchase_no.substring(2, 7);
+//        String split_dh = purchase_no.substring(8, purchase_no.length());
+//        System.out.println(split_dhlx);
+//        System.out.println(split_gs);
+//        System.out.println(split_dh);
 
+        /**
+         * restTemplate方法调用其他接口
+         * */
+        String url = "https://calljde.harmontronics.com/api/jde/barcode-py?ukid=10000956&type=01";
+        String res = new RestTemplate().getForObject(url, String.class);
+        System.out.println(res);
+        /*if(!"1".equals(res)){
+            System.out.println("No");
+        }else {
+            System.out.println("yes");
+        }*/
 
-
-
+        //String md5Pws = MD5Util.MD5("Hc01000207"); //05c9dd55ad61953e1465e62250cf3568
+        //String md5Pws = MD5Util.MD5("111111");
+        //System.out.println(md5Pws);
 
 
 
@@ -877,4 +900,31 @@ public class test {
      * */
 
 
+    public static void main(String[] args) {
+        /*String s = "https://open.work.weixin.qq.com/wwopen/sso/qrConnect?appid=wx6337ae93b823df88&agentid=1000035&redirect_uri=http://passport-test.harmontronics.com/loginByWx&state=wx_login&login_type=jssdk";
+        String dom = new RestTemplate().getForObject(s,String.class);
+        //System.out.println(dom);
+        String regex ="window.settings[\\s={\\s(appid):\"0-9a-zA-Z,]+(style)";
+        Pattern pattern= Pattern.compile(regex);
+        Matcher m = pattern.matcher(dom);
+        if(m.find()) {
+            String group = m.group(0);
+            System.out.println("/////////////////////////////////////////////////");
+            System.out.println(group);
+        }
+        //String regexRes = "key[\\s:\"]+(\\w+)\"";
+        String regexRes = "key[\\s:\"]+(\\w+)\"";
+        Pattern patternRes = Pattern.compile(regexRes);
+        Matcher mRes = patternRes.matcher(m.group(0));
+        if(mRes.find()) {
+            String groupRes = mRes.group(1);
+            System.out.println("最后key: " + groupRes);
+        }else {
+            System.out.println("sorry");
+        }*/
+
+
+
+
+    }
 }

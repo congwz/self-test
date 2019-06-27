@@ -2,11 +2,11 @@
 var num_entries = null,list = null;
 //每页显示的记录数
 var items_per_page = 10;
-var url='http:127.0.0.1:7000/api/lost/page-list' + '?pageNumber=' + 1 + '&pageSize=' + items_per_page;
+var url='/api/lost/page-list' + '?pageNumber=' + 1 + '&pageSize=' + items_per_page;
 
 function pageselectCallback(page_index, jq){
     var pageNumber = page_index + 1;
-    url='http:127.0.0.1:7000/api/lost/page-list' + '?pageNumber=' + pageNumber + '&pageSize=' + items_per_page;
+    url='/api/lost/page-list' + '?pageNumber=' + pageNumber + '&pageSize=' + items_per_page;
     console.log('进入回调函数');
     $('#swapper').empty();
 

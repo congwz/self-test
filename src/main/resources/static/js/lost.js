@@ -237,7 +237,7 @@ window.onload = function () {
         if(userAccount != '' && userPassword != '') {
             //后台验证账号密码
             $.ajax({
-                url: 'http:127.0.0.1:7000/api/lost/check-login?account=' + userAccount + '&password=' + userPassword,
+                url: '/api/lost/check-login?account=' + userAccount + '&password=' + userPassword,
                 type: 'GET',
                 /*dataType: 'json',*/
                 async: false,

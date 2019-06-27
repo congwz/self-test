@@ -84,7 +84,7 @@ function successAlert(title,text) {
 function accountVerify(name) {
     var isExist = null;
     $.ajax({
-        url: 'http:127.0.0.1:7000/api/lost/account-verify?account=' + name,
+        url: '/api/lost/account-verify?account=' + name,
         type: 'GET',
         dataType: 'json',
         async: false,
@@ -125,7 +125,7 @@ function agreeClick() {
 /*注册*/
 function registerFn() {
     var checkAgreeBox = document.getElementsByClassName('check-agree')[0];
-    var url = 'http:127.0.0.1:7000/api/lost/register';
+    var url = '/api/lost/register';
     var account = getElById('name').value;
     var ageOriginal = getElById('age').value;
     var age = ageOriginal == '' ? -1: ageOriginal;
