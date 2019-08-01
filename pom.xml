@@ -325,6 +325,13 @@
         </dependency>-->
 
 
+        <!-- 短信依赖 -->
+        <dependency>
+            <groupId>com.oneclick.passport</groupId>
+            <artifactId>taobao-sdk</artifactId>
+            <version>1.0</version>
+        </dependency>
+
 
     </dependencies>
 

@@ -1,10 +1,12 @@
 package com.viverselftest.api;
 
 //import com.harmontronics.erp.util.StrUtils;
+
 import com.viverselftest.dto.outputtest.HandlePlanDetailDTO;
 import com.viverselftest.po.TestLowerOrUpperPO;
 import com.viverselftest.po.TestPO;
 import com.viverselftest.service.TestService;
+import com.viverselftest.util.PasswordUtil;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.mail.Email;
 import org.slf4j.Logger;
@@ -986,9 +988,9 @@ listNoDup2：[a, b, c, 1]*/
 
 
         /*opendevice加盐值的MD5加密*/
-        /*Map<String, String> pwdMap = PasswordUtil.generatePassword("111111");
+        Map<String, String> pwdMap = PasswordUtil.generatePassword("admin");
         System.out.println(pwdMap.get("password"));
-        System.out.println(pwdMap.get("salt"));*/
+        System.out.println(pwdMap.get("salt"));
 
 
         /*passport向外发送的邮件*/

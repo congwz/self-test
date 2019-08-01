@@ -1,5 +1,5 @@
 import org.junit.Test;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.util.Assert;
 
 import java.io.*;
 import java.util.*;
@@ -319,9 +319,9 @@ public class test {
         /**
          * restTemplate方法调用其他接口
          * */
-        String url = "https://calljde.harmontronics.com/api/jde/barcode-py?ukid=10000956&type=01";
-        String res = new RestTemplate().getForObject(url, String.class);
-        System.out.println(res);
+//        String url = "https://calljde.harmontronics.com/api/jde/barcode-py?ukid=10000956&type=01";
+//        String res = new RestTemplate().getForObject(url, String.class);
+//        System.out.println(res);
         /*if(!"1".equals(res)){
             System.out.println("No");
         }else {
@@ -331,6 +331,38 @@ public class test {
         //String md5Pws = MD5Util.MD5("Hc01000207"); //05c9dd55ad61953e1465e62250cf3568
         //String md5Pws = MD5Util.MD5("111111");
         //System.out.println(md5Pws);
+
+
+        Assert.hasText("","非空且不为空字符串");
+        //报错如下：
+        /**
+         * java.lang.IllegalArgumentException: 非空且不为空字符串
+
+         at org.springframework.util.Assert.hasText(Assert.java:181)
+         at test.self(test.java:336)
+         at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+         at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+         at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+         at java.lang.reflect.Method.invoke(Method.java:498)
+         at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
+         at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+         at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
+         at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+         at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
+         at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)
+         at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)
+         at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+         at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+         at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+         at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+         at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+         at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+         at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
+         at com.intellij.junit4.JUnit4IdeaTestRunner.startRunnerWithArgs(JUnit4IdeaTestRunner.java:68)
+         at com.intellij.rt.execution.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:47)
+         at com.intellij.rt.execution.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:242)
+         at com.intellij.rt.execution.junit.JUnitStarter.main(JUnitStarter.java:70)
+         * */
 
 
 
