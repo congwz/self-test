@@ -5,7 +5,7 @@ import cn.afterturn.easypoi.excel.ExcelImportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
-import cn.afterturn.easypoi.util.PoiPublicUtil;
+import cn.afterturn.easypoi.excel.entity.result.ExcelImportResult;
 import cn.afterturn.easypoi.word.WordExportUtil;
 import com.viverselftest.dto.PageDTO;
 import com.viverselftest.dto.inquireonline.InquireOnlineConditionsDTO;
@@ -20,21 +20,18 @@ import freemarker.template.TemplateException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.ss.format.CellFormat;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.net.URLEncoder;
-import java.text.ParseException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -656,6 +653,50 @@ public class EasyPOIApi {
         System.out.println("list：" + list.toString());
 
         return "Import excel ok.";
+    }
+
+
+    @ApiOperation("从导入的excel中获取List集合")
+    @PostMapping("/od/import")
+    public String getListFromImportExcel(MultipartFile file) {
+
+        if (file.isEmpty()) {
+            return "请选择一个图片上传";
+        }
+        long uploadTime = System.currentTimeMillis();
+        String filename = uploadTime + "_" + file.getOriginalFilename();
+        try {
+            byte[] bytes = file.getBytes();
+
+            //Path path = Paths.get("/program/opendevices/uploads/" + filename);
+
+            Path path = Paths.get("C:\\excel\\import\\" + filename);
+            Files.write(path, bytes);
+            System.out.println("写入本地excel成功");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "上传出错";
+        }
+
+
+        ImportParams importParams = new ImportParams();
+        //List<ExcelExportSimplePO> list = ExcelImportUtil.importExcel(new File("C:\\excel\\import\\test1.xlsx"),ExcelExportSimplePO.class,importParams);
+
+        importParams.setTitleRows(1);
+        //ExcelImportResult<ExcelExportOdPO> res = ExcelImportUtil.importExcelMore(new File("C:\\excel\\import\\" + filename), ExcelExportOdPO.class, importParams);
+        ExcelImportResult<ExcelExportOdPO> res = ExcelImportUtil.importExcelMore(new File(Paths.get("C:\\excel\\import\\" + filename).toString()), ExcelExportOdPO.class, importParams);
+
+        System.out.println(ReflectionToStringBuilder.toString(res.getList().get(0)));
+        System.out.println("list：" + res.getList());
+
+
+        /*List<ExcelExportOdPO> list = ExcelImportUtil.importExcel(new File("C:\\excel\\import\\" + filename),ExcelExportOdPO.class,importParams);
+        System.out.println(ReflectionToStringBuilder.toString(list.get(0)));
+        System.out.println("list：" + list.toString());*/
+
+        return "成功";
+
     }
 
 
