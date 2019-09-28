@@ -103,6 +103,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
         suggestBuilder.addSuggestion("mySuggest", builder);//添加suggest
         requestBuilder = client.prepareSearch(ElasticSearchConstants.ES_DB).suggest(suggestBuilder);
 
+        System.out.println(requestBuilder.toString());
         SearchResponse response = requestBuilder.get();
         Suggest suggest = response.getSuggest();//suggest实体
         Set<String> suggestSet = new HashSet<>();

@@ -1,8 +1,6 @@
 import org.junit.Test;
-import org.springframework.util.Assert;
 
 import java.io.*;
-import java.util.*;
 
 /**
  * Created by Congwz on 2019/2/15.
@@ -11,6 +9,69 @@ public class test {
 
     @Test
     public void self() {
+
+
+
+        /**
+         * TIMESTAMP转化为yyyy-MM-dd格式
+         * */
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");//定义日期类型格式
+//        Timestamp ts = new Timestamp(System.currentTimeMillis());
+//        String result = format.format(ts);
+//        System.out.println(result);//打印获取的字符串 // 2019-09-20
+
+        /**
+         * String转化为TIMESTAMP格式
+         * */
+//        Timestamp timestamp = Timestamp.valueOf("2019-07-20 11:49:45");
+//        System.out.println(timestamp);  // 2019-07-20 11:49:45.0
+
+
+
+        /*DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+
+            System.out.println(df.parse("2019-09-20"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }*/
+
+
+        //Set集合转换成逗号分割的字段串返回
+//        Set<Integer> test = new HashSet<Integer>();
+//        test.add(2);
+//        test.add(18);
+//        test.add(5);
+//
+//        System.out.println("Set集合 = " + test.toString());
+//
+//        if(CollectionUtils.isEmpty(test)){
+//            System.out.println("set是空集合");
+//        }else {
+//            StringBuilder sb=new StringBuilder(",");
+//            for (Integer integer : test) {
+//                if(integer==null){
+//                    continue;
+//                }
+//                sb.append(integer).append(",");
+//            }
+//            String str = sb.toString();
+//            System.out.println("StringBuilder = " + str);
+//            str = str.substring(1, str.length() - 1);
+//            System.out.println("去掉开头和末尾的逗号 = " + str);
+//
+//            String[] splitArr = str.split(",");
+//            List<String> list = new ArrayList<String>(Arrays.asList(splitArr));
+//            System.out.println("list = " + list.toString());
+//
+//        }
+
+
+
+
+
+
+
         /**
          * 时间转化
          String pattern = "yyyyMMddHHmmss";
@@ -241,6 +302,8 @@ public class test {
 
          * */
 
+/*
+
         TestDTO[] detail = new TestDTO[3];
         for (int i = 0; i < 3; i++) {
             detail[i] = new TestDTO();
@@ -264,6 +327,8 @@ public class test {
         List<TestDTO> tempList = new ArrayList<TestDTO>(Arrays.asList(detail));
         System.out.println("temp list: " + tempList.toString());
 
+*/
+
         /**
          * 这样调用  遇到null的值会抛出异常
          * */
@@ -273,7 +338,12 @@ public class test {
         /**
          * 这样调用，更好【推荐】--------->（null重新赋值为"",且使用trim去除前后空格）
          * */
+/*
+
         Collections.sort(tempList, Comparator.comparing(TestDTO::trimNull));
+*/
+
+
         /*
         打印信息如下：
         temp list: [TestDTO(picking_no=I100214-19001294, warehousing_pick=3K01022             ), TestDTO(picking_no=I100214-19001294, warehousing_pick=3K01011             ), TestDTO(picking_no=I100214-19001294, warehousing_pick=null)]
@@ -333,7 +403,7 @@ public class test {
         //System.out.println(md5Pws);
 
 
-        Assert.hasText("","非空且不为空字符串");
+        //Assert.hasText("","非空且不为空字符串");
         //报错如下：
         /**
          * java.lang.IllegalArgumentException: 非空且不为空字符串
@@ -365,8 +435,66 @@ public class test {
          * */
 
 
+        //字符串截取substring
+        /*String date1 = "2019-07";
+        String date2 = "2019-12";
+        String rq = date2.substring(5, 7).replace("0","");
+        System.out.println(rq);*/
+
+        /*String date = "2019-07-04";
+        SimpleDateFormat format = new SimpleDateFormat("MM月dd日");
+        try {
+            String res = format.parse(date).toString();
+            System.out.println(res);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }*/
+
+//        DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+//        DateFormat format2= new SimpleDateFormat("M月d");
+//        Date date = null;
+//        String res = null;
+//        String str = "2007-03-18";
+//        try {
+//            date = format1.parse(str);
+//            res = format2.format(date);
+//            System.out.println(date);
+//            System.out.println(res);
+//        } catch (ParseException e) {
+//         e.printStackTrace();
+//        }
+
+
+
+
+/*
+        Optional<Integer> max3 = Stream.of(1, 2, 3, 4, 5)
+                .max(Comparator.comparingInt(x-> x));
+
+        System.out.println("max3: " + max3); // 5
+*/
+
+//        String test = null;
+//        List<String> testList = Splitter.on(",").splitToList(test);  //test不能是null
+//        System.out.println("逗号分割后的字符串集合：" + testList.toString());
+
+
+
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

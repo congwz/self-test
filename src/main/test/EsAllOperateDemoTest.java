@@ -616,7 +616,8 @@ publish_date = 2019-1-23
         //QueryBuilder builder = QueryBuilders.typeQuery("work");
 
         //按照文档的多个id查询【ids查询】
-        QueryBuilder builder = QueryBuilders.idsQuery().addIds("3","2");
+        //QueryBuilder builder = QueryBuilders.idsQuery().addIds("3","2");
+        QueryBuilder builder = QueryBuilders.idsQuery().addIds(new String[] {"3","2"});
         SearchResponse response = client.prepareSearch(db)
                 .setQuery(builder)
                 .setSize(5).get();

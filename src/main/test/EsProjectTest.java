@@ -1,12 +1,5 @@
-import com.viverselftest.config.Redis;
 import com.viverselftest.consts.ElasticSearchConstants;
 import com.viverselftest.po.elasticsearch.EsLFPO;
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.cjk.CJKAnalyzer;
-import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
-import org.apache.lucene.analysis.custom.CustomAnalyzer;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeAction;
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeRequestBuilder;
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeResponse;
@@ -20,16 +13,12 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
-import org.elasticsearch.common.xcontent.XContentParser;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.wltea.analyzer.core.IKSegmenter;
-import org.wltea.analyzer.core.Lexeme;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -863,7 +852,7 @@ public class EsProjectTest {
         CreateIndexRequestBuilder cib = client.admin().indices().prepareCreate(ElasticSearchConstants.ES_DB);
         XContentBuilder mappingLost = XContentFactory.jsonBuilder()
                 .startObject()
-                .startObject("properties") //设置之定义字段
+                .startObject("properties") //设置自定义字段
                 .startObject("id")
                 .field("type", "keyword") //设置数据类型
                 .endObject()
@@ -905,7 +894,7 @@ public class EsProjectTest {
 
         XContentBuilder mappingFind = XContentFactory.jsonBuilder()
                 .startObject()
-                .startObject("properties") //设置之定义字段
+                .startObject("properties") //设置自定义字段
                 .startObject("id")
                 .field("type", "keyword") //设置数据类型
                 .endObject()

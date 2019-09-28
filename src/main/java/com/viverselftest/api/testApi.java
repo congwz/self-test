@@ -2,20 +2,27 @@ package com.viverselftest.api;
 
 //import com.harmontronics.erp.util.StrUtils;
 
+import com.viverselftest.dao.jde.testMapper;
 import com.viverselftest.dto.outputtest.HandlePlanDetailDTO;
 import com.viverselftest.po.TestLowerOrUpperPO;
 import com.viverselftest.po.TestPO;
 import com.viverselftest.service.TestService;
+import com.viverselftest.util.DateUtil;
 import com.viverselftest.util.PasswordUtil;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.mail.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.security.Key;
 import java.text.ParseException;
@@ -31,11 +38,118 @@ public class testApi {
     @Autowired
     private TestService testService;
 
+    @Autowired
+    private testMapper tmapper;
+
 
     private static Email email;
 
 
     private Logger logger = LoggerFactory.getLogger(testApi.class);
+
+
+    @ApiOperation(value = "【TimeStamp-Date】")
+    @GetMapping("/timestamp-date")
+    public void testTimeStampDate() {
+        tmapper.addTimeStemp(DateUtil.formateStringToTime("2019-09-28")); // 2019-09-28 00:00:00.0
+    }
+
+    @ApiOperation(value = "【获取TimeStamp-Date】")
+    @GetMapping("/get-timestamp-date")
+    public void getTimeStampDate() {
+
+        Date timeStamp = tmapper.findTimeStamp();
+        System.out.println("Date = " + timeStamp);  // Date = Sat Sep 28 00:00:00 CST 2019
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String formatStr = sdf.format(timeStamp);
+        System.out.println("format = " + formatStr); // format = 2019-09-28
+
+    }
+
+    @ApiOperation(value = "测试访问resource目录下的文件")
+    @GetMapping("/get-resource-file")
+    public void testGetResourceFile() {
+        try {
+            /**
+             * 访问项目/根目录下的文件
+             * */
+            String path = ResourceUtils.getURL("randomAccessFileDemo").getPath();
+
+            //文件目录绝对路径 = /C:/Users/Congwz/IdeaProjects/VIVERSELFTEST/randomAccessFileDemo/
+            System.out.println("文件目录绝对路径 = " + path);
+
+/*
+            /C:/Users/Congwz/IdeaProjects/VIVERSELFTEST/classes
+
+            String filePath = path
+                    + File.separator + "com"
+                    + File.separator + "viverselftest"
+                    + File.separator + "resource"
+                    + File.separator + File.separator + "price.xlsx";
+
+            /C:/Users/Congwz/IdeaProjects/VIVERSELFTEST/classes\com\viverselftest\resource\\price.xlsx
+*/
+            String filePath = path + "out.txt";
+            System.out.println("文件绝对路径 = " + filePath);
+            File file = new File(filePath);
+            if(file.exists()) {
+                System.out.println("文件out.txt存在"); // 文件out.txt存在
+            }else {
+                System.out.println("文件out.txt不存在");
+            }
+
+
+            /**
+             * 访问resource目录下的文件
+             * */
+            String path1 = ClassUtils.getDefaultClassLoader().getResource("").getPath();
+            System.out.println("classes目录绝对路径 = 【 " + path1 + "】");
+            // classes目录绝对路径 = 【 /C:/Users/Congwz/IdeaProjects/VIVERSELFTEST/target/classes/】
+
+            String path2 = ResourceUtils.getURL("classpath:").getPath();
+            System.out.println("classes目录绝对路径 （同上）= 【 " + path1 + "】");
+            // classes目录绝对路径 （同上）= 【 /C:/Users/Congwz/IdeaProjects/VIVERSELFTEST/target/classes/】
+
+
+
+
+
+
+            /**
+             * 访问resource目录下的文件【推荐】
+             * */
+            File f =  ResourceUtils.getFile("classpath:static/test.html");
+            System.out.println("文件存在true，不存在false = " + f.exists());
+            // 文件存在true，不存在false = 【true】
+
+            ClassPathResource classPathResource = new ClassPathResource("static/test.html");
+            try {
+                String cPath1 = classPathResource.getURI().getPath();
+                String cPath2 = classPathResource.getURL().getPath();
+                File cPathFile1 = new File(cPath1);
+                File cPathFile2 = new File(cPath2);
+                if(cPathFile1.exists()) {
+                    System.out.println("文件uri = " + cPath1 + "，文件存在");
+                }
+                if(cPathFile2.exists()) {
+                    System.out.println("文件url(同上) = " + cPath2 + "，文件存在");
+                }
+
+                //文件uri = /C:/Users/Congwz/IdeaProjects/VIVERSELFTEST/target/classes/static/test.html，文件存在
+                //文件url(同上) = /C:/Users/Congwz/IdeaProjects/VIVERSELFTEST/target/classes/static/test.html，文件存在
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            System.out.println("测试完成===============================================");
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     /**
